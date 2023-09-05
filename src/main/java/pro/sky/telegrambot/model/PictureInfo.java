@@ -19,7 +19,7 @@ public class PictureInfo {
     private byte[] data;
 
     @ManyToOne
-    @JoinColumn(name = "info_id")
+    @JoinColumn(name = "info_name")
     private Info info;
 
     public PictureInfo() {

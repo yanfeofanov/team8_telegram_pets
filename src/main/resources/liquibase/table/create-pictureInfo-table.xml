@@ -30,16 +30,16 @@
             <column name="data" type="OID">
                 <constraints  nullable="false"/>
             </column>
-            <column name="info_id" type="BIGINT">
+            <column name="info_name" type="VARCHAR(255)">
                 <constraints  nullable="false"/>
             </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="picture_info"
-                                 baseColumnNames="info_id"
-                                 constraintName="FK_PICTUREINFO_INFO_ID"
+                                 baseColumnNames="info_name"
+                                 constraintName="FK_PICTUREINFO_INFO_NAME"
                                  referencedTableName="info"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="name"/>
 
     </changeSet>
 </databaseChangeLog>

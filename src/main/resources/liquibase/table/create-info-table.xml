@@ -14,14 +14,11 @@
         </preConditions>
 
         <createTable tableName="info">
-            <column name="id" autoIncrement="true" type="BIGINT">
+            <column name="name" type="VARCHAR(255)">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(255)">
-                <constraints  nullable="false"/>
-            </column>
             <column name="text" type="VARCHAR(4096)">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints  nullable="false"/>
             </column>
         </createTable>
     </changeSet>
