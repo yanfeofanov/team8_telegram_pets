@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="create-pets-table.1" author="DMorozov">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="pets"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="pets">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="age" type="INT">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="breed" type="VARCHAR(255)">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="shelter_id" type="INT">
+                <constraints  nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="pets"
+                                 baseColumnNames="shelter_id"
+                                 constraintName="FK_PETS_SHELTER_ID"
+                                 referencedTableName="shelters"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>
