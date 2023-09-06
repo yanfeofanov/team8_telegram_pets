@@ -5,21 +5,25 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="create-shelters-table.1" author="DMorozov">
+    <changeSet id="create-shelter-table.1" author="DMorozov">
 
         <preConditions>
             <not>
-                <tableExists tableName="shelters"/>
+                <tableExists tableName="shelter"/>
             </not>
         </preConditions>
 
-        <createTable tableName="shelters">
-            <column name="id" autoIncrement="true" type="INT">
-                <constraints primaryKey="true"/>
+        <createTable tableName="shelter">
+            <column name="id" autoIncrement="true" type="SERIAL">
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(255)">
-                <constraints  nullable="false"/>
+                <constraints nullable="false"/>
             </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="photo_id" type="INT8"/>
         </createTable>
     </changeSet>
 

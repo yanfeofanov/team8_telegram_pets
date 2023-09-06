@@ -5,27 +5,26 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="create-info-table.1" author="DMorozov">
+    <changeSet id="create-bot_user-table.1" author="DMorozov">
 
         <preConditions>
             <not>
-                <tableExists tableName="info"/>
+                <tableExists tableName="bot_user"/>
             </not>
         </preConditions>
 
-        <createTable tableName="info">
-            <column name="id" type="SERIAL" autoIncrement="true">
+        <createTable tableName="bot_user">
+            <column name="id" type="INT8">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="type" type="VARCHAR(150)">
+            <column name="chat_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="text" type="VARCHAR(4096)">
+            <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="shelter_id" type="INT4">
-                <constraints nullable="false"/>
-            </column>
+            <column name="date_added" type="TIMESTAMP"/>
         </createTable>
+
     </changeSet>
 </databaseChangeLog>

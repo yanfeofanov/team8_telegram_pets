@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="create-pet-table.1" author="DMorozov">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="pet"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="pet">
+            <column name="id" autoIncrement="true" type="SERIAL">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="INT2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="breed" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shelter_id" type="INT4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pet_owner_id" type="INT2"/>
+            <column name="photo_id" type="INT8"/>
+            <column name="probation" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_probation" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
