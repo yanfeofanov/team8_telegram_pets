@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="add-foreign-key-constraint.1" author="AChumichev">
+        <addForeignKeyConstraint baseTableName="communication_request"
+                                 baseColumnNames="bot_user_id"
+                                 constraintName="FK_COMMUNICATION_REQUEST_BOT_USER"
+                                 referencedTableName="bot_user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="communication_request"
+                                 baseColumnNames="volunteer_id"
+                                 constraintName="FK_COMMUNICATION_REQUEST_VOLUNTEER"
+                                 referencedTableName="volunteer"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="daily_report"
+                                 baseColumnNames="pet_owner_id"
+                                 constraintName="FK_DAILY_REPORT_PET_OWNER"
+                                 referencedTableName="pet_owner"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="daily_report"
+                                 baseColumnNames="photo_id"
+                                 constraintName="FK_DAILY_REPORT_PHOTO"
+                                 referencedTableName="photo"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="daily_report"
+                                 baseColumnNames="volunteer_id"
+                                 constraintName="FK_DAILY_REPORT_VOLUNTEER"
+                                 referencedTableName="volunteer"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="info"
+                                 baseColumnNames="shelter_id"
+                                 constraintName="FK_INFO_SHELTER"
+                                 referencedTableName="shelter"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="pet"
+                                 baseColumnNames="shelter_id"
+                                 constraintName="FK_PET_SHELTER"
+                                 referencedTableName="shelter"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="pet"
+                                 baseColumnNames="pet_owner_id"
+                                 constraintName="FK_PET_OWNER"
+                                 referencedTableName="pet_owner"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="pet"
+                                 baseColumnNames="photo_id"
+                                 constraintName="FK_PET_PHOTO"
+                                 referencedTableName="photo"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="pet_owner"
+                                 baseColumnNames="bot_user_id"
+                                 constraintName="FK_PET_OWNER_BOT_USER"
+                                 referencedTableName="bot_user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="pet_owner"
+                                 baseColumnNames="volunteer_id"
+                                 constraintName="FK_PET_OWNER_VOLUNTEER"
+                                 referencedTableName="volunteer"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="photo"
+                                 baseColumnNames="pet_id"
+                                 constraintName="FK_PHOTO_PET"
+                                 referencedTableName="pet"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="photo"
+                                 baseColumnNames="report_id"
+                                 constraintName="FK_PHOTO_REPORT"
+                                 referencedTableName="daily_report"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="shelter"
+                                 baseColumnNames="photo_id"
+                                 constraintName="FK_SHELTER_PHOTO"
+                                 referencedTableName="photo"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="volunteer"
+                                 baseColumnNames="bot_user_id"
+                                 constraintName="FK_VOLUNTEER_BOT_USER"
+                                 referencedTableName="bot_user"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
+
+

@@ -1,7 +1,6 @@
 package pro.sky.telegrambot.model;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,28 +9,32 @@ public class Info {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private String name;
-
+    private int id;
+    private String type;
     private String text;
-
-    @OneToMany(mappedBy = "info")
-    private List<PictureInfo> pictureInfoList;
+    @ManyToOne
+    @JoinColumn(name = "shelter_id")
+    private Shelter shelter;
 
     public Info() {
     }
 
-    public Info(String name, String text) {
-        this.name = name;
+    public Info(String type, String text, Shelter shelter) {
+        this.type = type;
         this.text = text;
+        this.shelter = shelter;
     }
 
-    public String getName() {
-        return name;
+    public int getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getText() {
@@ -42,17 +45,36 @@ public class Info {
         this.text = text;
     }
 
+    public Shelter getShelter() {
+        return shelter;
+    }
+
+    public void setShelter(Shelter shelter) {
+        this.shelter = shelter;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Info)) return false;
         Info info = (Info) o;
-        return Objects.equals(name, info.name) && Objects.equals(text, info.text);
+        return getId() == info.getId() && Objects.equals(getType(), info.getType()) && Objects.equals(getText(), info.getText()) && Objects.equals(getShelter(), info.getShelter());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, text);
+        return Objects.hash(getId(), getType(), getText(), getShelter());
+    }
+
+    @Override
+    public String toString() {
+        return "Info{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", text='" + text + '\'' +
+                ", shelter=" + shelter +
+                '}';
     }
 }
+
 

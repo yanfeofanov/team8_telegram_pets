@@ -5,27 +5,35 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="create-info-table.1" author="DMorozov">
+    <changeSet id="create-pet-table.1" author="DMorozov">
 
         <preConditions>
             <not>
-                <tableExists tableName="info"/>
+                <tableExists tableName="pet"/>
             </not>
         </preConditions>
 
-        <createTable tableName="info">
-            <column name="id" type="SERIAL" autoIncrement="true">
+        <createTable tableName="pet">
+            <column name="id" autoIncrement="true" type="SERIAL">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="type" type="VARCHAR(150)">
+            <column name="type" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="text" type="VARCHAR(4096)">
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="INT2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="breed" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="shelter_id" type="INT4">
                 <constraints nullable="false"/>
             </column>
+            <column name="pet_owner_id" type="INT4"/>
+            <column name="photo_id" type="INT8"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

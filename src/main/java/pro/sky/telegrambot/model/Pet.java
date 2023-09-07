@@ -1,62 +1,44 @@
 package pro.sky.telegrambot.model;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "pets")
+@Table(name = "pet")
 public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private int age;
-
+    private int id;
     private String type;
+    private String name;
+    private byte age;
     private String breed;
-
-    @OneToMany(mappedBy = "pet")
-    private List<PhotoPet> photoPets;
-
     @ManyToOne
     @JoinColumn(name = "shelter_id")
     private Shelter shelter;
+    @ManyToOne
+    @JoinColumn(name = "pet_owner_id")
+    private PetOwner petOwner;
+    @OneToOne
+    @JoinColumn(name = "photo_id")
+    private Photo photo;
 
     public Pet() {
     }
 
-    public Pet(Long id, String name, int age, String type, String breed) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
+    public Pet(String type, String name, byte age, String breed, Shelter shelter, PetOwner petOwner, Photo photo) {
         this.type = type;
-        this.breed = breed;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
         this.age = age;
+        this.breed = breed;
+        this.shelter = shelter;
+        this.petOwner = petOwner;
+        this.photo = photo;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getType() {
@@ -67,6 +49,22 @@ public class Pet {
         this.type = type;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public byte getAge() {
+        return age;
+    }
+
+    public void setAge(byte age) {
+        this.age = age;
+    }
+
     public String getBreed() {
         return breed;
     }
@@ -75,22 +73,55 @@ public class Pet {
         this.breed = breed;
     }
 
+    public Shelter getShelter() {
+        return shelter;
+    }
+
+    public void setShelter(Shelter shelter) {
+        this.shelter = shelter;
+    }
+
+    public PetOwner getPetOwner() {
+        return petOwner;
+    }
+
+    public void setPetOwner(PetOwner petOwner) {
+        this.petOwner = petOwner;
+    }
+
+    public Photo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Pet)) return false;
         Pet pet = (Pet) o;
-        return age == pet.age && Objects.equals(id, pet.id) && Objects.equals(name, pet.name) && Objects.equals(type, pet.type) && Objects.equals(breed, pet.breed);
+        return getAge() == pet.getAge() && Objects.equals(getId(), pet.getId()) && Objects.equals(getType(), pet.getType()) && Objects.equals(getName(), pet.getName()) && Objects.equals(getBreed(), pet.getBreed()) && Objects.equals(getShelter(), pet.getShelter()) && Objects.equals(getPetOwner(), pet.getPetOwner()) && Objects.equals(getPhoto(), pet.getPhoto());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, age, type, breed);
+        return Objects.hash(getId(), getType(), getName(), getAge(), getBreed(), getShelter(), getPetOwner(), getPhoto());
     }
 
     @Override
     public String toString() {
-        return id + name + age + type + breed;
+        return "Pet{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", breed='" + breed + '\'' +
+                ", shelter=" + shelter +
+                ", petOwner=" + petOwner +
+                ", photo=" + photo +
+                '}';
     }
 }
 
