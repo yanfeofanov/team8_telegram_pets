@@ -1,32 +1,32 @@
 package pro.sky.telegrambot.model;
 
-import org.springframework.util.StringUtils;
-
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "bot_user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatId;
-    private String name;
-    private String phone;
-    private String mail;
-
-    @ManyToOne
-    @JoinColumn(name = "shelter_id")
-    private Shelter shelter;
+    private Long id; //we use id from "telegram" as the primary key for the table
+    private Long chatId; //chatId from "telegram"
+    private LocalDateTime dateAdded;
 
     public User() {
     }
 
-    public User(Long chatId, String name, String phone, String mail) {
+    public User(Long id, Long chatId, LocalDateTime dateAdded) {
+        this.id = id;
         this.chatId = chatId;
-        this.name = StringUtils.capitalize(name.toUpperCase());
-        this.phone = phone;
-        this.mail = mail;
+        this.dateAdded = dateAdded;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getChatId() {
@@ -37,43 +37,34 @@ public class User {
         this.chatId = chatId;
     }
 
-    public String getName() {
-        return name;
+    public LocalDateTime getDateAdded() {
+        return dateAdded;
     }
 
-    public void setName(String name) {
-        this.name = StringUtils.capitalize(name.toUpperCase());
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setDateAdded(LocalDateTime dateAdded) {
+        this.dateAdded = dateAdded;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (!(o instanceof User)) return false;
         User user = (User) o;
-
-        return Objects.equals(chatId, user.chatId);
+        return Objects.equals(getId(), user.getId()) && Objects.equals(getChatId(), user.getChatId()) && Objects.equals(getDateAdded(), user.getDateAdded());
     }
 
     @Override
     public int hashCode() {
-        return chatId != null ? chatId.hashCode() : 0;
+        return Objects.hash(getId(), getChatId(), getDateAdded());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", chatId=" + chatId +
+                ", dateAdded=" + dateAdded +
+                '}';
     }
 }
 
