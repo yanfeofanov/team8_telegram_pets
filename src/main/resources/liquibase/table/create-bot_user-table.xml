@@ -17,10 +17,10 @@
             <column name="id" type="INT8">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="chatId" type="BIGINT">
+            <column name="chat_id" type="INT8">
                 <constraints nullable="false"/>
             </column>
-            <column name="dateAdded" type="TIMESTAMP">
+            <column name="date_added" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>

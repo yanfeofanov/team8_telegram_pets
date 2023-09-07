@@ -9,16 +9,18 @@ import java.util.Objects;
 public class User {
     @Id
     private Long id; //we use id from "telegram" as the primary key for the table
+    @JoinColumn(name = "chat_id")
     private Long chatId; //chatId from "telegram"
+    @JoinColumn(name = "date_added")
     private LocalDateTime dateAdded;
 
     public User() {
     }
 
-    public User(Long id, Long chatId, LocalDateTime dateAdded) {
+    public User(Long id, Long chatId, LocalDateTime date_Added) {
         this.id = id;
         this.chatId = chatId;
-        this.dateAdded = dateAdded;
+        this.dateAdded = date_Added;
     }
 
     public Long getId() {
@@ -37,11 +39,11 @@ public class User {
         this.chatId = chatId;
     }
 
-    public LocalDateTime getDateAdded() {
+    public LocalDateTime getDate_Added() {
         return dateAdded;
     }
 
-    public void setDateAdded(LocalDateTime dateAdded) {
+    public void setDate_Added(LocalDateTime dateAdded) {
         this.dateAdded = dateAdded;
     }
 
@@ -50,12 +52,12 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getChatId(), user.getChatId()) && Objects.equals(getDateAdded(), user.getDateAdded());
+        return Objects.equals(getId(), user.getId()) && Objects.equals(getChatId(), user.getChatId()) && Objects.equals(getDate_Added(), user.getDate_Added());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getChatId(), getDateAdded());
+        return Objects.hash(getId(), getChatId(), getDate_Added());
     }
 
     @Override

@@ -14,6 +14,7 @@ public class CommunicationRequest {
     @ManyToOne
     @JoinColumn(name = "bot_user_id")
     private User user;
+    @JoinColumn(name = "contact_info")
     private String contactInfo;
     private Boolean done;
     @ManyToOne

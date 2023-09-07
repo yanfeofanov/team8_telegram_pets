@@ -23,7 +23,7 @@
             <column name="bot_user_id" type="INT8">
                 <constraints nullable="false"/>
             </column>
-            <column name="contactInfo" type="VARCHAR(200)">
+            <column name="contact_info" type="VARCHAR(200)">
                 <constraints nullable="false"/>
             </column>
             <column name="done" type="BOOLEAN"/>

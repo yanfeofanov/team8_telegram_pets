@@ -18,8 +18,11 @@ public class Photo {
     @ManyToOne
     @JoinColumn(name = "report_id")
     private DailyReport dailyReport;
+    @JoinColumn(name = "file_path")
     private String filePath;
+    @JoinColumn(name = "media_type")
     private String mediaType;
+    @JoinColumn(name = "file_size")
     private long fileSize;
     @Lob
     private byte[] data;

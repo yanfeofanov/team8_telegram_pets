@@ -20,6 +20,7 @@ public class DailyReport {
     @OneToOne
     @JoinColumn(name = "photo_id")
     private Photo photo;
+    @JoinColumn(name = "report_body")
     private String reportBody;
     private Boolean checked;
     @ManyToOne

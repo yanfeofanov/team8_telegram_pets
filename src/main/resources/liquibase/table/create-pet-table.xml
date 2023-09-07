@@ -34,10 +34,6 @@
             </column>
             <column name="pet_owner_id" type="INT4"/>
             <column name="photo_id" type="INT8"/>
-            <column name="probation" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-            <column name="endProbation" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
