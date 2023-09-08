@@ -37,7 +37,7 @@ public class TelegramBotService {
         Long chatId = message.chat().id();
         if ("/start".equals(message.text())) {
             if (isTheUserNew(userId)) {
-                User newUser = addNewUser(userId, message.from().username(), chatId);
+                User newUser = addNewUser(userId, message.from().username(), message.from().firstName(), chatId);
                 sendReply(chatId, generateGreetingText(newUser.getUserName()), null);
             }
             sendShelterSelectionMenu(chatId);
@@ -68,9 +68,11 @@ public class TelegramBotService {
         return userRepository.findUserById(id) == null;
     }
 
-    public User addNewUser(Long id, String nickName, Long chatId) {
+    public User addNewUser(Long id, String nickName, String name, Long chatId) {
         if (nickName == null || nickName.isEmpty()) {
-            nickName = "дорогой гость";
+            if (name == null || name.isEmpty()) {
+                nickName = "дорогой гость";
+            } else nickName = name;
         }
         return userRepository.save(new User(id, nickName, chatId, LocalDateTime.now(TimeZone.getTimeZone("GMT+3").toZoneId())));
     }
