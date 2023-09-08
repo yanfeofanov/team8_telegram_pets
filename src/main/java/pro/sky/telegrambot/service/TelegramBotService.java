@@ -69,6 +69,9 @@ public class TelegramBotService {
     }
 
     public User addNewUser(Long id, String nickName, Long chatId) {
+        if (nickName == null || nickName.isEmpty()) {
+            nickName = "дорогой гость";
+        }
         return userRepository.save(new User(id, nickName, chatId, LocalDateTime.now(TimeZone.getTimeZone("GMT+3").toZoneId())));
     }
 
