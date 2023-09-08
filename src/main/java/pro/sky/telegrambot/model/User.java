@@ -9,6 +9,8 @@ import java.util.Objects;
 public class User {
     @Id
     private Long id; //we use id from "telegram" as the primary key for the table
+    @JoinColumn(name = "user_name")
+    private String userName;
     @JoinColumn(name = "chat_id")
     private Long chatId; //chatId from "telegram"
     @JoinColumn(name = "date_added")
@@ -17,8 +19,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, Long chatId, LocalDateTime date_Added) {
+    public User(Long id, String userName, Long chatId, LocalDateTime date_Added) {
         this.id = id;
+        this.userName = userName;
         this.chatId = chatId;
         this.dateAdded = date_Added;
     }
@@ -29,6 +32,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Long getChatId() {
@@ -52,18 +63,20 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getChatId(), user.getChatId()) && Objects.equals(getDate_Added(), user.getDate_Added());
+        return Objects.equals(getId(), user.getId()) && Objects.equals(getUserName(), user.getUserName())
+                && Objects.equals(getChatId(), user.getChatId()) && Objects.equals(dateAdded, user.dateAdded);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getChatId(), getDate_Added());
+        return Objects.hash(getId(), getUserName(), getChatId(), dateAdded);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", nickName='" + userName + '\'' +
                 ", chatId=" + chatId +
                 ", dateAdded=" + dateAdded +
                 '}';

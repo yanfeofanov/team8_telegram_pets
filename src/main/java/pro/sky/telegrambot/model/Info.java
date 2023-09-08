@@ -1,5 +1,7 @@
 package pro.sky.telegrambot.model;
 
+import pro.sky.telegrambot.constant.TypesOfInformation;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,7 +12,7 @@ public class Info {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String type;
+    private TypesOfInformation type;
     private String text;
     @ManyToOne
     @JoinColumn(name = "shelter_id")
@@ -19,7 +21,7 @@ public class Info {
     public Info() {
     }
 
-    public Info(String type, String text, Shelter shelter) {
+    public Info(TypesOfInformation type, String text, Shelter shelter) {
         this.type = type;
         this.text = text;
         this.shelter = shelter;
@@ -29,11 +31,11 @@ public class Info {
         return id;
     }
 
-    public String getType() {
+    public TypesOfInformation getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TypesOfInformation type) {
         this.type = type;
     }
 
