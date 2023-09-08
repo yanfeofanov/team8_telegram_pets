@@ -17,15 +17,13 @@
             <column name="id" type="SERIAL" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="type" type="VARCHAR(150)">
+            <column name="type" type="INT4">
                 <constraints nullable="false"/>
             </column>
             <column name="text" type="VARCHAR(4096)">
                 <constraints nullable="false"/>
             </column>
-            <column name="shelter_id" type="INT4">
-                <constraints nullable="false"/>
-            </column>
+            <column name="shelter_id" type="INT4"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
