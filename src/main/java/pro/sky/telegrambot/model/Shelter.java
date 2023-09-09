@@ -1,5 +1,7 @@
 package pro.sky.telegrambot.model;
 
+import pro.sky.telegrambot.constant.TypeOfPet;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,7 +12,8 @@ public class Shelter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private TypeOfPet type;
 
     @OneToOne
     @JoinColumn(name = "photo_id")
@@ -19,7 +22,7 @@ public class Shelter {
     public Shelter() {
     }
 
-    public Shelter(String name, String type, Photo photo) {
+    public Shelter(String name, TypeOfPet type, Photo photo) {
         this.name = name;
         this.type = type;
         this.photo = photo;
@@ -37,11 +40,11 @@ public class Shelter {
         this.name = name;
     }
 
-    public String getType() {
+    public TypeOfPet getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TypeOfPet type) {
         this.type = type;
     }
 

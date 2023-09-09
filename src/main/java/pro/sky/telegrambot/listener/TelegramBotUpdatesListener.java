@@ -2,6 +2,7 @@ package pro.sky.telegrambot.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import org.slf4j.Logger;
@@ -34,13 +35,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
             Message message = update.message();
+            CallbackQuery callbackQuery = update.callbackQuery();
+            byte processMassageCode = 0;
+            String logMessage = "";
             if (message != null && !message.from().isBot()) {
-                if (telegramBotService.processMessage(message) != 0) { //0 - code indicating the absence of errors
-                    logger.error("the message id: " + message.messageId()
-                            + " from chat #" + message.chat().id()
-                            + " was not processed correctly");
-                }
+                processMassageCode = telegramBotService.processMessage(message);
+                logMessage = "the message id: " + message.messageId()
+                        + " from chat #" + message.chat().id()
+                        + " was not processed correctly";
 
+            } else if (callbackQuery != null && !callbackQuery.from().isBot()) {
+                processMassageCode = telegramBotService.processCallBackQuery(callbackQuery);
+                logMessage = "the callbackQuery id: " + callbackQuery.id()
+                        + " from user #" + callbackQuery.from().id()
+                        + " was not processed correctly";
+            }
+            if (processMassageCode != 0) { //0 - code indicating the absence of errors
+                logger.error(logMessage);
             }
 
         });
