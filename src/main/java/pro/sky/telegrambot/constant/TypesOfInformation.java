@@ -2,6 +2,9 @@ package pro.sky.telegrambot.constant;
 
 public enum TypesOfInformation {
     INFO_ABOUT_BOT,
-    INFO_ABOUT_CAT_SHELTER,
-    INFO_ABOUT_DOG_SHELTER
+    SHORT_INFO_ABOUT_SHELTER,
+    LONG_INFO_ABOUT_SHELTER,
+    SHELTER_CONTACT_INFO,
+    SHELTER_PASS_REG_INFO,
+    SAFETY_RECOMMENDATIONS
 }

@@ -17,7 +17,7 @@
             <column name="id" type="SERIAL" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="type" type="INT4">
+            <column name="type" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="text" type="VARCHAR(4096)">
