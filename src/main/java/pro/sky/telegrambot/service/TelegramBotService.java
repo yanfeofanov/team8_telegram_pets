@@ -48,6 +48,8 @@ public class TelegramBotService {
                 sendReply(chatId, generateGreetingText(newUser.getUserName()), null);
             }
             sendShelterSelectionMenu(chatId);
+        } else if (Commands.HELP.getCommand().equals(commandStr)) {
+            sendHelpInformation(chatId);
         } else if (Commands.CAT_SHELTER.getCommand().equals(commandStr)) {
             sendCatShelterMenu(chatId);
         } else if (Commands.DOG_SHELTER.getCommand().equals(commandStr)) {
@@ -56,12 +58,18 @@ public class TelegramBotService {
         return 0;
     }
 
+    private void sendHelpInformation(Long chatId) {
+        StringBuilder textMessage = new StringBuilder();
+        for (Commands command : Commands.values()) {
+            textMessage.append(command.getCommand()).append(" - ").append(command.getDescription()).append("\n");
+        }
+        sendReply(chatId, textMessage.toString(), null);
+    }
+
     public byte processCallBackQuery(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.message().chat().id();
         String callbackCommand = callbackQuery.data();
-        if (Commands.START.getCommand().equals(callbackCommand)) {
-            sendShelterSelectionMenu(chatId);
-        } else if (Commands.CAT_SHELTER.getCommand().equals(callbackCommand)) {
+        if (Commands.CAT_SHELTER.getCommand().equals(callbackCommand)) {
             sendCatShelterMenu(chatId);
         } else if (Commands.DOG_SHELTER.getCommand().equals(callbackCommand)) {
             sendDogShelterMenu(chatId);
