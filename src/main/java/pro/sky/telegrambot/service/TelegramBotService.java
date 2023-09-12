@@ -173,7 +173,7 @@ public class TelegramBotService {
         if (shelter == null) {
             return;
         }
-        String aboutDogShelterStr = "";
+        String aboutDogShelterStr = "* ";
         Info aboutDogShelterInfo = infoRepository.findByTypeAndShelter(TypesOfInformation.SHORT_INFO_ABOUT_SHELTER, shelter);
         if (aboutDogShelterInfo != null) {
             aboutDogShelterStr += "_" + aboutDogShelterInfo.getText() + "_";
@@ -186,7 +186,7 @@ public class TelegramBotService {
         if (shelter == null) {
             return;
         }
-        String aboutCatShelterStr = "";
+        String aboutCatShelterStr = "* ";
         Info aboutCatShelterInfo = infoRepository.findByTypeAndShelter(TypesOfInformation.SHORT_INFO_ABOUT_SHELTER, shelter);
         if (aboutCatShelterInfo != null) {
             aboutCatShelterStr += "_" + aboutCatShelterInfo.getText() + "_";
@@ -199,11 +199,11 @@ public class TelegramBotService {
     }
 
     private String generateGreetingText(String nickName) {
-        String greeting = "";
+        String greeting = "здравствуйте ";
         greeting += nickName;
         Info aboutBot = infoRepository.findByType(TypesOfInformation.INFO_ABOUT_BOT);
         if (aboutBot != null) {
-            greeting = greeting + " вас приветсвует " + aboutBot.getText();
+            greeting = greeting + ", вас приветсвует " + aboutBot.getText();
         }
         return greeting;
     }
