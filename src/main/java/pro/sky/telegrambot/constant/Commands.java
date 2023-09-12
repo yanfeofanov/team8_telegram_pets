@@ -11,7 +11,7 @@ public enum Commands {
     CAT_SHELTER_CONTACT_INFO("расписание работы приюта для кошек, адрес и схема проезда", "/cat_shelter_contact_info"),
     DOG_SHELTER_CONTACT_INFO("расписание работы приюта для собак, адрес и схема проезда", "/dog_shelter_contact_info"),
     CAT_SHELTER_PASS_REG("контакты для оформления пропуска на машину в приют кошек","/cat_shelter_pass_reg"),
-    DOG_SHELTER_PASS_REG("контанты для оформления пропуска на машину в приют собак","/dog_shelter_pass_reg"),
+    DOG_SHELTER_PASS_REG("контакты для оформления пропуска на машину в приют собак","/dog_shelter_pass_reg"),
     SHELTER_SAFETY_RECOMMENDATIONS("техника безопасности на территории приюта", "/shelter_safety_recommendations"),
     COMMUNICATION_REQUEST("запрос на обратную связь", "/communication_request"),
     CALL_VOLUNTEER("позвать волонтера", "/call_volunteer"),

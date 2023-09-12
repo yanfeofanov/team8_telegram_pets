@@ -11,7 +11,7 @@ public class Volunteer {
     private int id;
     private String name;
     private String surname;
-    @JoinColumn(name = "phone_number")
+    @Column(name = "phone_number")
     private String phoneNumber;
     @OneToOne
     @JoinColumn(name = "bot_user_id")

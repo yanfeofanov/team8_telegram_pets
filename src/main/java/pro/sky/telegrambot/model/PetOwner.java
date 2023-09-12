@@ -12,7 +12,7 @@ public class PetOwner {
     private int id;
     private String name;
     private String surname;
-    @JoinColumn(name = "phone_number")
+    @Column(name = "phone_number")
     private String phoneNumber;
     private String email;
     @OneToOne
@@ -22,7 +22,7 @@ public class PetOwner {
     @JoinColumn(name = "volunteer_id")
     private Volunteer volunteer;
     private boolean probation;
-    @JoinColumn(name = "end_probation")
+    @Column(name = "end_probation")
     private LocalDateTime endProbation;
 
     public PetOwner() {

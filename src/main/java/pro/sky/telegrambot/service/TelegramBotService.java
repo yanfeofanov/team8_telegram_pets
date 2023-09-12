@@ -3,7 +3,10 @@ package pro.sky.telegrambot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
@@ -15,15 +18,20 @@ import pro.sky.telegrambot.constant.TypesOfInformation;
 import pro.sky.telegrambot.model.Info;
 import pro.sky.telegrambot.model.Shelter;
 import pro.sky.telegrambot.model.User;
+import pro.sky.telegrambot.model.Volunteer;
 import pro.sky.telegrambot.repository.InfoRepository;
 import pro.sky.telegrambot.repository.ShelterRepository;
 import pro.sky.telegrambot.repository.UserRepository;
+import pro.sky.telegrambot.repository.VolunteerRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
+/**
+ * класс-сервис содержащий методы по обработке всех команд телеграмм бота
+ */
 @Service
 public class TelegramBotService {
 
@@ -31,17 +39,24 @@ public class TelegramBotService {
     private final UserRepository userRepository;
     private final InfoRepository infoRepository;
     private final ShelterRepository shelterRepository;
+    private final VolunteerRepository volunteerRepository;
     private final KeyboardService keyboardService;
     private final TelegramBot telegramBot;
 
-    public TelegramBotService(UserRepository userRepository, InfoRepository infoRepository, ShelterRepository shelterRepository, KeyboardService keyboardService, TelegramBot telegramBot) {
+    public TelegramBotService(UserRepository userRepository, InfoRepository infoRepository, ShelterRepository shelterRepository, VolunteerRepository volunteerRepository, KeyboardService keyboardService, TelegramBot telegramBot) {
         this.userRepository = userRepository;
         this.infoRepository = infoRepository;
         this.shelterRepository = shelterRepository;
+        this.volunteerRepository = volunteerRepository;
         this.keyboardService = keyboardService;
         this.telegramBot = telegramBot;
     }
 
+    /**
+     * метод осуществляет обработку сообщений от пользователя в чате телеграм бота
+     * @param message объект содержащий текст сообщения от пользователя в чат боте
+     * @return код ошибки обработки сообщения. 0 - означает отсутствие ошибок.
+     */
     public byte processMessage(Message message) {
         Long userId = message.from().id();
         Long chatId = message.chat().id();
@@ -60,20 +75,29 @@ public class TelegramBotService {
             sendDogShelterMenu(chatId);
         } else if (Commands.ABOUT_CAT_SHELTER.getCommand().equals(commandStr)) {
             sendInfoAboutCatShelter(chatId);
-        }else if (Commands.ABOUT_DOG_SHELTER.getCommand().equals(commandStr)) {
+        } else if (Commands.ABOUT_DOG_SHELTER.getCommand().equals(commandStr)) {
             sendInfoAboutDogShelter(chatId);
         } else if (Commands.ADOPT_CAT.getCommand().equals(commandStr)) {
             sendMenuPreparingForAdoptionCat(chatId);
         } else if (Commands.ADOPT_DOG.getCommand().equals(commandStr)) {
             sendMenuPreparingForAdoptionDog(chatId);
+        } else if (Commands.CALL_VOLUNTEER.getCommand().equals(commandStr)) {
+            callVolunteer(userId, chatId);
         }
         return 0;
     }
 
+    /**
+     * метод осуществляет обработку ответов пользователя на сообщения от бота, в том числе нажатие кнопок меню
+     * @param callbackQuery объект содержащий текст ответа пользователя а также исходное сообщение
+     * @return код ошибки обработки сообщения. 0 - означает отсутствие ошибок.
+     */
     public byte processCallBackQuery(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.message().chat().id();
         String callbackCommand = callbackQuery.data();
-        if (Commands.CAT_SHELTER.getCommand().equals(callbackCommand)) {
+        if (Commands.START.getCommand().equals(callbackCommand)) {
+            sendShelterSelectionMenu(chatId);
+        } else if (Commands.CAT_SHELTER.getCommand().equals(callbackCommand)) {
             sendCatShelterMenu(chatId);
         } else if (Commands.DOG_SHELTER.getCommand().equals(callbackCommand)) {
             sendDogShelterMenu(chatId);
@@ -85,37 +109,23 @@ public class TelegramBotService {
             sendInfoAboutCatShelter(chatId);
         } else if (Commands.ABOUT_DOG_SHELTER.getCommand().equals(callbackCommand)) {
             sendInfoAboutDogShelter(chatId);
+        } else if (Commands.CALL_VOLUNTEER.getCommand().equals(callbackCommand)) {
+            callVolunteer(callbackQuery.from().id(), chatId);
         }
         return 0;
     }
 
     private void sendMenuPreparingForAdoptionCat(Long chatId) {
         String textAboveMenu = "ознакомьтесь пожалуйста с информацией, которая поможет вам подготовиться ко встрече с новым членом семьи";
-        sendReply(chatId, textAboveMenu, generateMenuPreparingForAdoption(TypeOfPet.CAT));
+        sendReply(chatId, textAboveMenu, keyboardService.generateMenuPreparingForAdoption(TypeOfPet.CAT));
     }
 
     private void sendMenuPreparingForAdoptionDog(Long chatId) {
         String textAboveMenu = "ознакомьтесь пожалуйста с информацией, которая поможет вам подготовиться ко встрече с новым членом семьи";
-        sendReply(chatId, textAboveMenu, generateMenuPreparingForAdoption(TypeOfPet.DOG));
+        sendReply(chatId, textAboveMenu, keyboardService.generateMenuPreparingForAdoption(TypeOfPet.DOG));
     }
 
-    private Keyboard generateMenuPreparingForAdoption(TypeOfPet typeOfPet) {
-        List<Commands> commandList = new ArrayList<>();
-        commandList.add(Commands.RULES_FOR_GETTING_TO_KNOW_PET);
-        commandList.add(Commands.DOCUMENTS_FOR_ADOPTION);
-        commandList.add(Commands.TRANSPORTATION_RECOMMENDATION);
-        commandList.add(Commands.RECOMMENDATION_FOR_CUB_HOUSE);
-        commandList.add(Commands.RECOMMENDATION_FOR_ADULT_PET_HOUSE);
-        commandList.add(Commands.RECOMMENDATION_FOR_DISABLED_PET_HOUSE);
-        commandList.add(Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION);
-        if (TypeOfPet.DOG.equals(typeOfPet)) {
-            commandList.add(Commands.TIPS_FROM_DOG_HANDLER);
-            commandList.add(Commands.RECOMMENDED_DOG_HANDLERS_LIST);
-            commandList.add(Commands.COMMUNICATION_REQUEST);
-            commandList.add(Commands.CALL_VOLUNTEER);
-        }
-        return keyboardService.prepareInlineKeyboard(commandList);
-    }
+
 
     private void sendInfoAboutDogShelter(Long chatId) {
         Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
@@ -145,6 +155,11 @@ public class TelegramBotService {
         }
     }
 
+    /**
+     * метод получает весь список имеющихся команд бота с описаниями, из перечисления Commands
+     * и выводит их в чат пользователю
+     * @param chatId уникальный идентификатор чата с пользователем в telegram
+     */
     private void sendHelpInformation(Long chatId) {
         StringBuilder textMessage = new StringBuilder();
         for (Commands command : Commands.values()) {
@@ -161,21 +176,9 @@ public class TelegramBotService {
         String aboutDogShelterStr = "";
         Info aboutDogShelterInfo = infoRepository.findByTypeAndShelter(TypesOfInformation.SHORT_INFO_ABOUT_SHELTER, shelter);
         if (aboutDogShelterInfo != null) {
-            aboutDogShelterStr += aboutDogShelterInfo.getText();
+            aboutDogShelterStr += "_" + aboutDogShelterInfo.getText() + "_";
         }
-        sendReply(chatId, aboutDogShelterStr, generateDogShelterMenu());
-    }
-
-    private Keyboard generateDogShelterMenu() {
-        List<Commands> commandList = List.of(
-                Commands.ABOUT_DOG_SHELTER,
-                Commands.DOG_SHELTER_CONTACT_INFO,
-                Commands.DOG_SHELTER_PASS_REG,
-                Commands.SHELTER_SAFETY_RECOMMENDATIONS,
-                Commands.ADOPT_DOG,
-                Commands.COMMUNICATION_REQUEST,
-                Commands.CALL_VOLUNTEER);
-        return keyboardService.prepareInlineKeyboard(commandList);
+        sendReply(chatId, aboutDogShelterStr, keyboardService.generateDogShelterMenu());
     }
 
     private void sendCatShelterMenu(Long chatId) {
@@ -186,30 +189,13 @@ public class TelegramBotService {
         String aboutCatShelterStr = "";
         Info aboutCatShelterInfo = infoRepository.findByTypeAndShelter(TypesOfInformation.SHORT_INFO_ABOUT_SHELTER, shelter);
         if (aboutCatShelterInfo != null) {
-            aboutCatShelterStr += aboutCatShelterInfo.getText();
+            aboutCatShelterStr += "_" + aboutCatShelterInfo.getText() + "_";
         }
-        sendReply(chatId, aboutCatShelterStr, generateCatShelterMenu());
-    }
-
-    private Keyboard generateCatShelterMenu() {
-        List<Commands> commandList = List.of(
-                Commands.ABOUT_CAT_SHELTER,
-                Commands.CAT_SHELTER_CONTACT_INFO,
-                Commands.CAT_SHELTER_PASS_REG,
-                Commands.SHELTER_SAFETY_RECOMMENDATIONS,
-                Commands.ADOPT_CAT,
-                Commands.COMMUNICATION_REQUEST,
-                Commands.CALL_VOLUNTEER);
-        return keyboardService.prepareInlineKeyboard(commandList);
+        sendReply(chatId, aboutCatShelterStr, keyboardService.generateCatShelterMenu());
     }
 
     private void sendShelterSelectionMenu(Long chatId) {
-        sendReply(chatId, "выберите какой приют вас интересует", generateShelterSelectionMenu());
-    }
-
-    private Keyboard generateShelterSelectionMenu() {
-        List<Commands> commandList = List.of(Commands.CAT_SHELTER, Commands.DOG_SHELTER);
-        return keyboardService.prepareInlineKeyboard(commandList);
+        sendReply(chatId, "_выберите какой приют вас интересует_", keyboardService.generateShelterSelectionMenu());
     }
 
     private String generateGreetingText(String nickName) {
@@ -217,7 +203,7 @@ public class TelegramBotService {
         greeting += nickName;
         Info aboutBot = infoRepository.findByType(TypesOfInformation.INFO_ABOUT_BOT);
         if (aboutBot != null) {
-            greeting = greeting + " " + aboutBot.getText();
+            greeting = greeting + " вас приветсвует " + aboutBot.getText();
         }
         return greeting;
     }
@@ -226,7 +212,15 @@ public class TelegramBotService {
         return userRepository.findUserById(id) == null;
     }
 
-    public User addNewUser(Long id, String nickName, String name, Long chatId) {
+    /**
+     * метод асуществляет добовление нового пользователя в БД
+     * @param id уникальный идентификатор пользователя в telegram
+     * @param nickName логин пользователя
+     * @param name имя пользователя
+     * @param chatId уникальный идентификатор чата с пользователем в telegram
+     * @return объект User содержащий информацию о пользователе бота в telegram
+     */
+    private User addNewUser(Long id, String nickName, String name, Long chatId) {
         if (nickName == null || nickName.isEmpty()) {
             if (name == null || name.isEmpty()) {
                 nickName = "дорогой гость";
@@ -237,9 +231,44 @@ public class TelegramBotService {
 
     private SendResponse sendReply(Long chatId, String text, Keyboard keyboard) {
         SendMessage message = new SendMessage(chatId, text);
+        message.parseMode(ParseMode.Markdown);
         if (keyboard != null) {
             message.replyMarkup(keyboard);
         }
         return telegramBot.execute(message);
+    }
+
+    /**
+     * метод осуществляет поиск в бд данных о волонтерах, выбирает случайного из них в случае наличия.
+     * Отправляет волонтеру ссылку на профиль пользователя запросившего связь с волонтером, и информирует
+     * пользователя о том что волонтер получил запрос
+     * @param userId уникальный идентификатор пользователя в telegram
+     * @param chatId уникальный идентификатор чата с пользователем в telegram
+     */
+    private void callVolunteer(Long userId, Long chatId) {
+        Volunteer volunteer = chooseVolunteer();
+        if (volunteer == null) {
+            sendReply(chatId, "к сожалению в данный момент нет возможности пригласить волонтера", null);
+            return;
+        }
+        Long volunteerChatId = volunteer.getUser().getChatId();
+        String button_url = "tg://user?id=" + userId;
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        InlineKeyboardButton inlineButton = new InlineKeyboardButton("пользователь");
+        inlineButton.url(button_url);
+        keyboard.addRow(inlineButton);
+        SendResponse sendResponse = sendReply(volunteerChatId, "_поступил запрос на вызов волонтера от пользователя_", keyboard);
+        if (sendResponse.isOk()) {
+            sendReply(chatId, "запрос отправлен волонтеру, он напишет вам как только освободится", null);
+        }
+    }
+
+    private Volunteer chooseVolunteer() {
+        List<Volunteer> volunteers = volunteerRepository.findAll();
+        if (volunteers.isEmpty()) {
+            return null;
+        }
+        Collections.shuffle(volunteers);
+        return volunteers.get(0);
     }
 }
