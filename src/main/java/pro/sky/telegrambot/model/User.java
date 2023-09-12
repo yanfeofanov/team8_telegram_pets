@@ -9,11 +9,11 @@ import java.util.Objects;
 public class User {
     @Id
     private Long id; //we use id from "telegram" as the primary key for the table
-    @JoinColumn(name = "user_name")
+    @Column(name = "user_name")
     private String userName;
-    @JoinColumn(name = "chat_id")
+    @Column(name = "chat_id")
     private Long chatId; //chatId from "telegram"
-    @JoinColumn(name = "date_added")
+    @Column(name = "date_added")
     private LocalDateTime dateAdded;
 
     public User() {
