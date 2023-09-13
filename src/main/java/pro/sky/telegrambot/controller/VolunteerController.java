@@ -5,8 +5,12 @@ import pro.sky.telegrambot.model.Pet;
 import pro.sky.telegrambot.model.Volunteer;
 import pro.sky.telegrambot.service.VolunteerService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * класс управляет базой волонтеров, можно удалить, добавить, получить список всех волонтеров
+ */
 @RestController
 @RequestMapping("/volunteer")
 public class VolunteerController {
@@ -17,19 +21,19 @@ public class VolunteerController {
     }
     @PostMapping
     public Volunteer addVolunteer(@RequestBody Volunteer newVolunteer) {
-        return;
+        return newVolunteer;
     }
     @DeleteMapping("/{id}")
     public Volunteer deleteVolunteer(@PathVariable int id) {
-        return;
+        return new Volunteer();
     }
     @GetMapping("/{id}")
     public Volunteer getVolunteer(@PathVariable int id) {
-        return;
+        return new Volunteer();
     }
     @GetMapping("/all")
     public Collection<Volunteer> getAllVolunteers() {
-        return;
+        return new ArrayList<>();
     }
 
 
