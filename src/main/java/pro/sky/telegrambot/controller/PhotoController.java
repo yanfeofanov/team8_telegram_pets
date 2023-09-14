@@ -7,6 +7,9 @@ import pro.sky.telegrambot.service.PhotoService;
 
 import java.io.IOException;
 
+/**
+ * класс дает возможность загрузить фото животного
+ */
 @RestController
 @RequestMapping("photo")
 public class PhotoController {
@@ -15,8 +18,9 @@ public class PhotoController {
     public PhotoController(PhotoService photoService) {
         this.photoService = photoService;
     }
+
     @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile photoPet) throws IOException {
-        return;
+    public String uploadAvatar(@PathVariable int id, @RequestParam MultipartFile photoPet) throws IOException {
+        return new String();
     }
 }

@@ -7,8 +7,12 @@ import pro.sky.telegrambot.model.Pet;
 import pro.sky.telegrambot.model.User;
 import pro.sky.telegrambot.service.UserService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * класс дает возможность получить списком всех пользователей, заинтересовавшихся нашим приютом
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -20,7 +24,7 @@ public class UserController {
 
     @GetMapping("/all")
     public Collection<User> getAllUsers() {
-        return;
+        return new ArrayList<>();
     }
 
 }
