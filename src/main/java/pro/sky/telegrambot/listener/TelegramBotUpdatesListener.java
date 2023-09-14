@@ -18,7 +18,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
-    private final TelegramBotService telegramBotService;
+    private final  TelegramBotService telegramBotService;
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot, TelegramBotService telegramBotService) {
         this.telegramBot = telegramBot;

@@ -18,6 +18,7 @@ public class KeyboardService {
 
     /**
      * метод формирует меню для чата телеграмм бота на основе входящего списка команд(пунктов меню)
+     *
      * @param commandList список значений перечисления Command на основе которых формируется меню
      * @return объект-меню для telegram бота
      */
@@ -53,8 +54,6 @@ public class KeyboardService {
         }
         return prepareInlineKeyboard(commandList);
     }
-
-
 
     public Keyboard generateDogShelterMenu() {
         List<Commands> commandList = List.of(
