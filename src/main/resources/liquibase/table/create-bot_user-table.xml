@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="create-bot_user-table.1" author="DMorozov">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="bot_user"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="bot_user">
+            <column name="id" type="INT8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_name" type="VARCHAR(100)"/>
+            <column name="chat_id" type="INT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_added" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>

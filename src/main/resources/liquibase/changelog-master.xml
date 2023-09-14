@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <include file="table/create-bot_user-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/create-volunteer-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/create-communication_request-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/create-pet_owner-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/create-shelter-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/create-pet-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/create-photo-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/create-info-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/create-daily_report-table.xml" relativeToChangelogFile="true"/>
+    <include file="foreignKeys/addForeignKeyConstraint.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
