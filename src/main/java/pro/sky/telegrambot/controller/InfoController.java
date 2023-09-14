@@ -9,22 +9,22 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/info")
 public class InfoController {
-    private final InfoService infoService;
-
-    public InfoController(InfoService infoService) {
-        this.infoService = infoService;
-    }
-
-    @PostMapping
-    public Info addInfo(@RequestBody Info newInfo) {
-        return;
-    }
-    @PutMapping
-    public Info updateInfo(@RequestBody Info info) {
-        return;
-    }
-    @GetMapping("/{nameShelter}")
-    public Collection<Info> getAllInfoByShelter(@PathVariable String nameShelter) {
-        return;
-    }
+//    private final InfoService infoService;
+//
+//    public InfoController(InfoService infoService) {
+//        this.infoService = infoService;
+//    }
+//
+//    @PostMapping
+//    public Info addInfo(@RequestBody Info newInfo) {
+//        return;
+//    }
+//    @PutMapping
+//    public Info updateInfo(@RequestBody Info info) {
+//        return;
+//    }
+//    @GetMapping("/{nameShelter}")
+//    public Collection<Info> getAllInfoByShelter(@PathVariable String nameShelter) {
+//        return;
+//    }
 }

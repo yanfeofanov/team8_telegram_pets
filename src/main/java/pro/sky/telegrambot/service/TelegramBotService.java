@@ -75,6 +75,18 @@ public class TelegramBotService {
             sendDogShelterMenu(chatId);
         } else if (Commands.ABOUT_CAT_SHELTER.getCommand().equals(commandStr)) {
             sendInfoAboutCatShelter(chatId);
+        } else if (Commands.CAT_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
+            sendCatShelterContactInfo(chatId);
+        } else if (Commands.CAT_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
+            sendCAT_SHELTER_PASS_REG(chatId);
+        } else if (Commands.SHELTER_SAFETY_RECOMMENDATIONS.getCommand().equals(commandStr)) {
+            sendSHELTER_SAFETY_RECOMMENDATIONS(chatId);
+        } else if (Commands.COMMUNICATION_REQUEST.getCommand().equals(commandStr)) {
+            sendCOMMUNICATION_REQUEST(chatId);
+        } else if (Commands.DOG_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
+            sendDOGShelterContactInfo(chatId);
+        } else if (Commands.DOG_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
+            sendDOG_SHELTER_PASS_REG(chatId);
         } else if (Commands.ABOUT_DOG_SHELTER.getCommand().equals(commandStr)) {
             sendInfoAboutDogShelter(chatId);
         } else if (Commands.ADOPT_CAT.getCommand().equals(commandStr)) {
@@ -84,6 +96,7 @@ public class TelegramBotService {
         } else if (Commands.CALL_VOLUNTEER.getCommand().equals(commandStr)) {
             callVolunteer(userId, chatId);
         }
+
         return 0;
     }
 
@@ -107,26 +120,62 @@ public class TelegramBotService {
             sendMenuPreparingForAdoptionDog(chatId);
         } else if (Commands.ABOUT_CAT_SHELTER.getCommand().equals(callbackCommand)) {
             sendInfoAboutCatShelter(chatId);
+        } else if (Commands.CAT_SHELTER_CONTACT_INFO.getCommand().equals(callbackCommand)) {
+            sendCatShelterContactInfo(chatId);
+        } else if (Commands.CAT_SHELTER_PASS_REG.getCommand().equals(callbackCommand)) {
+            sendCAT_SHELTER_PASS_REG(chatId);
+        } else if (Commands.SHELTER_SAFETY_RECOMMENDATIONS.getCommand().equals(callbackCommand)) {
+            sendSHELTER_SAFETY_RECOMMENDATIONS(chatId);
         } else if (Commands.ABOUT_DOG_SHELTER.getCommand().equals(callbackCommand)) {
             sendInfoAboutDogShelter(chatId);
+
+        } else if (Commands.DOG_SHELTER_CONTACT_INFO.getCommand().equals(callbackCommand)) {
+            sendDOGShelterContactInfo(chatId);
+        } else if (Commands.DOG_SHELTER_PASS_REG.getCommand().equals(callbackCommand)) {
+            sendDOG_SHELTER_PASS_REG(chatId);
+//        } else if (Commands.SHELTER_SAFETY_RECOMMENDATIONS.getCommand().equals(callbackCommand)) {
+//            sendSHELTER_SAFETY_RECOMMENDATIONS(chatId);
+
         } else if (Commands.CALL_VOLUNTEER.getCommand().equals(callbackCommand)) {
             callVolunteer(callbackQuery.from().id(), chatId);
         }
         return 0;
     }
 
+    private void sendCatShelterContactInfo(Long chatId) {
+       String textAboveMenu = "График работы: с 8:00 до 20:00, воскресенье выходной, Aдрес проезда: Туполева 12А главные ворота";
+       sendReply(chatId,textAboveMenu, keyboardService.generateCatShelterMenu());
+    }
+    private void sendCAT_SHELTER_PASS_REG(Long chatId) {
+        String textAboveMenu = "Для оформления пропуска на территорию приюта для кошек, необходимо сообщить марку и госномер автомобиля";
+        sendReply(chatId,textAboveMenu, keyboardService.generateCatShelterMenu());
+    }
+    private void sendSHELTER_SAFETY_RECOMMENDATIONS(Long chatId) {
+        String textAboveMenu = " На территориию приюта необходимо соблюдать правила безопасности при обращении с животными";
+        sendReply(chatId,textAboveMenu, keyboardService.generateCatShelterMenu());
+    }
+
+    private void sendCOMMUNICATION_REQUEST(Long chatId) {
+        String textAboveMenu = " На территориию приюта необходимо соблюдать правила безлпасности при обращении с животными";
+        sendReply(chatId,textAboveMenu, keyboardService.generateCatShelterMenu());
+    }
     private void sendMenuPreparingForAdoptionCat(Long chatId) {
         String textAboveMenu = "ознакомьтесь пожалуйста с информацией, которая поможет вам подготовиться ко встрече с новым членом семьи";
         sendReply(chatId, textAboveMenu, keyboardService.generateMenuPreparingForAdoption(TypeOfPet.CAT));
     }
-
     private void sendMenuPreparingForAdoptionDog(Long chatId) {
         String textAboveMenu = "ознакомьтесь пожалуйста с информацией, которая поможет вам подготовиться ко встрече с новым членом семьи";
         sendReply(chatId, textAboveMenu, keyboardService.generateMenuPreparingForAdoption(TypeOfPet.DOG));
     }
 
-
-
+    private void sendDOGShelterContactInfo(Long chatId) {
+        String textAboveMenu = "График работы: с 8:30 до 22, воскресенье выходной, Aдрес приюта: Проезд Тупиковый 2А, вход с торца ";
+        sendReply(chatId,textAboveMenu, keyboardService.generateDogShelterMenu());
+    }
+    private void sendDOG_SHELTER_PASS_REG(Long chatId) {
+        String textAboveMenu = "Для оформления пропуска на территорию приюта для собак, необходимо сообщить марку машины и госномер автомобиля";
+        sendReply(chatId, textAboveMenu, keyboardService.generateDogShelterMenu());
+    }
     private void sendInfoAboutDogShelter(Long chatId) {
         Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
         if (shelter == null) {

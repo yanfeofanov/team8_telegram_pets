@@ -10,13 +10,13 @@ import java.io.IOException;
 @RestController
 @RequestMapping("photo")
 public class PhotoController {
-    private final PhotoService photoService;
-
-    public PhotoController(PhotoService photoService) {
-        this.photoService = photoService;
-    }
-    @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile photoPet) throws IOException {
-        return;
-    }
+//    private final PhotoService photoService;
+//
+//    public PhotoController(PhotoService photoService) {
+//        this.photoService = photoService;
+//    }
+//    @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public String uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile photoPet) throws IOException {
+//        return;
+//    }
 }

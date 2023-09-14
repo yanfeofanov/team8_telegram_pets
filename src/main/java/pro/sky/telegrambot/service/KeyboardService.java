@@ -54,6 +54,8 @@ public class KeyboardService {
         return prepareInlineKeyboard(commandList);
     }
 
+
+
     public Keyboard generateDogShelterMenu() {
         List<Commands> commandList = List.of(
                 Commands.ABOUT_DOG_SHELTER,

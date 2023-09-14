@@ -7,10 +7,10 @@ import pro.sky.telegrambot.service.PetOwnerService;
 @RestController
 @RequestMapping("/pet_owner")
 public class PetsOwnerController {
-    private final PetOwnerService petOwnerService;
-
-    public PetsOwnerController(PetOwnerService petOwnerService) {
-        this.petOwnerService = petOwnerService;
-    }
+//    private final PetOwnerService petOwnerService;
+//
+//    public PetsOwnerController(PetOwnerService petOwnerService) {
+//        this.petOwnerService = petOwnerService;
+//    }
 
 }
