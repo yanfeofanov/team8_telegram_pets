@@ -11,13 +11,7 @@ public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "pet_id")
-    private Pet pet;
     private LocalDateTime date;
-    @ManyToOne
-    @JoinColumn(name = "report_id")
-    private DailyReport dailyReport;
     @Column(name = "file_path")
     private String filePath;
     @Column(name = "media_type")
@@ -30,10 +24,8 @@ public class Photo {
     public Photo() {
     }
 
-    public Photo(Pet pet, LocalDateTime date, DailyReport dailyReport, String filePath, String mediaType, long fileSize, byte[] data) {
-        this.pet = pet;
+    public Photo(LocalDateTime date, String filePath, String mediaType, long fileSize, byte[] data) {
         this.date = date;
-        this.dailyReport = dailyReport;
         this.filePath = filePath;
         this.mediaType = mediaType;
         this.fileSize = fileSize;
@@ -44,28 +36,12 @@ public class Photo {
         return id;
     }
 
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
-
     public LocalDateTime getDate() {
         return date;
     }
 
     public void setDate(LocalDateTime date) {
         this.date = date;
-    }
-
-    public DailyReport getDailyReport() {
-        return dailyReport;
-    }
-
-    public void setDailyReport(DailyReport dailyReport) {
-        this.dailyReport = dailyReport;
     }
 
     public String getFilePath() {
@@ -105,12 +81,12 @@ public class Photo {
         if (this == o) return true;
         if (!(o instanceof Photo)) return false;
         Photo photo = (Photo) o;
-        return getFileSize() == photo.getFileSize() && Objects.equals(getId(), photo.getId()) && Objects.equals(getPet(), photo.getPet()) && Objects.equals(getDate(), photo.getDate()) && Objects.equals(getDailyReport(), photo.getDailyReport()) && Objects.equals(getFilePath(), photo.getFilePath()) && Objects.equals(getMediaType(), photo.getMediaType()) && Arrays.equals(getData(), photo.getData());
+        return getFileSize() == photo.getFileSize() && Objects.equals(getId(), photo.getId()) && Objects.equals(getDate(), photo.getDate()) && Objects.equals(getFilePath(), photo.getFilePath()) && Objects.equals(getMediaType(), photo.getMediaType()) && Arrays.equals(getData(), photo.getData());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getId(), getPet(), getDate(), getDailyReport(), getFilePath(), getMediaType(), getFileSize());
+        int result = Objects.hash(getId(), getDate(), getFilePath(), getMediaType(), getFileSize());
         result = 31 * result + Arrays.hashCode(getData());
         return result;
     }
@@ -119,9 +95,7 @@ public class Photo {
     public String toString() {
         return "Photo{" +
                 "id=" + id +
-                ", pet=" + pet +
                 ", date=" + date +
-                ", dailyReport=" + dailyReport +
                 ", filePath='" + filePath + '\'' +
                 ", mediaType='" + mediaType + '\'' +
                 ", fileSize=" + fileSize +
