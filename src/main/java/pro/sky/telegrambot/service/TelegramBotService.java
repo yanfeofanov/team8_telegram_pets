@@ -18,7 +18,6 @@ import pro.sky.telegrambot.constant.TypesOfInformation;
 import pro.sky.telegrambot.model.*;
 import pro.sky.telegrambot.repository.InfoRepository;
 import pro.sky.telegrambot.repository.ShelterRepository;
-import pro.sky.telegrambot.repository.VolunteerRepository;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -35,20 +34,17 @@ public class TelegramBotService {
     private final Pattern patternEmail = Pattern.compile("^[A-Za-z0-9][A-Za-z0-9\\.\\-_]*[A-Za-z0-9]*@([A-Za-z0-9]+([A-Za-z0-9-]*[A-Za-z0-9]+)*\\.)+[A-Za-z]*$");
     private final InfoRepository infoRepository;
     private final ShelterRepository shelterRepository;
-    private final VolunteerRepository volunteerRepository;
     private final KeyboardService keyboardService;
     private final CommunicationRequestService communicationRequestService;
     private final UserService userService;
     private final VolunteerService volunteerService;
     private final TelegramBot telegramBot;
 
-    public TelegramBotService(InfoRepository infoRepository, ShelterRepository shelterRepository,
-                              VolunteerRepository volunteerRepository, KeyboardService keyboardService,
+    public TelegramBotService(InfoRepository infoRepository, ShelterRepository shelterRepository, KeyboardService keyboardService,
                               CommunicationRequestService communicationRequestService, UserService userService,
                               VolunteerService volunteerService, TelegramBot telegramBot) {
         this.infoRepository = infoRepository;
         this.shelterRepository = shelterRepository;
-        this.volunteerRepository = volunteerRepository;
         this.keyboardService = keyboardService;
         this.communicationRequestService = communicationRequestService;
         this.userService = userService;
