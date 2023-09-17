@@ -28,7 +28,9 @@ public class TelegramBotConfiguration {
         BotCommand[] botCommands = new BotCommand[Commands.values().length];
         Commands[] commands = Commands.values();
         for (int i = 0; i < commands.length; i++) {
-            botCommands[i] = new BotCommand(commands[i].getCommand(), commands[i].getDescription());
+            if (commands[i].getCommand().contains("/")) {
+                botCommands[i] = new BotCommand(commands[i].getCommand(), commands[i].getDescription());
+            }
         }
         return botCommands;
     }

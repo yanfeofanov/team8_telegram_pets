@@ -1,6 +1,7 @@
 package pro.sky.telegrambot.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import pro.sky.telegrambot.constant.Commands;
 import pro.sky.telegrambot.constant.TypesOfInformation;
 import pro.sky.telegrambot.model.Info;
 import pro.sky.telegrambot.model.Shelter;
