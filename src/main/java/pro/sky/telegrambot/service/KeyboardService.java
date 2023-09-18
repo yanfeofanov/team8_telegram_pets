@@ -17,11 +17,12 @@ import java.util.List;
 public class KeyboardService {
 
     /**
-     * метод формирует меню для чата телеграмм бота на основе входящего списка команд(пунктов меню)
+     * метод формирует многострочное меню для чата телеграмм бота на основе входящего списка команд(пунктов меню)
+     *
      * @param commandList список значений перечисления Command на основе которых формируется меню
      * @return объект-меню для telegram бота
      */
-    private Keyboard prepareInlineKeyboard(List<Commands> commandList) {
+    private Keyboard prepareMultilineKeyboard(List<Commands> commandList) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         for (Commands command : commandList) {
             InlineKeyboardButton inlineButton = new InlineKeyboardButton(command.getDescription());
@@ -31,9 +32,28 @@ public class KeyboardService {
         return keyboard;
     }
 
+    /**
+     * метод формирует однострочное меню для чата телеграмм бота на основе входящего списка команд(пунктов меню)
+     *
+     * @param commandList список значений перечисления Command на основе которых формируется меню
+     * @return объект-меню для telegram бота
+     */
+    private Keyboard prepareSinglelineKeyboard(List<Commands> commandList) {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        InlineKeyboardButton[] buttons = new InlineKeyboardButton[commandList.size()];
+        for (int i = 0; i < commandList.size(); i++) {
+
+            InlineKeyboardButton inlineButton = new InlineKeyboardButton(commandList.get(i).getDescription());
+            inlineButton.callbackData(commandList.get(i).getCommand());
+            buttons[i] = inlineButton;
+        }
+        keyboard.addRow(buttons);
+        return keyboard;
+    }
+
     public Keyboard generateShelterSelectionMenu() {
         List<Commands> commandList = List.of(Commands.CAT_SHELTER, Commands.DOG_SHELTER);
-        return prepareInlineKeyboard(commandList);
+        return prepareSinglelineKeyboard(commandList);
     }
 
     public Keyboard generateMenuPreparingForAdoption(TypeOfPet typeOfPet) {
@@ -51,7 +71,7 @@ public class KeyboardService {
             commandList.add(Commands.COMMUNICATION_REQUEST);
             commandList.add(Commands.CALL_VOLUNTEER);
         }
-        return prepareInlineKeyboard(commandList);
+        return prepareMultilineKeyboard(commandList);
     }
 
     public Keyboard generateDogShelterMenu() {
@@ -63,7 +83,7 @@ public class KeyboardService {
                 Commands.ADOPT_DOG,
                 Commands.COMMUNICATION_REQUEST,
                 Commands.CALL_VOLUNTEER);
-        return prepareInlineKeyboard(commandList);
+        return prepareMultilineKeyboard(commandList);
     }
 
     public Keyboard generateCatShelterMenu() {
@@ -75,6 +95,11 @@ public class KeyboardService {
                 Commands.ADOPT_CAT,
                 Commands.COMMUNICATION_REQUEST,
                 Commands.CALL_VOLUNTEER);
-        return prepareInlineKeyboard(commandList);
+        return prepareMultilineKeyboard(commandList);
+    }
+
+    public Keyboard generateCommunicationOptionMenu() {
+        List<Commands> commandList = List.of(Commands.PHONE, Commands.EMAIL);
+        return prepareSinglelineKeyboard(commandList);
     }
 }
