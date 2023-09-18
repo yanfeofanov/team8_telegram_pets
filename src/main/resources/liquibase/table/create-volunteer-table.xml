@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="create-volunteer-table.1" author="DMorozov">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="volunteer"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="volunteer">
+            <column name="id" autoIncrement="true" type="INT4">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="surname" type="VARCHAR(100)">
+                <constraints  nullable="false"/>
+            </column>
+                <column name="phone_number" type="VARCHAR(30)"/>
+            <column name="bot_user_id" type="INT8">
+                <constraints  nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

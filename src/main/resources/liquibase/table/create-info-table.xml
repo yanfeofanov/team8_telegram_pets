@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="create-info-table.1" author="DMorozov">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="info"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="info">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="VARCHAR(4096)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shelter_id" type="INT4"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
