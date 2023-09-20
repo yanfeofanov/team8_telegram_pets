@@ -15,5 +15,6 @@
     <include file="table/create-info-table.xml" relativeToChangelogFile="true"/>
     <include file="table/create-daily_report-table.xml" relativeToChangelogFile="true"/>
     <include file="foreignKeys/addForeignKeyConstraint.xml" relativeToChangelogFile="true"/>
+    <include file="changes/change1-daily_report-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
