@@ -16,11 +16,11 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/pet_owner")
 public class PetsOwnerController {
-    private final PetOwnerService petOwnerService;
-
-    public PetsOwnerController(PetOwnerService petOwnerService) {
-        this.petOwnerService = petOwnerService;
-    }
+//    private final PetOwnerService petOwnerService;
+//
+//    public PetsOwnerController(PetOwnerService petOwnerService) {
+//        this.petOwnerService = petOwnerService;
+//    }
 
     @GetMapping("/{id}")
     public PetOwner findPetOwner(@PathVariable int id) {

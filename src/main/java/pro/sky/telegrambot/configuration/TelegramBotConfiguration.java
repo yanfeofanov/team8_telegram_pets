@@ -11,7 +11,7 @@ import pro.sky.telegrambot.constant.Commands;
 
 @Configuration
 
-public class TelegramBotConfiguration {
+public class  TelegramBotConfiguration {
 
     @Value("${telegram.bot.token}")
     private String token;
