@@ -80,6 +80,7 @@ public class KeyboardService {
                 Commands.DOG_SHELTER_CONTACT_INFO,
                 Commands.DOG_SHELTER_PASS_REG,
                 Commands.SHELTER_SAFETY_RECOMMENDATIONS,
+                Commands.REPORT_ABOUT_PET,
                 Commands.ADOPT_DOG,
                 Commands.COMMUNICATION_REQUEST,
                 Commands.CALL_VOLUNTEER);
@@ -92,6 +93,7 @@ public class KeyboardService {
                 Commands.CAT_SHELTER_CONTACT_INFO,
                 Commands.CAT_SHELTER_PASS_REG,
                 Commands.SHELTER_SAFETY_RECOMMENDATIONS,
+                Commands.REPORT_ABOUT_PET,
                 Commands.ADOPT_CAT,
                 Commands.COMMUNICATION_REQUEST,
                 Commands.CALL_VOLUNTEER);

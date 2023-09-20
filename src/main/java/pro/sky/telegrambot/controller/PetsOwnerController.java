@@ -1,11 +1,9 @@
 package pro.sky.telegrambot.controller;
 
 import org.springframework.web.bind.annotation.*;
-import pro.sky.telegrambot.model.Pet;
 import pro.sky.telegrambot.model.PetOwner;
 import pro.sky.telegrambot.service.PetOwnerService;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 

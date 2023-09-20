@@ -113,6 +113,8 @@ public class TelegramBotService {
             return sendRequestToEnterPhoneNumber(chatId);
         } else if (Commands.EMAIL.getCommand().equals(commandStr)) {
             return sendRequestToEnterEmail(chatId);
+        }else if (Commands.REPORT_ABOUT_PET.getCommand().equals(commandStr)) {
+            return sendRequestToEnterReport(chatId);
         }
         return 0;
     }

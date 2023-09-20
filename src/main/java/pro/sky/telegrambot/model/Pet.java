@@ -17,7 +17,7 @@ public class Pet {
     @ManyToOne
     @JoinColumn(name = "shelter_id")
     private Shelter shelter;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "pet_owner_id")
     private PetOwner petOwner;
     @OneToOne

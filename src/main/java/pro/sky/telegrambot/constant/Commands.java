@@ -27,7 +27,8 @@ public enum Commands {
     RECOMMENDED_DOG_HANDLERS_LIST("список рекомендуемых нами кинологов", "recommended_dog_handler_list"),
     POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION("возможные причины отказа в усыновлении питомца", "possible_reasons_for_refusal_of_adoption"),
     PHONE("телефон", "phone"),
-    EMAIL("электронная почта", "email");
+    EMAIL("электронная почта", "email"),
+    REPORT_ABOUT_PET("отправить отчет о питомце", "/report_about_pet");
 
     private final String description;
     private final String command;
