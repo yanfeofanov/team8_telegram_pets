@@ -255,7 +255,7 @@ public class TelegramBotService {
         }
         Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.LONG_INFO_ABOUT_SHELTER, shelter);
         if (infoAboutDogShelter != null) {
-            return sendReply(chatId, infoAboutDogShelter.getText(), null).errorCode();
+            return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
             logger.info("no info about dog shelter");
             return -1;
@@ -270,7 +270,7 @@ public class TelegramBotService {
         }
         Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.LONG_INFO_ABOUT_SHELTER, shelter);
         if (infoAboutCatShelter != null) {
-            return sendReply(chatId, infoAboutCatShelter.getText(), null).errorCode();
+            return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
             logger.info("no info about cat shelter");
             return -1;
@@ -290,7 +290,7 @@ public class TelegramBotService {
                 textMessage.append(command.getCommand()).append(" - ").append(command.getDescription()).append("\n");
             }
         }
-        return sendReply(chatId, textMessage.toString(), null).errorCode();
+        return sendReply(chatId, textMessage.toString()).errorCode();
     }
 
     private int sendDogShelterMenu(Long chatId) {
@@ -367,7 +367,7 @@ public class TelegramBotService {
     private int callVolunteer(Long userId, Long chatId) {
         Volunteer volunteer = volunteerService.getRandomVolunteer();
         if (volunteer == null || volunteer.getUser() == null) {
-            sendReply(chatId, "к сожалению в данный момент нет возможности пригласить волонтера", null);
+            sendReply(chatId, "к сожалению в данный момент нет возможности пригласить волонтера");
             return -1;
         }
         Long volunteerChatId = volunteer.getUser().getChatId();
