@@ -28,7 +28,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="data" type="OID"/>
-            <column name="pet_id" type="INT4"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

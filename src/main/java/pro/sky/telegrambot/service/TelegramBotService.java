@@ -20,6 +20,7 @@ import pro.sky.telegrambot.model.*;
 import pro.sky.telegrambot.repository.InfoRepository;
 import pro.sky.telegrambot.repository.ShelterRepository;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -40,11 +41,12 @@ public class TelegramBotService {
     private final UserService userService;
     private final VolunteerService volunteerService;
     private final PetOwnerService petOwnerService;
+    private final DailyReportService dailyReportService;
     private final TelegramBot telegramBot;
 
     public TelegramBotService(InfoRepository infoRepository, ShelterRepository shelterRepository, KeyboardService keyboardService,
                               CommunicationRequestService communicationRequestService, UserService userService,
-                              VolunteerService volunteerService, PetOwnerService petOwnerService, TelegramBot telegramBot) {
+                              VolunteerService volunteerService, PetOwnerService petOwnerService, DailyReportService dailyReportService, TelegramBot telegramBot) {
         this.infoRepository = infoRepository;
         this.shelterRepository = shelterRepository;
         this.keyboardService = keyboardService;
@@ -52,6 +54,7 @@ public class TelegramBotService {
         this.userService = userService;
         this.volunteerService = volunteerService;
         this.petOwnerService = petOwnerService;
+        this.dailyReportService = dailyReportService;
         this.telegramBot = telegramBot;
     }
 
@@ -74,7 +77,7 @@ public class TelegramBotService {
             }
             return processCommand(userId, chatId, textMassage);
         } else if (textMassage != null || photoSizes != null) {
-            return processInputOfInformation(userId, chatId, textMassage, photoSizes);
+            return processInputOfInformation(userId, chatId, (photoSizes != null) ? message.caption() : textMassage, photoSizes);
         } else {
             return sendReply(chatId, "извините, к сожалению наш бот не работает с данными данного типа").errorCode();
         }
@@ -157,11 +160,11 @@ public class TelegramBotService {
             }
         } else if (typeOfWaiting == TypeOfWaiting.DAILY_REPORT) {
             if (photoSizes != null) {
-                //метод загрузки фото отчета
-                return 0;
-            } else {
-                //метод загрузки текста отчета
-                return 0;
+               /* try {
+                    dailyReportService.sendReport(chatId, textMassage, photoSizes);
+                } catch (IOException e) {
+                    return sendReply(chatId, "Не удалось записать ваш отчет! Повторите пожалуйста снова.").errorCode();
+                }*/
             }
         }
         return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();

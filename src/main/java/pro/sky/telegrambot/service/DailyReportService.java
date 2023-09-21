@@ -108,7 +108,7 @@ public class DailyReportService {
      * @return айди искомого отчета
      */
     private long findReportIdByChatId(Long chatId) {
-        PetOwner petOwner = petOwnerService.findPetOwner(chatId);
+        PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(chatId);
         List<DailyReport> reportsToday = (List<DailyReport>) getAllDailyReport(LocalDate.now());
         long reportId = -1; // идентификатор  отчета, отправленного пользователем сегодня
         if (petOwner != null) {
@@ -140,9 +140,9 @@ public class DailyReportService {
         photoPet.setFileSize(file.fileSize());
         photoPet.setFilePath(filePath.toString());
 
-        PetOwner petOwner = petOwnerService.findPetOwner(chatId);
+        PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(chatId);
         if (petOwner != null) {
-            photoPet.setPet(petOwner.getPet());
+            //photoPet.setPet(petOwner.getPet());
         }else {
             throw new IllegalArgumentException("Владельца с таким chatId не существует:" + chatId);
         }
@@ -180,17 +180,17 @@ public class DailyReportService {
      * @return новый отчет
      */
     private DailyReport createKeepingPet(Long chatId, String text, Photo photo) {
-        PetOwner petOwner = petOwnerService.findPetOwner(chatId);
+        PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(chatId);
 
         DailyReport dailyReport = new DailyReport();
-        dailyReport.setChatId(chatId);
+        //dailyReport.setChatId(chatId);
         if (petOwner != null) {
             dailyReport.setPetOwner(petOwner);
         } else {
             throw new IllegalArgumentException("Владельца с таким chatId не существует:" + chatId);
         }
         dailyReport.setDate(LocalDateTime.now());
-        dailyReport.setInfoPet(text);
+        //dailyReport.setInfoPet(text);
         dailyReport.setPhoto(photo);
         return dailyReport;
     }
@@ -207,7 +207,7 @@ public class DailyReportService {
         DailyReport dailyReport = dailyReportRepository.findDailyReportById(reportId);
 
         dailyReport.setDate(LocalDateTime.now());
-        dailyReport.setInfoPet(caption);
+        //dailyReport.setInfoPet(caption);
         dailyReport.setPhoto(photo);
         return dailyReport;
     }

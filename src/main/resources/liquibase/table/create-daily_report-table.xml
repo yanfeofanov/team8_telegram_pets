@@ -14,14 +14,8 @@
         </preConditions>
 
         <createTable tableName="daily_report">
-            <column name="id" autoIncrement="true" type="BIGINT">
+            <column name="id" autoIncrement="true" type="INT8">
                 <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="chat_id" type="INT8">
-                <constraints nullable="false"/>
-            </column>
-            <column name="info_pet" type="TEXT">
-                <constraints nullable="false"/>
             </column>
             <column name="date" type="TIMESTAMP">
                 <constraints nullable="false"/>
@@ -29,7 +23,7 @@
             <column name="pet_owner_id" type="INT4">
                 <constraints nullable="false"/>
             </column>
-            <column name="pet_id" type="INT">
+            <column name="pet_id" type="INT4">
                 <constraints nullable="false"/>
             </column>
             <column name="photo_id" type="INT8"/>

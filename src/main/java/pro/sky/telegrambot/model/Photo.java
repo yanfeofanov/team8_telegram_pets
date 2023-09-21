@@ -21,10 +21,6 @@ public class Photo {
     @Lob
     private byte[] data;
 
-    @OneToOne
-    @JoinColumn(name = "pet_id")
-    private Pet pet;
-
     public Photo() {
     }
 
@@ -38,14 +34,6 @@ public class Photo {
 
     public Long getId() {
         return id;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
     }
 
     public LocalDateTime getDate() {

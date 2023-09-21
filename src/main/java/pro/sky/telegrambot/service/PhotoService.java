@@ -43,7 +43,7 @@ public class PhotoService {
 
         Photo photo = findPhoto(petId);
         photoPetRepository.save(photo);
-        photo.setPet(pet);
+        //photo.setPet(pet);
         photo.setFilePath(filePath.toString());
         photo.setFileSize(file.getSize());
         photo.setMediaType(file.getContentType());
@@ -55,8 +55,8 @@ public class PhotoService {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
-    public Photo findPhoto(Long petId) {
-        return photoPetRepository.findPhotoByPetId(petId).orElse(new Photo());
+    public Photo findPhoto(Long Id) {
+        return photoPetRepository.findPhotoById(Id).orElse(new Photo());
     }
 
     public Photo savePhotoReport (Photo photoPet) {
