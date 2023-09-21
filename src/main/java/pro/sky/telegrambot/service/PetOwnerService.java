@@ -6,7 +6,8 @@ import pro.sky.telegrambot.repository.PetOwnerRepository;
 
 @Service
 public class PetOwnerService {
-        private final PetOwnerRepository petOwnerRepository;
+
+    private final PetOwnerRepository petOwnerRepository;
 
     public PetOwnerService(PetOwnerRepository petOwnerRepository) {
         this.petOwnerRepository = petOwnerRepository;
@@ -14,5 +15,9 @@ public class PetOwnerService {
 
     public PetOwner findPetOwnerWithProbationaryPeriod(Long userId) {
         return petOwnerRepository.findByUserIdAndProbationIsTrue(userId);
+    }
+
+    public PetOwner findPetOwner(long chatId) {
+        return petOwnerRepository.findPetOwnerByChatId(chatId);
     }
 }

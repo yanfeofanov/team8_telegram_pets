@@ -10,6 +10,8 @@ public class DailyReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long chatId;
+    private String infoPet;
     private LocalDateTime date;
     @ManyToOne
     @JoinColumn(name = "pet_owner_id")
@@ -42,6 +44,22 @@ public class DailyReport {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getInfoPet() {
+        return infoPet;
+    }
+
+    public void setInfoPet(String infoPet) {
+        this.infoPet = infoPet;
     }
 
     public LocalDateTime getDate() {

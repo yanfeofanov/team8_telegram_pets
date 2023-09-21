@@ -17,6 +17,9 @@
             <column name="id" autoIncrement="true" type="INT4">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
+            <column name="chat_id" type="INT8">
+                <constraints nullable="false"/>
+            </column>
             <column name="name" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
@@ -25,6 +28,7 @@
             </column>
             <column name="phone_number" type="VARCHAR(30)"/>
             <column name="email" type="VARCHAR(100)"/>
+            <column name="pet_id" type="INT4"/>
             <column name="bot_user_id" type="INT8">
                 <constraints nullable="false"/>
             </column>
