@@ -15,7 +15,6 @@ public enum Commands {
     CAT_SHELTER_PASS_REG("контакты для оформления пропуска на машину в приют кошек","cat_shelter_pass_reg"),
     DOG_SHELTER_PASS_REG("контакты для оформления пропуска на машину в приют собак","dog_shelter_pass_reg"),
     SHELTER_SAFETY_RECOMMENDATIONS("техника безопасности на территории приюта", "shelter_safety_recommendations"),
-    SEND_PET_REPORT("отправить отчет о питомце", "/send_pet_report"),
     COMMUNICATION_REQUEST("запрос на обратную связь", "/communication_request"),
     CALL_VOLUNTEER("позвать волонтера", "/call_volunteer"),
     ADOPT_CAT("информация для готовящихся взять кошку", "/preparing_for_adoption_dog"),
@@ -30,7 +29,8 @@ public enum Commands {
     RECOMMENDED_DOG_HANDLERS_LIST("список рекомендуемых нами кинологов", "recommended_dog_handler_list"),
     POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION("возможные причины отказа в усыновлении питомца", "possible_reasons_for_refusal_of_adoption"),
     PHONE("телефон", "phone"),
-    EMAIL("электронная почта", "email");
+    EMAIL("электронная почта", "email"),
+    REPORT_ABOUT_PET("отправить отчет о питомце", "/report_about_pet");
 
     private final String description;
     private final String command;

@@ -78,7 +78,7 @@ public class KeyboardService {
         List<Commands> commandList = List.of(
                 Commands.DOG_SHELTER_MENU,
                 Commands.ADOPT_DOG,
-                Commands.SEND_PET_REPORT,
+                Commands.REPORT_ABOUT_PET,
                 Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
     }
@@ -98,7 +98,7 @@ public class KeyboardService {
         List<Commands> commandList = List.of(
                 Commands.CAT_SHELTER_MENU,
                 Commands.ADOPT_CAT,
-                Commands.SEND_PET_REPORT,
+                Commands.REPORT_ABOUT_PET,
                 Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
     }

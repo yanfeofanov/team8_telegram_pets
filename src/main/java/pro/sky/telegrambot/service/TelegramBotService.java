@@ -3,6 +3,7 @@ package pro.sky.telegrambot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
@@ -38,17 +39,19 @@ public class TelegramBotService {
     private final CommunicationRequestService communicationRequestService;
     private final UserService userService;
     private final VolunteerService volunteerService;
+    private final PetOwnerService petOwnerService;
     private final TelegramBot telegramBot;
 
     public TelegramBotService(InfoRepository infoRepository, ShelterRepository shelterRepository, KeyboardService keyboardService,
                               CommunicationRequestService communicationRequestService, UserService userService,
-                              VolunteerService volunteerService, TelegramBot telegramBot) {
+                              VolunteerService volunteerService, PetOwnerService petOwnerService, TelegramBot telegramBot) {
         this.infoRepository = infoRepository;
         this.shelterRepository = shelterRepository;
         this.keyboardService = keyboardService;
         this.communicationRequestService = communicationRequestService;
         this.userService = userService;
         this.volunteerService = volunteerService;
+        this.petOwnerService = petOwnerService;
         this.telegramBot = telegramBot;
     }
 
@@ -62,15 +65,18 @@ public class TelegramBotService {
         Long userId = message.from().id();
         Long chatId = message.chat().id();
         String textMassage = message.text();
-        if (textMassage.length() > 1 && textMassage.startsWith("/")) {
+        PhotoSize[] photoSizes = message.photo();
+        if (textMassage != null && textMassage.length() > 1 && textMassage.startsWith("/")) {
             chatsWaitingForInformation.remove(chatId);
             if (Commands.START.getCommand().equals(textMassage) && userService.isTheUserNew(userId)) {
                 User newUser = userService.addNewUser(userId, message.from().username(), message.from().firstName(), chatId);
                 sendReply(chatId, generateGreetingText(newUser.getUserName()));
             }
             return processCommand(userId, chatId, textMassage);
+        } else if (textMassage != null || photoSizes != null) {
+            return processInputOfInformation(userId, chatId, textMassage, photoSizes);
         } else {
-            return processInputOfInformation(userId, chatId, textMassage);
+            return sendReply(chatId, "извините, к сожалению наш бот не работает с данными данного типа").errorCode();
         }
     }
 
@@ -127,8 +133,51 @@ public class TelegramBotService {
             return sendRequestToEnterPhoneNumber(chatId);
         } else if (Commands.EMAIL.getCommand().equals(commandStr)) {
             return sendRequestToEnterEmail(chatId);
+        } else if (Commands.REPORT_ABOUT_PET.getCommand().equals(commandStr)) {
+            return sendRequestToEnterDailyReport(userId, chatId);
         }
         return 0;
+    }
+
+    private int processInputOfInformation(Long userId, Long chatId, String textMassage, PhotoSize[] photoSizes) {
+        TypeOfWaiting typeOfWaiting = chatsWaitingForInformation.get(chatId);
+        if (typeOfWaiting == null) {
+            return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
+        } else if (typeOfWaiting == TypeOfWaiting.PHONE_NUMBER) {
+            if (textMassage != null && validatePhoneNumber(textMassage)) {
+                return createCommunicationRequest(userId, chatId, textMassage);
+            } else {
+                return sendReply(chatId, "Телефонный номер введен не корректно! Повторите пожалуйста ввод.").errorCode();
+            }
+        } else if (typeOfWaiting == TypeOfWaiting.EMAIL) {
+            if (textMassage != null && validateEmail(textMassage)) {
+                return createCommunicationRequest(userId, chatId, textMassage);
+            } else {
+                return sendReply(chatId, "Адрес электронной почты введен не корректно! Повторите пожалуйста ввод.").errorCode();
+            }
+        } else if (typeOfWaiting == TypeOfWaiting.DAILY_REPORT) {
+            if (photoSizes != null) {
+                //метод загрузки фото отчета
+                return 0;
+            } else {
+                //метод загрузки текста отчета
+                return 0;
+            }
+        }
+        return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
+    }
+
+    private int sendRequestToEnterDailyReport(Long userId, Long chatId) {
+        PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(userId);
+        if (petOwner == null) {
+            return sendReply(chatId, "вам не нужно отправлять отчет, т.к. вы не являетесь владельцем питомца на испытательном сроке.").errorCode();
+        }
+        chatsWaitingForInformation.put(chatId, TypeOfWaiting.DAILY_REPORT);
+        return sendReply(chatId, "пришлите пожалуйста отчет содержащий следующую информацию:\n" +
+                "- фото животного\n" +
+                "- рацион животного\n" +
+                "- общее самочувствие и привыкание к новому месту\n" +
+                "- изменение в поведении: отказ от старых привычек, приобретение новых").errorCode();
     }
 
     private void sendCatShelterContactInfo(Long chatId) {
@@ -144,26 +193,6 @@ public class TelegramBotService {
     private void sendShelterSafetyRecommendations(Long chatId) {
         String textAboveMenu = " На территориию приюта необходимо соблюдать правила безопасности при обращении с животными";
         sendReply(chatId, textAboveMenu);
-    }
-
-    private int processInputOfInformation(Long userId, Long chatId, String textMassage) {
-        TypeOfWaiting typeOfWaiting = chatsWaitingForInformation.get(chatId);
-        if (typeOfWaiting == null) {
-            return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
-        } else if (typeOfWaiting == TypeOfWaiting.PHONE_NUMBER) {
-            if (validatePhoneNumber(textMassage)) {
-                return createCommunicationRequest(userId, chatId, textMassage);
-            } else {
-                return sendReply(chatId, "Телефонный номер введен не корректно! Повторите пожалуйста ввод.").errorCode();
-            }
-        } else if (typeOfWaiting == TypeOfWaiting.EMAIL) {
-            if (validateEmail(textMassage)) {
-                return createCommunicationRequest(userId, chatId, textMassage);
-            } else {
-                return sendReply(chatId, "Адрес электронной почты введен не корректно! Повторите пожалуйста ввод.").errorCode();
-            }
-        }
-        return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
     }
 
     private int createCommunicationRequest(Long userId, Long chatId, String contactInfo) {
@@ -196,11 +225,6 @@ public class TelegramBotService {
 
     private int sendCommunicationOptionMenu(Long chatId) {
         return sendReply(chatId, "выберите способ для связи:", keyboardService.generateCommunicationOptionMenu()).errorCode();
-    }
-
-    private void sendCommunicationRequest(Long chatId) {
-        String textAboveMenu = " На территориию приюта необходимо соблюдать правила безлпасности при обращении с животными";
-        sendReply(chatId, textAboveMenu);
     }
 
     private int sendMenuPreparingForAdoptionCat(Long chatId) {
