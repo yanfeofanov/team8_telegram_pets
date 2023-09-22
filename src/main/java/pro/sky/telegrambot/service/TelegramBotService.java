@@ -3,6 +3,7 @@ package pro.sky.telegrambot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
@@ -19,6 +20,7 @@ import pro.sky.telegrambot.model.*;
 import pro.sky.telegrambot.repository.InfoRepository;
 import pro.sky.telegrambot.repository.ShelterRepository;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -38,17 +40,21 @@ public class TelegramBotService {
     private final CommunicationRequestService communicationRequestService;
     private final UserService userService;
     private final VolunteerService volunteerService;
+    private final PetOwnerService petOwnerService;
+    private final DailyReportService dailyReportService;
     private final TelegramBot telegramBot;
 
     public TelegramBotService(InfoRepository infoRepository, ShelterRepository shelterRepository, KeyboardService keyboardService,
                               CommunicationRequestService communicationRequestService, UserService userService,
-                              VolunteerService volunteerService, TelegramBot telegramBot) {
+                              VolunteerService volunteerService, PetOwnerService petOwnerService, DailyReportService dailyReportService, TelegramBot telegramBot) {
         this.infoRepository = infoRepository;
         this.shelterRepository = shelterRepository;
         this.keyboardService = keyboardService;
         this.communicationRequestService = communicationRequestService;
         this.userService = userService;
         this.volunteerService = volunteerService;
+        this.petOwnerService = petOwnerService;
+        this.dailyReportService = dailyReportService;
         this.telegramBot = telegramBot;
     }
 
@@ -62,15 +68,18 @@ public class TelegramBotService {
         Long userId = message.from().id();
         Long chatId = message.chat().id();
         String textMassage = message.text();
-        if (textMassage.length() > 1 && textMassage.startsWith("/")) {
+        PhotoSize[] photoSizes = message.photo();
+        if (textMassage != null && textMassage.length() > 1 && textMassage.startsWith("/")) {
             chatsWaitingForInformation.remove(chatId);
             if (Commands.START.getCommand().equals(textMassage) && userService.isTheUserNew(userId)) {
                 User newUser = userService.addNewUser(userId, message.from().username(), message.from().firstName(), chatId);
                 sendReply(chatId, generateGreetingText(newUser.getUserName()));
             }
             return processCommand(userId, chatId, textMassage);
+        } else if (textMassage != null || photoSizes != null) {
+            return processInputOfInformation(userId, chatId, (photoSizes != null) ? message.caption() : textMassage, photoSizes);
         } else {
-            return processInputOfInformation(userId, chatId, textMassage);
+            return sendReply(chatId, "извините, к сожалению наш бот не работает с данными данного типа").errorCode();
         }
     }
 
@@ -95,14 +104,28 @@ public class TelegramBotService {
             return sendHelpInformation(chatId);
         } else if (Commands.CAT_SHELTER.getCommand().equals(commandStr)) {
             return sendCatShelterMenu(chatId);
+        } else if (Commands.CAT_SHELTER_MENU.getCommand().equals(commandStr)) {
+            return sendCatInfoMenu(chatId);
         } else if (Commands.DOG_SHELTER.getCommand().equals(commandStr)) {
             return sendDogShelterMenu(chatId);
+        } else if (Commands.DOG_SHELTER_MENU.getCommand().equals(commandStr)) {
+            return sendDogInfoMenu(chatId);
         } else if (Commands.ADOPT_CAT.getCommand().equals(commandStr)) {
             return sendMenuPreparingForAdoptionCat(chatId);
         } else if (Commands.ADOPT_DOG.getCommand().equals(commandStr)) {
             return sendMenuPreparingForAdoptionDog(chatId);
         } else if (Commands.ABOUT_CAT_SHELTER.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelter(chatId);
+        } else if (Commands.CAT_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
+            sendCatShelterContactInfo(chatId);
+        } else if (Commands.CAT_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
+            sendCatShelterPassReg(chatId);
+        } else if (Commands.SHELTER_SAFETY_RECOMMENDATIONS.getCommand().equals(commandStr)) {
+            sendShelterSafetyRecommendations(chatId);
+        } else if (Commands.DOG_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
+            sendDogShelterContactInfo(chatId);
+        } else if (Commands.DOG_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
+            sendDogShelterPassReg(chatId);
         } else if (Commands.ABOUT_DOG_SHELTER.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelter(chatId);
         } else if (Commands.CALL_VOLUNTEER.getCommand().equals(commandStr)) {
@@ -113,28 +136,66 @@ public class TelegramBotService {
             return sendRequestToEnterPhoneNumber(chatId);
         } else if (Commands.EMAIL.getCommand().equals(commandStr)) {
             return sendRequestToEnterEmail(chatId);
+        } else if (Commands.REPORT_ABOUT_PET.getCommand().equals(commandStr)) {
+            return sendRequestToEnterDailyReport(userId, chatId);
         }
         return 0;
     }
 
-    private int processInputOfInformation(Long userId, Long chatId, String textMassage) {
+    private int processInputOfInformation(Long userId, Long chatId, String textMassage, PhotoSize[] photoSizes) {
         TypeOfWaiting typeOfWaiting = chatsWaitingForInformation.get(chatId);
         if (typeOfWaiting == null) {
             return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
         } else if (typeOfWaiting == TypeOfWaiting.PHONE_NUMBER) {
-            if (validatePhoneNumber(textMassage)) {
+            if (textMassage != null && validatePhoneNumber(textMassage)) {
                 return createCommunicationRequest(userId, chatId, textMassage);
             } else {
                 return sendReply(chatId, "Телефонный номер введен не корректно! Повторите пожалуйста ввод.").errorCode();
             }
         } else if (typeOfWaiting == TypeOfWaiting.EMAIL) {
-            if (validateEmail(textMassage)) {
+            if (textMassage != null && validateEmail(textMassage)) {
                 return createCommunicationRequest(userId, chatId, textMassage);
             } else {
                 return sendReply(chatId, "Адрес электронной почты введен не корректно! Повторите пожалуйста ввод.").errorCode();
             }
+        } else if (typeOfWaiting == TypeOfWaiting.DAILY_REPORT) {
+            if (photoSizes != null) {
+               /* try {
+                    dailyReportService.sendReport(chatId, textMassage, photoSizes);
+                } catch (IOException e) {
+                    return sendReply(chatId, "Не удалось записать ваш отчет! Повторите пожалуйста снова.").errorCode();
+                }*/
+            }
         }
         return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
+    }
+
+    private int sendRequestToEnterDailyReport(Long userId, Long chatId) {
+        PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(userId);
+        if (petOwner == null) {
+            return sendReply(chatId, "вам не нужно отправлять отчет, т.к. вы не являетесь владельцем питомца на испытательном сроке.").errorCode();
+        }
+        chatsWaitingForInformation.put(chatId, TypeOfWaiting.DAILY_REPORT);
+        return sendReply(chatId, "пришлите пожалуйста отчет содержащий следующую информацию:\n" +
+                "- фото животного\n" +
+                "- рацион животного\n" +
+                "- общее самочувствие и привыкание к новому месту\n" +
+                "- изменение в поведении: отказ от старых привычек, приобретение новых").errorCode();
+    }
+
+    private void sendCatShelterContactInfo(Long chatId) {
+        String textAboveMenu = "График работы: с 8:00 до 20:00, воскресенье выходной, Aдрес проезда: Туполева 12А главные ворота";
+        sendReply(chatId, textAboveMenu);
+    }
+
+    private void sendCatShelterPassReg(Long chatId) {
+        String textAboveMenu = "Для оформления пропуска на территорию приюта для кошек, необходимо сообщить марку и госномер автомобиля";
+        sendReply(chatId, textAboveMenu);
+    }
+
+    private void sendShelterSafetyRecommendations(Long chatId) {
+        String textAboveMenu = " На территориию приюта необходимо соблюдать правила безопасности при обращении с животными";
+        sendReply(chatId, textAboveMenu);
     }
 
     private int createCommunicationRequest(Long userId, Long chatId, String contactInfo) {
@@ -179,6 +240,15 @@ public class TelegramBotService {
         return sendReply(chatId, textAboveMenu, keyboardService.generateMenuPreparingForAdoption(TypeOfPet.DOG)).errorCode();
     }
 
+    private void sendDogShelterContactInfo(Long chatId) {
+        String textAboveMenu = "График работы: с 8:30 до 22, воскресенье выходной, Aдрес приюта: Проезд Тупиковый 2А, вход с торца ";
+        sendReply(chatId, textAboveMenu);
+    }
+
+    private void sendDogShelterPassReg(Long chatId) {
+        String textAboveMenu = "Для оформления пропуска на территорию приюта для собак, необходимо сообщить марку машины и госномер автомобиля";
+        sendReply(chatId, textAboveMenu);
+    }
 
     private int sendInfoAboutDogShelter(Long chatId) {
         Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
@@ -188,7 +258,7 @@ public class TelegramBotService {
         }
         Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.LONG_INFO_ABOUT_SHELTER, shelter);
         if (infoAboutDogShelter != null) {
-            return sendReply(chatId, infoAboutDogShelter.getText(), null).errorCode();
+            return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
             logger.info("no info about dog shelter");
             return -1;
@@ -203,7 +273,7 @@ public class TelegramBotService {
         }
         Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.LONG_INFO_ABOUT_SHELTER, shelter);
         if (infoAboutCatShelter != null) {
-            return sendReply(chatId, infoAboutCatShelter.getText(), null).errorCode();
+            return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
             logger.info("no info about cat shelter");
             return -1;
@@ -223,7 +293,7 @@ public class TelegramBotService {
                 textMessage.append(command.getCommand()).append(" - ").append(command.getDescription()).append("\n");
             }
         }
-        return sendReply(chatId, textMessage.toString(), null).errorCode();
+        return sendReply(chatId, textMessage.toString()).errorCode();
     }
 
     private int sendDogShelterMenu(Long chatId) {
@@ -231,14 +301,8 @@ public class TelegramBotService {
         if (shelter == null) {
             return -1;
         }
-        String aboutDogShelterStr;
-        Info aboutDogShelterInfo = infoRepository.findByTypeAndShelter(TypesOfInformation.SHORT_INFO_ABOUT_SHELTER, shelter);
-        if (aboutDogShelterInfo != null) {
-            aboutDogShelterStr = aboutDogShelterInfo.getText();
-        } else {
-            aboutDogShelterStr = "приют для собак";
-        }
-        return sendReply(chatId, aboutDogShelterStr, keyboardService.generateDogShelterMenu()).errorCode();
+        String dogShelterStr = "приют для собак " + shelter.getName();
+        return sendReply(chatId, dogShelterStr, keyboardService.generateMainDogShelterMenu()).errorCode();
     }
 
     private int sendCatShelterMenu(Long chatId) {
@@ -246,14 +310,26 @@ public class TelegramBotService {
         if (shelter == null) {
             return -1;
         }
-        String aboutCatShelterStr;
-        Info aboutCatShelterInfo = infoRepository.findByTypeAndShelter(TypesOfInformation.SHORT_INFO_ABOUT_SHELTER, shelter);
-        if (aboutCatShelterInfo != null) {
-            aboutCatShelterStr = aboutCatShelterInfo.getText();
-        } else {
-            aboutCatShelterStr = "приют для кошек";
+        String catShelterStr = "приют для кошек " + shelter.getName();
+        return sendReply(chatId, catShelterStr, keyboardService.generateMainCatShelterMenu()).errorCode();
+    }
+
+    private int sendCatInfoMenu(Long chatId) {
+        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        if (shelter == null) {
+            return -1;
         }
-        return sendReply(chatId, aboutCatShelterStr, keyboardService.generateCatShelterMenu()).errorCode();
+        String catShelterStr = "приют для кошек " + shelter.getName();
+        return sendReply(chatId, catShelterStr, keyboardService.generateInfoCatShelterMenu()).errorCode();
+    }
+
+    private int sendDogInfoMenu(Long chatId) {
+        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        if (shelter == null) {
+            return -1;
+        }
+        String dogShelterStr = "приют для собак " + shelter.getName();
+        return sendReply(chatId, dogShelterStr, keyboardService.generateInfoDogShelterMenu()).errorCode();
     }
 
     private int sendShelterSelectionMenu(Long chatId) {
@@ -293,8 +369,8 @@ public class TelegramBotService {
      */
     private int callVolunteer(Long userId, Long chatId) {
         Volunteer volunteer = volunteerService.getRandomVolunteer();
-        if (volunteer == null) {
-            sendReply(chatId, "к сожалению в данный момент нет возможности пригласить волонтера", null);
+        if (volunteer == null || volunteer.getUser() == null) {
+            sendReply(chatId, "к сожалению в данный момент нет возможности пригласить волонтера");
             return -1;
         }
         Long volunteerChatId = volunteer.getUser().getChatId();
@@ -303,9 +379,9 @@ public class TelegramBotService {
         InlineKeyboardButton inlineButton = new InlineKeyboardButton("пользователь");
         inlineButton.url(button_url);
         keyboard.addRow(inlineButton);
-        SendResponse sendResponse = sendReply(volunteerChatId, "_поступил запрос на вызов волонтера от пользователя_", keyboard);
+        SendResponse sendResponse = sendReply(volunteerChatId, "поступил запрос на вызов волонтера от пользователя", keyboard);
         if (sendResponse.isOk()) {
-            sendReply(chatId, "запрос отправлен волонтеру, он напишет вам в личных сообщениях как только освободится", null);
+            sendReply(chatId, "запрос отправлен волонтеру, он напишет вам в личных сообщениях как только освободится");
         }
         return sendResponse.errorCode();
     }

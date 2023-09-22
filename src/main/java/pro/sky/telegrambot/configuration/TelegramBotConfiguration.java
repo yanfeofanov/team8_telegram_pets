@@ -9,9 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pro.sky.telegrambot.constant.Commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 
-public class TelegramBotConfiguration {
+public class  TelegramBotConfiguration {
 
     @Value("${telegram.bot.token}")
     private String token;
@@ -25,14 +28,14 @@ public class TelegramBotConfiguration {
     }
 
     private BotCommand[] generateListOfCommands() {
-        BotCommand[] botCommands = new BotCommand[Commands.values().length];
+        List<BotCommand> botCommandsList = new ArrayList<>();
         Commands[] commands = Commands.values();
-        for (int i = 0; i < commands.length; i++) {
-            if (commands[i].getCommand().contains("/")) {
-                botCommands[i] = new BotCommand(commands[i].getCommand(), commands[i].getDescription());
+        for (Commands command : commands) {
+            if (command.getCommand().contains("/")) {
+                botCommandsList.add(new BotCommand(command.getCommand(), command.getDescription()));
             }
         }
-        return botCommands;
+        return botCommandsList.toArray(BotCommand[]::new);
     }
 
 }

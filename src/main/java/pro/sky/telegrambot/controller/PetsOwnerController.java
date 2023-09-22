@@ -1,11 +1,9 @@
 package pro.sky.telegrambot.controller;
 
 import org.springframework.web.bind.annotation.*;
-import pro.sky.telegrambot.model.Pet;
 import pro.sky.telegrambot.model.PetOwner;
 import pro.sky.telegrambot.service.PetOwnerService;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -16,11 +14,11 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/pet_owner")
 public class PetsOwnerController {
-    private final PetOwnerService petOwnerService;
-
-    public PetsOwnerController(PetOwnerService petOwnerService) {
-        this.petOwnerService = petOwnerService;
-    }
+//    private final PetOwnerService petOwnerService;
+//
+//    public PetsOwnerController(PetOwnerService petOwnerService) {
+//        this.petOwnerService = petOwnerService;
+//    }
 
     @GetMapping("/{id}")
     public PetOwner findPetOwner(@PathVariable int id) {

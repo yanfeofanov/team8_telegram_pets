@@ -22,6 +22,11 @@
                                  referencedTableName="pet_owner"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="daily_report"
+                                 baseColumnNames="pet_id"
+                                 constraintName="FK_DAILY_REPORT_PET"
+                                 referencedTableName="pet"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="daily_report"
                                  baseColumnNames="photo_id"
                                  constraintName="FK_DAILY_REPORT_PHOTO"
                                  referencedTableName="photo"
