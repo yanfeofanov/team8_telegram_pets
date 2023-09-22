@@ -88,7 +88,7 @@ public class KeyboardService {
                 Commands.ABOUT_DOG_SHELTER,
                 Commands.DOG_SHELTER_CONTACT_INFO,
                 Commands.DOG_SHELTER_PASS_REG,
-                Commands.SHELTER_SAFETY_RECOMMENDATIONS,
+                Commands.DOG_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
                 Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
@@ -108,7 +108,7 @@ public class KeyboardService {
                 Commands.ABOUT_CAT_SHELTER,
                 Commands.CAT_SHELTER_CONTACT_INFO,
                 Commands.CAT_SHELTER_PASS_REG,
-                Commands.SHELTER_SAFETY_RECOMMENDATIONS,
+                Commands.CAT_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
                 Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
@@ -118,4 +118,15 @@ public class KeyboardService {
         List<Commands> commandList = List.of(Commands.PHONE, Commands.EMAIL);
         return prepareSinglelineKeyboard(commandList);
     }
+
+    public Keyboard backButtonMenuDog() {
+        List<Commands> commandsList = List.of(Commands.BACK_DOG_SHELTER);
+        return prepareMultilineKeyboard(commandsList);
+    }
+
+    public Keyboard backButtonMenuCat() {
+        List<Commands> commandsList = List.of(Commands.BACK_CAT_SHELTER);
+        return prepareMultilineKeyboard(commandsList);
+    }
+
 }
