@@ -116,14 +116,6 @@ public class TelegramBotService {
             return sendMenuPreparingForAdoptionDog(chatId);
         } else if (Commands.ABOUT_CAT_SHELTER.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelter(chatId);
-        } else if (Commands.CAT_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
-            sendCatShelterContactInfo(chatId);
-        } else if (Commands.CAT_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
-            sendCatShelterPassReg(chatId);
-        } else if (Commands.DOG_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
-            sendDogShelterContactInfo(chatId);
-        } else if (Commands.DOG_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
-            sendDogShelterPassReg(chatId);
         } else if (Commands.ABOUT_DOG_SHELTER.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelter(chatId);
         } else if (Commands.CALL_VOLUNTEER.getCommand().equals(commandStr)) {
@@ -138,18 +130,18 @@ public class TelegramBotService {
             return sendRequestToEnterEmail(chatId);
         } else if (Commands.REPORT_ABOUT_PET.getCommand().equals(commandStr)) {
             return sendRequestToEnterDailyReport(userId, chatId);
-        } else if (Commands.BACK_DOG_SHELTER.getCommand().equals(commandStr)) {
-            return sendDogShelterMenu(chatId);
+        } else if (Commands.CAT_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
+            return sendInfoAboutCatShelterContact(chatId);
         } else if (Commands.DOG_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterContact(chatId);
+        } else if (Commands.CAT_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
+            return sendInfoAboutCatShelterPassRegInfo(chatId);
         } else if (Commands.DOG_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterPassRegInfo(chatId);
         } else if (Commands.BACK_CAT_SHELTER.getCommand().equals(commandStr)) {
             return sendCatShelterMenu(chatId);
-        } else if (Commands.CAT_SHELTER_PASS_REG.getCommand().equals(commandStr)) {
-            return sendInfoAboutCatShelterPassRegInfo(chatId);
-        } else if (Commands.CAT_SHELTER_CONTACT_INFO.getCommand().equals(commandStr)) {
-            return sendInfoAboutCatShelterContact(chatId);
+        } else if (Commands.BACK_DOG_SHELTER.getCommand().equals(commandStr)) {
+            return sendDogShelterMenu(chatId);
         } else if (Commands.CAT_SHELTER_SAFETY_RECOMMENDATIONS.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterSafetyRecommendation(chatId);
         }
@@ -159,7 +151,8 @@ public class TelegramBotService {
     private int processInputOfInformation(Long userId, Long chatId, String textMassage, PhotoSize[] photoSizes) {
         TypeOfWaiting typeOfWaiting = chatsWaitingForInformation.get(chatId);
         if (typeOfWaiting == null) {
-            return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
+            sendReply(chatId, "введенная вами команда не распознана ботом");
+            return sendHelpInformation(chatId);
         } else if (typeOfWaiting == TypeOfWaiting.PHONE_NUMBER) {
             if (textMassage != null && validatePhoneNumber(textMassage)) {
                 return createCommunicationRequest(userId, chatId, textMassage);
@@ -195,21 +188,6 @@ public class TelegramBotService {
                 "- рацион животного\n" +
                 "- общее самочувствие и привыкание к новому месту\n" +
                 "- изменение в поведении: отказ от старых привычек, приобретение новых").errorCode();
-    }
-
-    private void sendCatShelterContactInfo(Long chatId) {
-        String textAboveMenu = "График работы: с 8:00 до 20:00, воскресенье выходной, Aдрес проезда: Туполева 12А главные ворота";
-        sendReply(chatId, textAboveMenu);
-    }
-
-    private void sendCatShelterPassReg(Long chatId) {
-        String textAboveMenu = "Для оформления пропуска на территорию приюта для кошек, необходимо сообщить марку и госномер автомобиля";
-        sendReply(chatId, textAboveMenu);
-    }
-
-    private void sendShelterSafetyRecommendations(Long chatId) {
-        String textAboveMenu = " На территориию приюта необходимо соблюдать правила безопасности при обращении с животными";
-        sendReply(chatId, textAboveMenu);
     }
 
     private int createCommunicationRequest(Long userId, Long chatId, String contactInfo) {
@@ -252,16 +230,6 @@ public class TelegramBotService {
     private int sendMenuPreparingForAdoptionDog(Long chatId) {
         String textAboveMenu = "ознакомьтесь пожалуйста с информацией, которая поможет вам подготовиться ко встрече с новым членом семьи";
         return sendReply(chatId, textAboveMenu, keyboardService.generateMenuPreparingForAdoption(TypeOfPet.DOG)).errorCode();
-    }
-
-    private void sendDogShelterContactInfo(Long chatId) {
-        String textAboveMenu = "График работы: с 8:30 до 22, воскресенье выходной, Aдрес приюта: Проезд Тупиковый 2А, вход с торца ";
-        sendReply(chatId, textAboveMenu);
-    }
-
-    private void sendDogShelterPassReg(Long chatId) {
-        String textAboveMenu = "Для оформления пропуска на территорию приюта для собак, необходимо сообщить марку машины и госномер автомобиля";
-        sendReply(chatId, textAboveMenu);
     }
 
     private int sendInfoAboutDogShelter(Long chatId) {
@@ -307,7 +275,6 @@ public class TelegramBotService {
             logger.info("no info about dog shelter");
             return -1;
         }
-
     }
 
     private int sendInfoAboutDogShelterPassRegInfo(Long chatId) {
@@ -323,7 +290,6 @@ public class TelegramBotService {
             logger.info("no info about dog shelter");
             return -1;
         }
-
     }
 
     private int sendInfoAboutCatShelterPassRegInfo(Long chatId) {
@@ -369,7 +335,6 @@ public class TelegramBotService {
             logger.info("no info about cat shelter");
             return -1;
         }
-
     }
 
     private int sendInfoAboutCatShelter(Long chatId) {
