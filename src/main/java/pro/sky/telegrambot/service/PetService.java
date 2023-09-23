@@ -19,8 +19,8 @@ public class PetService {
      * @param id
      * @return Pet
      */
-    public Pet findPet(Long id){
-        return petRepository.findById(id).orElse(null);
+    public Pet findPet(int id){
+        return petRepository.findById(id);
     }
 
 }
