@@ -74,25 +74,41 @@ public class KeyboardService {
         return prepareMultilineKeyboard(commandList);
     }
 
-    public Keyboard generateDogShelterMenu() {
+    public Keyboard generateMainDogShelterMenu() {
+        List<Commands> commandList = List.of(
+                Commands.DOG_SHELTER_MENU,
+                Commands.ADOPT_DOG,
+                Commands.REPORT_ABOUT_PET,
+                Commands.CALL_VOLUNTEER);
+        return prepareMultilineKeyboard(commandList);
+    }
+
+    public Keyboard generateInfoDogShelterMenu() {
         List<Commands> commandList = List.of(
                 Commands.ABOUT_DOG_SHELTER,
                 Commands.DOG_SHELTER_CONTACT_INFO,
                 Commands.DOG_SHELTER_PASS_REG,
-                Commands.SHELTER_SAFETY_RECOMMENDATIONS,
-                Commands.ADOPT_DOG,
+                Commands.DOG_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
                 Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
     }
 
-    public Keyboard generateCatShelterMenu() {
+    public Keyboard generateMainCatShelterMenu() {
+        List<Commands> commandList = List.of(
+                Commands.CAT_SHELTER_MENU,
+                Commands.ADOPT_CAT,
+                Commands.REPORT_ABOUT_PET,
+                Commands.CALL_VOLUNTEER);
+        return prepareMultilineKeyboard(commandList);
+    }
+
+    public Keyboard generateInfoCatShelterMenu() {
         List<Commands> commandList = List.of(
                 Commands.ABOUT_CAT_SHELTER,
                 Commands.CAT_SHELTER_CONTACT_INFO,
                 Commands.CAT_SHELTER_PASS_REG,
-                Commands.SHELTER_SAFETY_RECOMMENDATIONS,
-                Commands.ADOPT_CAT,
+                Commands.CAT_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
                 Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
@@ -102,4 +118,15 @@ public class KeyboardService {
         List<Commands> commandList = List.of(Commands.PHONE, Commands.EMAIL);
         return prepareSinglelineKeyboard(commandList);
     }
+
+    public Keyboard backButtonMenuDog() {
+        List<Commands> commandsList = List.of(Commands.BACK_DOG_SHELTER);
+        return prepareMultilineKeyboard(commandsList);
+    }
+
+    public Keyboard backButtonMenuCat() {
+        List<Commands> commandsList = List.of(Commands.BACK_CAT_SHELTER);
+        return prepareMultilineKeyboard(commandsList);
+    }
+
 }

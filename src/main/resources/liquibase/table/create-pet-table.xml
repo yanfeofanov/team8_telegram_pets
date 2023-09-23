@@ -32,7 +32,6 @@
             <column name="shelter_id" type="INT4">
                 <constraints nullable="false"/>
             </column>
-            <column name="pet_owner_id" type="INT4"/>
             <column name="photo_id" type="INT8"/>
         </createTable>
     </changeSet>

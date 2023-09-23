@@ -22,6 +22,11 @@
                                  referencedTableName="pet_owner"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="daily_report"
+                                 baseColumnNames="pet_id"
+                                 constraintName="FK_DAILY_REPORT_PET"
+                                 referencedTableName="pet"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="daily_report"
                                  baseColumnNames="photo_id"
                                  constraintName="FK_DAILY_REPORT_PHOTO"
                                  referencedTableName="photo"
@@ -40,11 +45,6 @@
                                  baseColumnNames="shelter_id"
                                  constraintName="FK_PET_SHELTER"
                                  referencedTableName="shelter"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="pet"
-                                 baseColumnNames="pet_owner_id"
-                                 constraintName="FK_PET_OWNER"
-                                 referencedTableName="pet_owner"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="pet"
                                  baseColumnNames="photo_id"

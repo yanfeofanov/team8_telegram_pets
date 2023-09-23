@@ -15,6 +15,10 @@ public class PetOwner {
     @Column(name = "phone_number")
     private String phoneNumber;
     private String email;
+
+    @OneToOne
+    @JoinColumn(name = "pet_id")
+    private Pet pet;
     @OneToOne
     @JoinColumn(name = "bot_user_id")
     private User user;
@@ -41,6 +45,14 @@ public class PetOwner {
 
     public int getId() {
         return id;
+    }
+
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
     public String getName() {
