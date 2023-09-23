@@ -14,6 +14,5 @@
         <addColumn tableName="pet">
             <column name="leave" type="BOOLEAN"/>
         </addColumn>
-
     </changeSet>
 </databaseChangeLog>
