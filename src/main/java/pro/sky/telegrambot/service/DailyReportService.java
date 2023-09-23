@@ -189,7 +189,7 @@ public class DailyReportService {
      */
     private DailyReport createDailyReport(Long chatId, String text, Photo photo) {
         PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(chatId);
-        Pet pet = petService.findPet(petOwner.getPet().getId());
+        Pet pet = petService.findPet(petOwner.getId());
         Volunteer volunteer = volunteerService.getRandomVolunteer();
 
         DailyReport dailyReport = new DailyReport();
