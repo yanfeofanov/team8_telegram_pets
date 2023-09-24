@@ -10,9 +10,7 @@ import com.pengrad.telegrambot.response.GetFileResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pro.sky.telegrambot.model.DailyReport;
-import pro.sky.telegrambot.model.PetOwner;
-import pro.sky.telegrambot.model.Photo;
+import pro.sky.telegrambot.model.*;
 import pro.sky.telegrambot.repository.DailyReportRepository;
 
 import java.io.*;
@@ -34,16 +32,26 @@ public class DailyReportService {
 
     private final PhotoService photoService;
 
+    private final PetService petService;
+
+    private final VolunteerService volunteerService;
+
     @Value("path.to.photo.dir")
     private String coversDir;
 
     @Autowired
     TelegramBot telegramBot;
 
-    public DailyReportService(DailyReportRepository dailyReportRepository, PetOwnerService petOwnerService,PhotoService photoService) {
+    public DailyReportService(DailyReportRepository dailyReportRepository,
+                              PetOwnerService petOwnerService,
+                              PhotoService photoService,
+                              PetService petService,
+                              VolunteerService volunteerService) {
         this.dailyReportRepository = dailyReportRepository;
         this.petOwnerService = petOwnerService;
         this.photoService = photoService;
+        this.petService = petService;
+        this.volunteerService = volunteerService;
     }
 
     public DailyReport sendReport(Long chatId, String caption, PhotoSize[] photoSizes) throws IOException {
@@ -88,7 +96,7 @@ public class DailyReportService {
             photoService.savePhotoReport(photo1);
             uploadPhotoToServer(fileData, filePath);
 
-            return createKeepingPet(chatId, text, photo1);
+            return createDailyReport(chatId, text, photo1);
         }
         else { // пользователь сегодня уже отправлял отчет
             Photo deletePhotoPet = dailyReportRepository.findDailyReportById(reportId).getPhoto();
@@ -98,7 +106,7 @@ public class DailyReportService {
             photoService.savePhotoReport(photo1);
             uploadPhotoToServer(fileData, filePath);
 
-            return updateKeepingPet(reportId, text, photo1);
+            return updateDailyReport(reportId, text, photo1);
         }
     }
 
@@ -139,13 +147,13 @@ public class DailyReportService {
         photoPet.setMediaType(fileRequest.getContentType());
         photoPet.setFileSize(file.fileSize());
         photoPet.setFilePath(filePath.toString());
-
-        PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(chatId);
-        if (petOwner != null) {
-            //photoPet.setPet(petOwner.getPet());
-        }else {
-            throw new IllegalArgumentException("Владельца с таким chatId не существует:" + chatId);
-        }
+//
+//        PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(chatId);
+//        if (petOwner != null) {
+//            petOwner.g();
+//        }else {
+//            throw new IllegalArgumentException("Владельца с таким chatId не существует:" + chatId);
+//        }
 
         return photoPet;
     }
@@ -179,19 +187,23 @@ public class DailyReportService {
      * @param photo объект содержащий информацию. о фотографии
      * @return новый отчет
      */
-    private DailyReport createKeepingPet(Long chatId, String text, Photo photo) {
+    private DailyReport createDailyReport(Long chatId, String text, Photo photo) {
         PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(chatId);
+        Pet pet = petService.findPet(petOwner.getId());
+        Volunteer volunteer = volunteerService.getRandomVolunteer();
 
         DailyReport dailyReport = new DailyReport();
-        //dailyReport.setChatId(chatId);
         if (petOwner != null) {
             dailyReport.setPetOwner(petOwner);
+
         } else {
             throw new IllegalArgumentException("Владельца с таким chatId не существует:" + chatId);
         }
         dailyReport.setDate(LocalDateTime.now());
-        //dailyReport.setInfoPet(text);
+        dailyReport.setReportBody(text);
         dailyReport.setPhoto(photo);
+        dailyReport.setPet(pet);
+        dailyReport.setInspector(volunteer);
         return dailyReport;
     }
     /**
@@ -203,11 +215,11 @@ public class DailyReportService {
      * @param photo новое фотография питомца
      * @return обновленный отчет
      */
-    private DailyReport updateKeepingPet(long reportId, String caption, Photo photo) {
+    private DailyReport updateDailyReport(long reportId, String caption, Photo photo) {
         DailyReport dailyReport = dailyReportRepository.findDailyReportById(reportId);
 
         dailyReport.setDate(LocalDateTime.now());
-        //dailyReport.setInfoPet(caption);
+        dailyReport.setReportBody(caption);
         dailyReport.setPhoto(photo);
         return dailyReport;
     }
@@ -281,4 +293,3 @@ public class DailyReportService {
         return dailyReportRepository.findDailyReportByDateBetween(date.atStartOfDay(), date.plusDays(1).atStartOfDay());
     }
 }
-

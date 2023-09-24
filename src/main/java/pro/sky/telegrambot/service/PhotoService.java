@@ -55,7 +55,7 @@ public class PhotoService {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
-    public Photo findPhoto(Long Id) {
+    public Photo findPhoto(int Id) {
         return photoPetRepository.findPhotoById(Id).orElse(new Photo());
     }
 

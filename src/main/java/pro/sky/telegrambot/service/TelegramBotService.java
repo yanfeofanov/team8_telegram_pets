@@ -164,12 +164,13 @@ public class TelegramBotService {
                 return sendReply(chatId, "Адрес электронной почты введен не корректно! Повторите пожалуйста ввод.").errorCode();
             }
         } else if (typeOfWaiting == TypeOfWaiting.DAILY_REPORT) {
-            if (photoSizes != null) {
-               /* try {
+            if (photoSizes != null && textMassage != null) {
+                try {
                     dailyReportService.sendReport(chatId, textMassage, photoSizes);
+                    return sendReply(chatId, "отчет сохранен. Спасибо!").errorCode();
                 } catch (IOException e) {
                     return sendReply(chatId, "Не удалось записать ваш отчет! Повторите пожалуйста снова.").errorCode();
-                }*/
+                }
             }
         }
         return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
