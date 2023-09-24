@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="create-pet_owner-table.1" author="DMorozov">
 
@@ -25,7 +25,6 @@
             </column>
             <column name="phone_number" type="VARCHAR(30)"/>
             <column name="email" type="VARCHAR(100)"/>
-            <column name="pet_id" type="INT4"/>
             <column name="bot_user_id" type="INT8">
                 <constraints nullable="false"/>
             </column>

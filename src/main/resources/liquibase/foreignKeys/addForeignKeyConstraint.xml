@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="add-foreign-key-constraint.1" author="AChumichev">
         <addForeignKeyConstraint baseTableName="communication_request"
@@ -45,6 +45,11 @@
                                  baseColumnNames="shelter_id"
                                  constraintName="FK_PET_SHELTER"
                                  referencedTableName="shelter"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="pet"
+                                 baseColumnNames="pet_owner_id"
+                                 constraintName="FK_PET_OWNER"
+                                 referencedTableName="pet_owner"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="pet"
                                  baseColumnNames="photo_id"

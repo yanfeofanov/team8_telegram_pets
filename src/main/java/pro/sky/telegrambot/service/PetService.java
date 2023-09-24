@@ -14,13 +14,13 @@ public class PetService {
     }
 
     /**
-     * Метод находит питомца по id
+     * Метод находит питомца по id владельца
      *
-     * @param id
+     * @param petOwnerId
      * @return Pet
      */
-    public Pet findPet(int id){
-        return petRepository.findById(id);
+    public Pet findPet(int petOwnerId){
+        return petRepository.findByPetOwnerIdAndLeaveFalse(petOwnerId);
     }
 
 }
