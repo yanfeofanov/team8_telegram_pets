@@ -7,7 +7,7 @@ import pro.sky.telegrambot.repository.PetRepository;
 @Service
 public class PetService {
 
-    private PetRepository petRepository;
+    private final PetRepository petRepository;
 
     public PetService(PetRepository petRepository) {
         this.petRepository = petRepository;
@@ -16,11 +16,14 @@ public class PetService {
     /**
      * Метод находит питомца по id
      *
-     * @param id
+     * @param id уникальный идентификатор питомца
      * @return Pet
      */
-    public Pet findPet(Long id){
-        return petRepository.findById(id).orElse(null);
+    public Pet findPet(int id){
+        return petRepository.findById(id);
     }
 
+    public Pet addPet(Pet newPet) {
+        return petRepository.save(newPet);
+    }
 }

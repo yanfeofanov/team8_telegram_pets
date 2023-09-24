@@ -26,7 +26,7 @@ public class PhotoService {
         this.petService = petService;
         this.photoPetRepository = photoPetRepository;
     }
-    public void uploadPhoto(Long petId, MultipartFile file) throws IOException {
+    public void uploadPhoto(int petId, MultipartFile file) throws IOException {
         Pet pet = petService.findPet(petId);
 
         Path filePath = Path.of(coversDir, petId + "." + getExtension(file.getOriginalFilename()));

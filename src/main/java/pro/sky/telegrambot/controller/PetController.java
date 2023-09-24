@@ -1,6 +1,7 @@
 package pro.sky.telegrambot.controller;
 
 import org.springframework.web.bind.annotation.*;
+import pro.sky.telegrambot.exception.BadParamException;
 import pro.sky.telegrambot.model.Pet;
 import pro.sky.telegrambot.service.PetService;
 
@@ -20,15 +21,17 @@ public class PetController {
     }
     @GetMapping("/{id}")
     public Pet findPet (@PathVariable int id) {
-        return new Pet();
+        checkParametersForNull(id);
+        return petService.findPet(id);
     }
     @PostMapping
     public Pet addPet(@RequestBody Pet newPet) {
-        return newPet;
+        checkParametersForNull(newPet);
+        return petService.addPet(newPet);
     }
     @DeleteMapping("/{id}")
     public Pet deletePet (@PathVariable int id) {
-        return new Pet();
+        return petService.deletePet(id);
     }
 
     @GetMapping("/all")
@@ -66,4 +69,11 @@ public class PetController {
         return new ArrayList<>();
     }
 
+    private void checkParametersForNull(Object... params) {
+        for (Object param : params) {
+            if (param == null) {
+                throw new BadParamException();
+            }
+        }
+    }
 }
