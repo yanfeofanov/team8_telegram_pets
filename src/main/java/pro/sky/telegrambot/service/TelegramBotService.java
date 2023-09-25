@@ -17,8 +17,6 @@ import pro.sky.telegrambot.constant.TypeOfPet;
 import pro.sky.telegrambot.constant.TypeOfWaiting;
 import pro.sky.telegrambot.constant.TypesOfInformation;
 import pro.sky.telegrambot.model.*;
-import pro.sky.telegrambot.repository.InfoRepository;
-import pro.sky.telegrambot.repository.ShelterRepository;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,8 +32,8 @@ public class TelegramBotService {
     private final Map<Long, TypeOfWaiting> chatsWaitingForInformation = new HashMap<>();
     private final Pattern patternPhoneNumber = Pattern.compile("89\\d{9}");
     private final Pattern patternEmail = Pattern.compile("^[A-Za-z0-9][A-Za-z0-9\\.\\-_]*[A-Za-z0-9]*@([A-Za-z0-9]+([A-Za-z0-9-]*[A-Za-z0-9]+)*\\.)+[A-Za-z]*$");
-    private final InfoRepository infoRepository;
-    private final ShelterRepository shelterRepository;
+    private final InfoService infoService;
+    private final ShelterService shelterService;
     private final KeyboardService keyboardService;
     private final CommunicationRequestService communicationRequestService;
     private final UserService userService;
@@ -44,11 +42,11 @@ public class TelegramBotService {
     private final DailyReportService dailyReportService;
     private final TelegramBot telegramBot;
 
-    public TelegramBotService(InfoRepository infoRepository, ShelterRepository shelterRepository, KeyboardService keyboardService,
+    public TelegramBotService(InfoService infoService, ShelterService shelterService, KeyboardService keyboardService,
                               CommunicationRequestService communicationRequestService, UserService userService,
                               VolunteerService volunteerService, PetOwnerService petOwnerService, DailyReportService dailyReportService, TelegramBot telegramBot) {
-        this.infoRepository = infoRepository;
-        this.shelterRepository = shelterRepository;
+        this.infoService = infoService;
+        this.shelterService = shelterService;
         this.keyboardService = keyboardService;
         this.communicationRequestService = communicationRequestService;
         this.userService = userService;
@@ -79,7 +77,7 @@ public class TelegramBotService {
         } else if (textMassage != null || photoSizes != null) {
             return processInputOfInformation(userId, chatId, (photoSizes != null) ? message.caption() : textMassage, photoSizes);
         } else {
-            return sendReply(chatId, "извините, к сожалению наш бот не работает с данными данного типа").errorCode();
+            return sendReply(chatId, "извините, к сожалению наш бот не работает с данными такого типа").errorCode();
         }
     }
 
@@ -97,7 +95,7 @@ public class TelegramBotService {
         return processCommand(userId, chatId, callbackCommand);
     }
 
-    public int processCommand(Long userId, Long chatId, String commandStr) {
+    private int processCommand(Long userId, Long chatId, String commandStr) {
         if (Commands.START.getCommand().equals(commandStr)) {
             return sendShelterSelectionMenu(chatId);
         } else if (Commands.HELP.getCommand().equals(commandStr)) {
@@ -168,14 +166,20 @@ public class TelegramBotService {
         } else if (typeOfWaiting == TypeOfWaiting.DAILY_REPORT) {
             if (photoSizes != null && textMassage != null) {
                 try {
-                    dailyReportService.sendReport(chatId, textMassage, photoSizes);
-                    return sendReply(chatId, "отчет сохранен. Спасибо!").errorCode();
+                    if (dailyReportService.sendReport(userId, textMassage, photoSizes) != null) {
+                        chatsWaitingForInformation.remove(chatId);
+                        return sendReply(chatId, "отчет сохранен. Спасибо!").errorCode();
+                    } else sendReply(chatId, "Не удалось записать ваш отчет! Повторите пожалуйста снова.").errorCode();
                 } catch (IOException e) {
                     return sendReply(chatId, "Не удалось записать ваш отчет! Повторите пожалуйста снова.").errorCode();
                 }
+            } else {
+                return sendReply(chatId, "Данные для отчета введены в неверном формате!\n " +
+                        "Отправьте отчет одним сообщением! Текст отчета должен быть размещен в описании под фото!").errorCode();
             }
         }
-        return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
+        sendReply(chatId, "введенная вами команда не распознана ботом");
+        return sendHelpInformation(chatId);
     }
 
     private int sendRequestToEnterDailyReport(Long userId, Long chatId) {
@@ -188,7 +192,8 @@ public class TelegramBotService {
                 "- фото животного\n" +
                 "- рацион животного\n" +
                 "- общее самочувствие и привыкание к новому месту\n" +
-                "- изменение в поведении: отказ от старых привычек, приобретение новых").errorCode();
+                "- изменение в поведении: отказ от старых привычек, приобретение новых\n" +
+                "* Отправьте отчет одним сообщением! Текст отчета должен быть размещен в описании под фото!").errorCode();
     }
 
     private int createCommunicationRequest(Long userId, Long chatId, String contactInfo) {
@@ -234,12 +239,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelter(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.LONG_INFO_ABOUT_SHELTER, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.LONG_INFO_ABOUT_SHELTER, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -249,12 +254,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterContact(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelterContact = infoRepository.findByTypeAndShelter(TypesOfInformation.SHELTER_CONTACT_INFO, shelter);
+        Info infoAboutDogShelterContact = infoService.findByTypeAndShelter(TypesOfInformation.SHELTER_CONTACT_INFO, shelter);
         if (infoAboutDogShelterContact != null) {
             return sendReply(chatId, infoAboutDogShelterContact.getText(), keyboardService.backButtonMenuDog()).errorCode();
         } else {
@@ -264,12 +269,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterSafetyRecommendation(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelterRecommendation = infoRepository.findByTypeAndShelter(TypesOfInformation.SAFETY_RECOMMENDATIONS, shelter);
+        Info infoAboutDogShelterRecommendation = infoService.findByTypeAndShelter(TypesOfInformation.SAFETY_RECOMMENDATIONS, shelter);
         if (infoAboutDogShelterRecommendation != null) {
             return sendReply(chatId, infoAboutDogShelterRecommendation.getText(), keyboardService.backButtonMenuDog()).errorCode();
         } else {
@@ -279,12 +284,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterPassRegInfo(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.SHELTER_PASS_REG_INFO, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.SHELTER_PASS_REG_INFO, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText(), keyboardService.backButtonMenuDog()).errorCode();
         } else {
@@ -294,12 +299,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterPassRegInfo(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.SHELTER_PASS_REG_INFO, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.SHELTER_PASS_REG_INFO, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText(), keyboardService.backButtonMenuCat()).errorCode();
         } else {
@@ -309,12 +314,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterContact(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelterContact = infoRepository.findByTypeAndShelter(TypesOfInformation.SHELTER_CONTACT_INFO, shelter);
+        Info infoAboutCatShelterContact = infoService.findByTypeAndShelter(TypesOfInformation.SHELTER_CONTACT_INFO, shelter);
         if (infoAboutCatShelterContact != null) {
             return sendReply(chatId, infoAboutCatShelterContact.getText(), keyboardService.backButtonMenuCat()).errorCode();
         } else {
@@ -324,12 +329,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterSafetyRecommendation(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelterSafetyRecommendation = infoRepository.findByTypeAndShelter(TypesOfInformation.SAFETY_RECOMMENDATIONS, shelter);
+        Info infoAboutCatShelterSafetyRecommendation = infoService.findByTypeAndShelter(TypesOfInformation.SAFETY_RECOMMENDATIONS, shelter);
         if (infoAboutCatShelterSafetyRecommendation != null) {
             return sendReply(chatId, infoAboutCatShelterSafetyRecommendation.getText(), keyboardService.backButtonMenuCat()).errorCode();
         } else {
@@ -339,12 +344,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelter(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.LONG_INFO_ABOUT_SHELTER, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.LONG_INFO_ABOUT_SHELTER, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
@@ -370,7 +375,7 @@ public class TelegramBotService {
     }
 
     private int sendDogShelterMenu(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.DOG);
         if (shelter == null) {
             return -1;
         }
@@ -379,7 +384,7 @@ public class TelegramBotService {
     }
 
     private int sendCatShelterMenu(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.CAT);
         if (shelter == null) {
             return -1;
         }
@@ -388,7 +393,7 @@ public class TelegramBotService {
     }
 
     private int sendCatInfoMenu(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.CAT);
         if (shelter == null) {
             return -1;
         }
@@ -397,7 +402,7 @@ public class TelegramBotService {
     }
 
     private int sendDogInfoMenu(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findShelterByType(TypeOfPet.DOG);
         if (shelter == null) {
             return -1;
         }
@@ -412,7 +417,7 @@ public class TelegramBotService {
     private String generateGreetingText(String nickName) {
         String greeting = "здравствуйте ";
         greeting += nickName;
-        Info aboutBot = infoRepository.findByType(TypesOfInformation.INFO_ABOUT_BOT);
+        Info aboutBot = infoService.findByType(TypesOfInformation.INFO_ABOUT_BOT);
         if (aboutBot != null) {
             greeting = greeting + ", вас приветсвует " + aboutBot.getText();
         }
@@ -428,13 +433,12 @@ public class TelegramBotService {
 
     public SendResponse sendReply(Long chatId, String text) {
         SendMessage message = new SendMessage(chatId, text);
-        //message.parseMode(ParseMode.Markdown);
+        //message.parseMode(ParseMode.MarkdownV2);
         return telegramBot.execute(message);
     }
 
     /**
-     * метод осуществляет поиск в бд данных о волонтерах, выбирает случайного из них в случае наличия.
-     * Отправляет волонтеру ссылку на профиль пользователя запросившего связь с волонтером, и информирует
+     * метод отправляет случайному волонтеру ссылку на профиль пользователя запросившего связь с волонтером, и информирует
      * пользователя о том что волонтер получил запрос
      *
      * @param userId уникальный идентификатор пользователя в telegram

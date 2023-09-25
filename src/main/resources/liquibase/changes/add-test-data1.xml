@@ -8,6 +8,7 @@
     <changeSet id="add-test-data-bot_user-table" author="Chumichev">
         <preConditions>
             <tableExists tableName="bot_user"/>
+            <tableIsEmpty tableName="bot_user"/>
         </preConditions>
         <insert tableName="bot_user">
             <column name="id" value="298044410"/>
@@ -38,6 +39,7 @@
     <changeSet id="add-test-volunteer-table" author="Chumichev">
         <preConditions>
             <tableExists tableName="volunteer"/>
+            <tableIsEmpty tableName="volunteer"/>
         </preConditions>
         <insert tableName="volunteer">
             <column name="id" value="1"/>
@@ -50,6 +52,7 @@
     <changeSet id="add-test-data-shelter-table" author="Chumichev">
         <preConditions>
             <tableExists tableName="shelter"/>
+            <tableIsEmpty tableName="shelter"/>
         </preConditions>
         <insert tableName="shelter">
             <column name="id" value="1"/>
@@ -65,6 +68,7 @@
     <changeSet id="add-test-data-info-table" author="Chumichev">
         <preConditions>
             <tableExists tableName="info"/>
+            <tableIsEmpty tableName="info"/>
         </preConditions>
         <insert tableName="info">
             <column name="id" value="1"/>
@@ -276,6 +280,7 @@
     <changeSet id="add-test-data-pet_owner-table" author="Chumichev">
         <preConditions>
             <tableExists tableName="pet_owner"/>
+            <tableIsEmpty tableName="pet_owner"/>
         </preConditions>
         <insert tableName="pet_owner">
             <column name="id" value="1"/>
@@ -309,6 +314,7 @@
     <changeSet id="add-test-data-pet-table" author="Chumichev">
         <preConditions>
             <tableExists tableName="pet"/>
+            <tableIsEmpty tableName="pet"/>
         </preConditions>
         <insert tableName="pet">
             <column name="id" value="1"/>
