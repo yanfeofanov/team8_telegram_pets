@@ -22,6 +22,11 @@ public class Shelter {
     public Shelter() {
     }
 
+    public Shelter(String name, TypeOfPet type) {
+        this.name = name;
+        this.type = type;
+    }
+
     public Shelter(String name, TypeOfPet type, Photo photo) {
         this.name = name;
         this.type = type;
