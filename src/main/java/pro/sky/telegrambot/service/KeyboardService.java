@@ -90,7 +90,16 @@ public class KeyboardService {
                 Commands.DOG_SHELTER_PASS_REG,
                 Commands.DOG_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
-                Commands.CALL_VOLUNTEER);
+                Commands.CALL_VOLUNTEER,
+                Commands.RULES_FOR_GETTING_TO_KNOW_PET,
+                Commands.DOCUMENTS_FOR_ADOPTION,
+                Commands.TRANSPORTATION_RECOMMENDATION,
+                Commands.RECOMMENDATION_FOR_CUB_HOUSE,
+                Commands.RECOMMENDATION_FOR_ADULT_PET_HOUSE,
+                Commands.RECOMMENDATION_FOR_DISABLED_PET_HOUSE,
+                Commands.TIPS_FROM_DOG_HANDLER,
+                Commands.RECOMMENDED_DOG_HANDLERS_LIST,
+                Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION);
         return prepareMultilineKeyboard(commandList);
     }
 
@@ -110,7 +119,16 @@ public class KeyboardService {
                 Commands.CAT_SHELTER_PASS_REG,
                 Commands.CAT_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
-                Commands.CALL_VOLUNTEER);
+                Commands.CALL_VOLUNTEER,
+                Commands.RULES_FOR_GETTING_TO_KNOW_PET,
+                Commands.DOCUMENTS_FOR_ADOPTION,
+                Commands.TRANSPORTATION_RECOMMENDATION,
+                Commands.RECOMMENDATION_FOR_CUB_HOUSE,
+                Commands.RECOMMENDATION_FOR_ADULT_PET_HOUSE,
+                Commands.RECOMMENDATION_FOR_DISABLED_PET_HOUSE,
+                Commands.TIPS_FROM_DOG_HANDLER,
+                Commands.RECOMMENDED_DOG_HANDLERS_LIST,
+                Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION);
         return prepareMultilineKeyboard(commandList);
     }
 

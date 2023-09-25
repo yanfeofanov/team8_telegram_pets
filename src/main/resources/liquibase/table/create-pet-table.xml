@@ -34,7 +34,7 @@
             </column>
             <column name="pet_owner_id" type="INT4"/>
             <column name="photo_id" type="INT8"/>
-            <column name="leave" type="BOOLEAN"/>
+
         </createTable>
     </changeSet>
 </databaseChangeLog>
