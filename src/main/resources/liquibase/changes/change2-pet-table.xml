@@ -9,6 +9,9 @@
 
         <preConditions>
                 <tableExists tableName="pet"/>
+            <not>
+                <columnExists tableName="pet" columnName="leave"/>
+            </not>
         </preConditions>
 
         <addColumn tableName="pet">

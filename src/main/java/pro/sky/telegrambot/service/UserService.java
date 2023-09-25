@@ -28,7 +28,9 @@ public class UserService {
         if (nickName == null || nickName.isEmpty()) {
             if (name == null || name.isEmpty()) {
                 nickName = "дорогой гость";
-            } else nickName = name;
+            } else {
+                nickName = name;
+            }
         }
         return userRepository.save(new User(id, nickName, chatId, LocalDateTime.now(TimeZone.getTimeZone("GMT+3").toZoneId())));
     }

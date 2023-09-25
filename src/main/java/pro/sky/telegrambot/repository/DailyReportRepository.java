@@ -14,5 +14,7 @@ public interface DailyReportRepository extends JpaRepository<DailyReport, Long> 
     Collection<DailyReport> findDailyReportByPetOwner(PetOwner petOwner);
 
     Collection<DailyReport> findDailyReportByDateBetween(LocalDateTime begin, LocalDateTime end);
+
+    DailyReport findByPetOwnerAndDateBetween(PetOwner petOwner, LocalDateTime begin, LocalDateTime end);
 }
 
