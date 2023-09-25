@@ -28,7 +28,9 @@
             </column>
             <column name="photo_id" type="INT8"/>
             <column name="report_body" type="TEXT"/>
-            <column name="checked" type="BOOLEAN"/>
+            <column name="checked" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
             <column name="volunteer_id" type="INT4"/>
         </createTable>
     </changeSet>

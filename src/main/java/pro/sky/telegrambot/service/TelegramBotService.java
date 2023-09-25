@@ -166,14 +166,20 @@ public class TelegramBotService {
         } else if (typeOfWaiting == TypeOfWaiting.DAILY_REPORT) {
             if (photoSizes != null && textMassage != null) {
                 try {
-                    dailyReportService.sendReport(chatId, textMassage, photoSizes);
-                    return sendReply(chatId, "отчет сохранен. Спасибо!").errorCode();
+                    if (dailyReportService.sendReport(userId, textMassage, photoSizes) != null) {
+                        chatsWaitingForInformation.remove(chatId);
+                        return sendReply(chatId, "отчет сохранен. Спасибо!").errorCode();
+                    } else sendReply(chatId, "Не удалось записать ваш отчет! Повторите пожалуйста снова.").errorCode();
                 } catch (IOException e) {
                     return sendReply(chatId, "Не удалось записать ваш отчет! Повторите пожалуйста снова.").errorCode();
                 }
+            } else {
+                return sendReply(chatId, "Данные для отчета введены в неверном формате!\n " +
+                        "Отправьте отчет одним сообщением! Текст отчета должен быть размещен в описании под фото!").errorCode();
             }
         }
-        return sendReply(chatId, "введенная вами команда не распознана ботом").errorCode();
+        sendReply(chatId, "введенная вами команда не распознана ботом");
+        return sendHelpInformation(chatId);
     }
 
     private int sendRequestToEnterDailyReport(Long userId, Long chatId) {
