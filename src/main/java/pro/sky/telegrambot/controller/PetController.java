@@ -26,13 +26,13 @@ public class PetController {
         return petService.findPetById(id);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public Pet addPet(@RequestBody Pet newPet) {
         checkParametersForNull(newPet);
         return petService.addPet(newPet);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deletePet(@PathVariable int id) {
         petService.deletePet(id);
     }
@@ -113,7 +113,7 @@ public class PetController {
     public Collection<Pet> getAllPetsOnProbationByType(@PathVariable String type) {
         checkParametersForNull(type);
         try {
-            TypeOfPet typeOfPet = TypeOfPet.valueOf(type);
+            TypeOfPet typeOfPet = TypeOfPet.valueOf(type.toUpperCase());
             return petService.getAllPetsOnProbationByType(typeOfPet);
         } catch (IllegalArgumentException e) {
             throw new BadParamException();
