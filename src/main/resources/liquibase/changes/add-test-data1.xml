@@ -42,7 +42,6 @@
             <tableIsEmpty tableName="volunteer"/>
         </preConditions>
         <insert tableName="volunteer">
-            <column name="id" value="1"/>
             <column name="name" value="Stanislav"/>
             <column name="surname" value="Kruglov"/>
             <column name="bot_user_id" value="298044410"/>
@@ -55,12 +54,10 @@
             <tableIsEmpty tableName="shelter"/>
         </preConditions>
         <insert tableName="shelter">
-            <column name="id" value="1"/>
             <column name="name" value="Лапочка"/>
             <column name="type" value="CAT"/>
         </insert>
         <insert tableName="shelter">
-            <column name="id" value="2"/>
             <column name="name" value="Верный друг"/>
             <column name="type" value="DOG"/>
         </insert>
@@ -71,13 +68,11 @@
             <tableIsEmpty tableName="info"/>
         </preConditions>
         <insert tableName="info">
-            <column name="id" value="1"/>
             <column name="type" value="INFO_ABOUT_BOT"/>
             <column name="text"
                     value="Здравствуйте, я бот сети приютов для животных, рад приветсвовать вас в нашем чате! Моя задача помочь вам найти себе нового друга и члена семьи."/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="2"/>
             <column name="type" value="LONG_INFO_ABOUT_SHELTER"/>
             <column name="text"
                     value="Информация о приюте:&#10;
@@ -85,7 +80,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="3"/>
             <column name="type" value="LONG_INFO_ABOUT_SHELTER"/>
             <column name="text"
                     value="Информация о приюте:&#10;
@@ -93,14 +87,12 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="4"/>
             <column name="type" value="SHELTER_CONTACT_INFO"/>
             <column name="text"
                     value="Расписание работы:&#10; • Пн-Пт: с 10:00 до 18:00&#10; • Сб-Вс: с 11:00 до 15:00&#10;Адрес: Вячеславская ул. дом 2, Астана, Казахстан&#10;Схема проезда: https://yandex.ru/maps/163/astana/?ll=71.482494%2C51.173181&amp;mode=routes&amp;rtext=~51.175409%2C71.479170&amp;rtt=auto&amp;ruri=~ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgg2NzM1MjgwNBJK0prQsNC30LDSm9GB0YLQsNC9LCDQkNGB0YLQsNC90LAsINCS0Y_Rh9C10YHQu9Cw0LLRgdC60LDRjyDQutOp0YjQtdGB0ZYsIDIiCg1s9Y5CFbuzTEI%2C&amp;z=16.61"/>
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="5"/>
             <column name="type" value="SHELTER_CONTACT_INFO"/>
             <column name="text"
                     value="Расписание работы:&#10;• Пн-Пт: с 9:00 до 17:00&#10;• Сб-Вс: с 10:00 до 16:00&#10;
@@ -109,21 +101,18 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="6"/>
             <column name="type" value="SHELTER_PASS_REG_INFO"/>
             <column name="text" value="Контакты для оформления пропуска на машину:&#10;
 Телефон: +7 (702) 987-65-43&#10;Email: vernydrug.astana@example.com"/>
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="7"/>
             <column name="type" value="SHELTER_PASS_REG_INFO"/>
             <column name="text" value="Контакты для оформления пропуска на машину:&#10;
 Телефон: +7 (701) 123-45-67&#10;Email: lapochka.astana@example.com"/>
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="8"/>
             <column name="type" value="SAFETY_RECOMMENDATIONS"/>
             <column name="text" value="Техника безопасности на территории приюта:&#10;
 • Перед посещением приюта, обязательно согласуйте время приезда и получите разрешение на въезд.&#10;
@@ -134,7 +123,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="9"/>
             <column name="type" value="SAFETY_RECOMMENDATIONS"/>
             <column name="text" value="Техника безопасности на территории приюта:&#10;
 • Обязательно согласуйте время посещения приюта и получите пропуск для въезда.&#10;
@@ -145,7 +133,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="10"/>
             <column name="type" value="RULES_FOR_GETTING_TO_KNOW_PET"/>
             <column name="text" value="Правила знакомства с животным:&#10;
 Прежде чем забрать кошку из приюта, рекомендуется провести несколько посещений,
@@ -154,7 +141,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="11"/>
             <column name="type" value="RULES_FOR_GETTING_TO_KNOW_PET"/>
             <column name="text" value="Правила знакомства с животным:&#10;
 Прежде чем забрать собаку из приюта, сначала познакомьтесь с ней.
@@ -162,7 +148,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="12"/>
             <column name="type" value="DOCUMENTS_FOR_ADOPTION_PET"/>
             <column name="text" value="Список документов:&#10;
 • Паспорт или удостоверение личности.&#10;
@@ -170,7 +155,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="13"/>
             <column name="type" value="DOCUMENTS_FOR_ADOPTION_PET"/>
             <column name="text" value="Список документов:&#10;
 • Паспорт или удостоверение личности.&#10;
@@ -178,7 +162,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="14"/>
             <column name="type" value="ANIMAL_TRANSPORTATION"/>
             <column name="text" value="Рекомендации по транспортировке животного:&#10;
 Для безопасной перевозки кошки вам потребуется переноска, подстилка и вода.
@@ -186,7 +169,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="15"/>
             <column name="type" value="ANIMAL_TRANSPORTATION"/>
             <column name="text" value="Рекомендации по транспортировке животного:&#10;
 Используйте безопасные переноски и страховки для перевозки собаки.
@@ -194,7 +176,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="16"/>
             <column name="type" value="HOUSE_FOR_CUB"/>
             <column name="text" value="Рекомендации по обустройству дома для котенка:&#10;
 • Подготовьте безопасное место с игрушками и местом для сна.&#10;
@@ -203,7 +184,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="17"/>
             <column name="type" value="HOUSE_FOR_CUB"/>
             <column name="text" value="Рекомендации по обустройству дома для щенка:&#10;
 • Обеспечьте безопасное место для игр и отдыха.&#10;
@@ -211,7 +191,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="18"/>
             <column name="type" value="HOUSE_FOR_ADULT_PET"/>
             <column name="text" value="Рекомендации по обустройству дома для взрослой кошки:&#10;
 • Создайте уютное место для отдыха и личного пространства.&#10;
@@ -219,7 +198,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="19"/>
             <column name="type" value="HOUSE_FOR_ADULT_PET"/>
             <column name="text" value="Рекомендации по обустройству дома для взрослой собаки:&#10;
 • Создайте место для отдыха и тренировок.&#10;
@@ -227,7 +205,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="20"/>
             <column name="type" value="HOUSE_FOR_DISABLED_PET"/>
             <column name="text" value="Рекомендации по обустройству дома для кошки с ограниченными возможностями:&#10;
 • Уберите препятствия и создайте безопасную среду.&#10;
@@ -235,7 +212,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="21"/>
             <column name="type" value="HOUSE_FOR_DISABLED_PET"/>
             <column name="text" value="Рекомендации по обустройству дома для собаки с ограниченными возможностями:&#10;
 • Уберите препятствия и обеспечьте доступность.&#10;
@@ -243,7 +219,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="22"/>
             <column name="type" value="REASONS_FOR_REFUSAL_OF_ADOPTION"/>
             <column name="text" value="Причины отказа:&#10;
 • Несоответствие заявителя возрасту или здоровью животного.&#10;
@@ -252,7 +227,6 @@
             <column name="shelter_id" value="1"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="23"/>
             <column name="type" value="REASONS_FOR_REFUSAL_OF_ADOPTION"/>
             <column name="text" value="Причины отказа:&#10;
 • Несоответствие заявителя возрасту или опыту владения собаками.&#10;
@@ -261,7 +235,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="24"/>
             <column name="type" value="TIPS_FROM_DOG_HANDLER"/>
             <column name="text" value="Советы кинолога:&#10;
 Первое общение с собакой должно быть спокойным и дружелюбным. Не нависайте над собакой и не пытайтесь погладить ее сразу.
@@ -269,7 +242,6 @@
             <column name="shelter_id" value="2"/>
         </insert>
         <insert tableName="info">
-            <column name="id" value="25"/>
             <column name="type" value="RECOMMENDED_DOG_HANDLERS"/>
             <column name="text" value="Рекомендации по проверенным кинологам:&#10;
 По запросу мы можем предоставить контакты проверенных кинологов для дальнейшей работы над дрессировкой и адаптацией собаки в новом доме."/>
@@ -283,7 +255,6 @@
             <tableIsEmpty tableName="pet_owner"/>
         </preConditions>
         <insert tableName="pet_owner">
-            <column name="id" value="1"/>
             <column name="name" value="Ivan"/>
             <column name="surname" value="Ivanov"/>
             <column name="bot_user_id" value="298044410"/>
@@ -292,7 +263,6 @@
             <column name="end_probation" value="2023-09-29 10:43:07.044724"/>
         </insert>
         <insert tableName="pet_owner">
-            <column name="id" value="2"/>
             <column name="name" value="Petr"/>
             <column name="surname" value="Petrov"/>
             <column name="bot_user_id" value="76318058"/>
@@ -301,7 +271,6 @@
             <column name="end_probation" value="2023-09-12 10:43:07.044724"/>
         </insert>
         <insert tableName="pet_owner">
-            <column name="id" value="3"/>
             <column name="name" value="Oleg"/>
             <column name="surname" value="Olegov"/>
             <column name="bot_user_id" value="639608754"/>
@@ -317,7 +286,6 @@
             <tableIsEmpty tableName="pet"/>
         </preConditions>
         <insert tableName="pet">
-            <column name="id" value="1"/>
             <column name="type" value="CAT"/>
             <column name="name" value="Pushok"/>
             <column name="age" value="3"/>
@@ -327,7 +295,6 @@
             <column name="leave" value="false"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="2"/>
             <column name="type" value="DOG"/>
             <column name="name" value="Chernish"/>
             <column name="age" value="1"/>
@@ -337,7 +304,6 @@
             <column name="leave" value="true"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="3"/>
             <column name="type" value="DOG"/>
             <column name="name" value="Gera"/>
             <column name="age" value="5"/>
@@ -347,7 +313,6 @@
             <column name="leave" value="true"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="4"/>
             <column name="type" value="CAT"/>
             <column name="name" value="Lord"/>
             <column name="age" value="2"/>
