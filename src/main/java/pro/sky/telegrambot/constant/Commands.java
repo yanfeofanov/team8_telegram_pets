@@ -41,7 +41,11 @@ public enum Commands {
     EMAIL("электронная почта", "email"),
     BACK_DOG_SHELTER("<- назад", "back_dog_shelter"),
     BACK_CAT_SHELTER("<- назад", "back_cat_shelter"),
-    BACK_START_MENU("<- назад", "back_start_menu");
+    BACK_START_MENU("<- назад", "back_start_menu"),
+    BACK_CAT_INFO_MENU("<- назад", "back_cat_info_menu"),
+    BACK_DOG_INFO_MENU("<- назад", "back_dog_info_menu"),
+    BACK_CAT_ADOPTION_MENU("<- назад", "back_cat_adoption_menu"),
+    BACK_DOG_ADOPTION_MENU("<- назад", "back_dog_adoption_menu");
 
 
 

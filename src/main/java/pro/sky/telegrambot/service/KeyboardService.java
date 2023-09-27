@@ -2,7 +2,6 @@ package pro.sky.telegrambot.service;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.model.request.Keyboard;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambot.constant.Commands;
 import pro.sky.telegrambot.constant.TypeOfPet;
@@ -142,6 +141,26 @@ public class KeyboardService {
 
     public InlineKeyboardMarkup backButtonMenuCat() {
         List<Commands> commandsList = List.of(Commands.BACK_CAT_SHELTER);
+        return prepareMultilineKeyboard(commandsList);
+    }
+
+    public InlineKeyboardMarkup backCatInfoMenu() {
+        List<Commands> commandsList = List.of(Commands.BACK_CAT_INFO_MENU);
+        return prepareMultilineKeyboard(commandsList);
+    }
+
+    public InlineKeyboardMarkup backDogInfoMenu() {
+        List<Commands> commandsList = List.of(Commands.BACK_DOG_INFO_MENU);
+        return prepareMultilineKeyboard(commandsList);
+    }
+
+    public InlineKeyboardMarkup backDogAdoptionMenu() {
+        List<Commands> commandsList = List.of(Commands.BACK_DOG_ADOPTION_MENU);
+        return prepareMultilineKeyboard(commandsList);
+    }
+
+    public InlineKeyboardMarkup backCatAdoptionMenu() {
+        List<Commands> commandsList = List.of(Commands.BACK_CAT_ADOPTION_MENU);
         return prepareMultilineKeyboard(commandsList);
     }
 
