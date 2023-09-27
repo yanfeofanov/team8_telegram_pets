@@ -58,19 +58,27 @@ public class KeyboardService {
 
     public Keyboard generateMenuPreparingForAdoption(TypeOfPet typeOfPet) {
         List<Commands> commandList = new ArrayList<>();
-        commandList.add(Commands.RULES_FOR_GETTING_TO_KNOW_PET);
-        commandList.add(Commands.DOCUMENTS_FOR_ADOPTION);
-        commandList.add(Commands.TRANSPORTATION_RECOMMENDATION);
-        commandList.add(Commands.RECOMMENDATION_FOR_CUB_HOUSE);
-        commandList.add(Commands.RECOMMENDATION_FOR_ADULT_PET_HOUSE);
-        commandList.add(Commands.RECOMMENDATION_FOR_DISABLED_PET_HOUSE);
-        commandList.add(Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION);
         if (TypeOfPet.DOG.equals(typeOfPet)) {
+            commandList.add(Commands.RULES_FOR_GETTING_TO_KNOW_DOG);
+            commandList.add(Commands.DOCUMENTS_FOR_ADOPTION_DOG);
+            commandList.add(Commands.TRANSPORTATION_RECOMMENDATION_FOR_DOG);
+            commandList.add(Commands.RECOMMENDATION_FOR_DOG_CUB_HOUSE);
+            commandList.add(Commands.RECOMMENDATION_FOR_DOG_ADULT_HOUSE);
+            commandList.add(Commands.RECOMMENDATION_FOR_DISABLED_DOG_HOUSE);
+            commandList.add(Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION_DOG);
             commandList.add(Commands.TIPS_FROM_DOG_HANDLER);
             commandList.add(Commands.RECOMMENDED_DOG_HANDLERS_LIST);
-            commandList.add(Commands.COMMUNICATION_REQUEST);
-            commandList.add(Commands.CALL_VOLUNTEER);
+        } else {
+            commandList.add(Commands.RULES_FOR_GETTING_TO_KNOW_CAT);
+            commandList.add(Commands.DOCUMENTS_FOR_ADOPTION_CAT);
+            commandList.add(Commands.TRANSPORTATION_RECOMMENDATION_FOR_CAT);
+            commandList.add(Commands.RECOMMENDATION_FOR_CAT_CUB_HOUSE);
+            commandList.add(Commands.RECOMMENDATION_FOR_CAT_ADULT_HOUSE);
+            commandList.add(Commands.RECOMMENDATION_FOR_DISABLED_CAT_HOUSE);
+            commandList.add(Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION_CAT);
         }
+        commandList.add(Commands.COMMUNICATION_REQUEST);
+        commandList.add(Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
     }
 
@@ -90,16 +98,7 @@ public class KeyboardService {
                 Commands.DOG_SHELTER_PASS_REG,
                 Commands.DOG_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
-                Commands.CALL_VOLUNTEER,
-                Commands.RULES_FOR_GETTING_TO_KNOW_PET,
-                Commands.DOCUMENTS_FOR_ADOPTION,
-                Commands.TRANSPORTATION_RECOMMENDATION,
-                Commands.RECOMMENDATION_FOR_CUB_HOUSE,
-                Commands.RECOMMENDATION_FOR_ADULT_PET_HOUSE,
-                Commands.RECOMMENDATION_FOR_DISABLED_PET_HOUSE,
-                Commands.TIPS_FROM_DOG_HANDLER,
-                Commands.RECOMMENDED_DOG_HANDLERS_LIST,
-                Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION);
+                Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
     }
 
@@ -119,16 +118,7 @@ public class KeyboardService {
                 Commands.CAT_SHELTER_PASS_REG,
                 Commands.CAT_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
-                Commands.CALL_VOLUNTEER,
-                Commands.RULES_FOR_GETTING_TO_KNOW_PET,
-                Commands.DOCUMENTS_FOR_ADOPTION,
-                Commands.TRANSPORTATION_RECOMMENDATION,
-                Commands.RECOMMENDATION_FOR_CUB_HOUSE,
-                Commands.RECOMMENDATION_FOR_ADULT_PET_HOUSE,
-                Commands.RECOMMENDATION_FOR_DISABLED_PET_HOUSE,
-                Commands.TIPS_FROM_DOG_HANDLER,
-                Commands.RECOMMENDED_DOG_HANDLERS_LIST,
-                Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION);
+                Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
     }
 

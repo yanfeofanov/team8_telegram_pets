@@ -142,39 +142,37 @@ public class TelegramBotService {
             return sendDogShelterMenu(chatId);
         } else if (Commands.CAT_SHELTER_SAFETY_RECOMMENDATIONS.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterSafetyRecommendation(chatId);
-        } else if (Commands.RULES_FOR_GETTING_TO_KNOW_PET.getCommand().equals(commandStr)) {
+        } else if (Commands.RULES_FOR_GETTING_TO_KNOW_DOG.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterGettingRules(chatId);
-        } else if (Commands.RULES_FOR_GETTING_TO_KNOW_PET.getCommand().equals(commandStr)) {
+        } else if (Commands.RULES_FOR_GETTING_TO_KNOW_CAT.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterGettingRules(chatId);
-        } else if (Commands.DOCUMENTS_FOR_ADOPTION.getCommand().equals(commandStr)) {
+        } else if (Commands.DOCUMENTS_FOR_ADOPTION_DOG.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterDocumentAdoption(chatId);
-        } else if (Commands.DOCUMENTS_FOR_ADOPTION.getCommand().equals(commandStr)) {
+        } else if (Commands.DOCUMENTS_FOR_ADOPTION_CAT.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterDocumentAdoption(chatId);
-        } else if (Commands.TRANSPORTATION_RECOMMENDATION.getCommand().equals(commandStr)) {
+        } else if (Commands.TRANSPORTATION_RECOMMENDATION_FOR_DOG.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterTransportationAnimal(chatId);
-        } else if (Commands.TRANSPORTATION_RECOMMENDATION.getCommand().equals(commandStr)) {
+        } else if (Commands.TRANSPORTATION_RECOMMENDATION_FOR_CAT.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterTransportationAnimal(chatId);
-        } else if (Commands.RECOMMENDATION_FOR_CUB_HOUSE.getCommand().equals(commandStr)) {
+        } else if (Commands.RECOMMENDATION_FOR_DOG_CUB_HOUSE.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterHouseCub(chatId);
-        } else if (Commands.RECOMMENDATION_FOR_CUB_HOUSE.getCommand().equals(commandStr)) {
+        } else if (Commands.RECOMMENDATION_FOR_CAT_CUB_HOUSE.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterHouseCub(chatId);
-        } else if (Commands.RECOMMENDATION_FOR_ADULT_PET_HOUSE.getCommand().equals(commandStr)) {
+        } else if (Commands.RECOMMENDATION_FOR_DOG_ADULT_HOUSE.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterHouseAdultPet(chatId);
-        } else if (Commands.RECOMMENDATION_FOR_ADULT_PET_HOUSE.getCommand().equals(commandStr)) {
+        } else if (Commands.RECOMMENDATION_FOR_CAT_ADULT_HOUSE.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterHouseAdultPet(chatId);
-        } else if (Commands.RECOMMENDATION_FOR_DISABLED_PET_HOUSE.getCommand().equals(commandStr)) {
+        } else if (Commands.RECOMMENDATION_FOR_DISABLED_DOG_HOUSE.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterHouseDisable(chatId);
-        } else if (Commands.RECOMMENDATION_FOR_DISABLED_PET_HOUSE.getCommand().equals(commandStr)) {
+        } else if (Commands.RECOMMENDATION_FOR_DISABLED_CAT_HOUSE.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterHouseDisable(chatId);
-        } else if (Commands.TIPS_FROM_DOG_HANDLER.getCommand().equals(commandStr)) {
-            return sendInfoAboutDogShelterTipsDogHandler(chatId);
         } else if (Commands.TIPS_FROM_DOG_HANDLER.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterTipsDogHandler(chatId);
         } else if (Commands.RECOMMENDED_DOG_HANDLERS_LIST.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterTipsDogHandlerList(chatId);
-        } else if (Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION.getCommand().equals(commandStr)) {
+        } else if (Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION_DOG.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterPossibleReasonForRefusalAdoption(chatId);
-        } else if (Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION.getCommand().equals(commandStr)) {
+        } else if (Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION_CAT.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterPossibleReasonForRefusalAdoption(chatId);
         }
 
@@ -289,12 +287,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterGettingRules(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.RULES_FOR_GETTING_TO_KNOW_PET, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.RULES_FOR_GETTING_TO_KNOW_PET, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -304,12 +302,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterDocumentAdoption(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.DOCUMENTS_FOR_ADOPTION_PET, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.DOCUMENTS_FOR_ADOPTION_PET, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -319,12 +317,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterTransportationAnimal(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.ANIMAL_TRANSPORTATION, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.ANIMAL_TRANSPORTATION, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -334,12 +332,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterHouseCub(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_CUB, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_CUB, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -349,12 +347,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterHouseAdultPet(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_ADULT_PET, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_ADULT_PET, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -364,12 +362,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterHouseDisable(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_DISABLED_PET, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_DISABLED_PET, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -379,12 +377,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterTipsDogHandler(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.TIPS_FROM_DOG_HANDLER, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.TIPS_FROM_DOG_HANDLER, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -394,12 +392,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterTipsDogHandlerList(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.RECOMMENDED_DOG_HANDLERS, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.RECOMMENDED_DOG_HANDLERS, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -409,12 +407,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutDogShelterPossibleReasonForRefusalAdoption(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
             return -1;
         }
-        Info infoAboutDogShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.REASONS_FOR_REFUSAL_OF_ADOPTION, shelter);
+        Info infoAboutDogShelter = infoService.findByTypeAndShelter(TypesOfInformation.REASONS_FOR_REFUSAL_OF_ADOPTION, shelter);
         if (infoAboutDogShelter != null) {
             return sendReply(chatId, infoAboutDogShelter.getText()).errorCode();
         } else {
@@ -514,12 +512,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterGettingRules(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.RULES_FOR_GETTING_TO_KNOW_PET, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.RULES_FOR_GETTING_TO_KNOW_PET, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
@@ -529,12 +527,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterDocumentAdoption(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.DOCUMENTS_FOR_ADOPTION_PET, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.DOCUMENTS_FOR_ADOPTION_PET, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
@@ -544,12 +542,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterTransportationAnimal(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.ANIMAL_TRANSPORTATION, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.ANIMAL_TRANSPORTATION, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
@@ -559,12 +557,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterHouseCub(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_CUB, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_CUB, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
@@ -574,12 +572,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterHouseAdultPet(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_ADULT_PET, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_ADULT_PET, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
@@ -589,12 +587,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterHouseDisable(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.DOG);
+        Shelter shelter = shelterService.findByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_DISABLED_PET, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.HOUSE_FOR_DISABLED_PET, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
@@ -604,12 +602,12 @@ public class TelegramBotService {
     }
 
     private int sendInfoAboutCatShelterPossibleReasonForRefusalAdoption(Long chatId) {
-        Shelter shelter = shelterRepository.findByType(TypeOfPet.CAT);
+        Shelter shelter = shelterService.findByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
             return -1;
         }
-        Info infoAboutCatShelter = infoRepository.findByTypeAndShelter(TypesOfInformation.REASONS_FOR_REFUSAL_OF_ADOPTION, shelter);
+        Info infoAboutCatShelter = infoService.findByTypeAndShelter(TypesOfInformation.REASONS_FOR_REFUSAL_OF_ADOPTION, shelter);
         if (infoAboutCatShelter != null) {
             return sendReply(chatId, infoAboutCatShelter.getText()).errorCode();
         } else {
