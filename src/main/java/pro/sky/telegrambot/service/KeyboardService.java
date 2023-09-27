@@ -22,7 +22,7 @@ public class KeyboardService {
      * @param commandList список значений перечисления Command на основе которых формируется меню
      * @return объект-меню для telegram бота
      */
-    private Keyboard prepareMultilineKeyboard(List<Commands> commandList) {
+    private InlineKeyboardMarkup prepareMultilineKeyboard(List<Commands> commandList) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         for (Commands command : commandList) {
             InlineKeyboardButton inlineButton = new InlineKeyboardButton(command.getDescription());
@@ -38,7 +38,7 @@ public class KeyboardService {
      * @param commandList список значений перечисления Command на основе которых формируется меню
      * @return объект-меню для telegram бота
      */
-    private Keyboard prepareSinglelineKeyboard(List<Commands> commandList) {
+    private InlineKeyboardMarkup prepareSinglelineKeyboard(List<Commands> commandList) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         InlineKeyboardButton[] buttons = new InlineKeyboardButton[commandList.size()];
         for (int i = 0; i < commandList.size(); i++) {
@@ -51,12 +51,12 @@ public class KeyboardService {
         return keyboard;
     }
 
-    public Keyboard generateShelterSelectionMenu() {
+    public InlineKeyboardMarkup generateShelterSelectionMenu() {
         List<Commands> commandList = List.of(Commands.CAT_SHELTER, Commands.DOG_SHELTER);
         return prepareSinglelineKeyboard(commandList);
     }
 
-    public Keyboard generateMenuPreparingForAdoption(TypeOfPet typeOfPet) {
+    public InlineKeyboardMarkup generateMenuPreparingForAdoption(TypeOfPet typeOfPet) {
         List<Commands> commandList = new ArrayList<>();
         if (TypeOfPet.DOG.equals(typeOfPet)) {
             commandList.add(Commands.RULES_FOR_GETTING_TO_KNOW_DOG);
@@ -68,6 +68,9 @@ public class KeyboardService {
             commandList.add(Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION_DOG);
             commandList.add(Commands.TIPS_FROM_DOG_HANDLER);
             commandList.add(Commands.RECOMMENDED_DOG_HANDLERS_LIST);
+            commandList.add(Commands.COMMUNICATION_REQUEST);
+            commandList.add(Commands.CALL_VOLUNTEER);
+            commandList.add(Commands.BACK_DOG_SHELTER);
         } else {
             commandList.add(Commands.RULES_FOR_GETTING_TO_KNOW_CAT);
             commandList.add(Commands.DOCUMENTS_FOR_ADOPTION_CAT);
@@ -76,63 +79,68 @@ public class KeyboardService {
             commandList.add(Commands.RECOMMENDATION_FOR_CAT_ADULT_HOUSE);
             commandList.add(Commands.RECOMMENDATION_FOR_DISABLED_CAT_HOUSE);
             commandList.add(Commands.POSSIBLE_REASON_FOR_REFUSAL_FOR_ADOPTION_CAT);
+            commandList.add(Commands.COMMUNICATION_REQUEST);
+            commandList.add(Commands.CALL_VOLUNTEER);
+            commandList.add(Commands.BACK_CAT_SHELTER);
         }
-        commandList.add(Commands.COMMUNICATION_REQUEST);
-        commandList.add(Commands.CALL_VOLUNTEER);
         return prepareMultilineKeyboard(commandList);
     }
 
-    public Keyboard generateMainDogShelterMenu() {
+    public InlineKeyboardMarkup generateMainDogShelterMenu() {
         List<Commands> commandList = List.of(
-                Commands.DOG_SHELTER_MENU,
+                Commands.DOG_SHELTER_INFO_MENU,
                 Commands.ADOPT_DOG,
                 Commands.REPORT_ABOUT_PET,
-                Commands.CALL_VOLUNTEER);
+                Commands.CALL_VOLUNTEER,
+                Commands.BACK_START_MENU);
         return prepareMultilineKeyboard(commandList);
     }
 
-    public Keyboard generateInfoDogShelterMenu() {
+    public InlineKeyboardMarkup generateInfoDogShelterMenu() {
         List<Commands> commandList = List.of(
                 Commands.ABOUT_DOG_SHELTER,
                 Commands.DOG_SHELTER_CONTACT_INFO,
                 Commands.DOG_SHELTER_PASS_REG,
                 Commands.DOG_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
-                Commands.CALL_VOLUNTEER);
+                Commands.CALL_VOLUNTEER,
+                Commands.BACK_DOG_SHELTER);
         return prepareMultilineKeyboard(commandList);
     }
 
-    public Keyboard generateMainCatShelterMenu() {
+    public InlineKeyboardMarkup generateMainCatShelterMenu() {
         List<Commands> commandList = List.of(
-                Commands.CAT_SHELTER_MENU,
+                Commands.CAT_SHELTER_INFO_MENU,
                 Commands.ADOPT_CAT,
                 Commands.REPORT_ABOUT_PET,
-                Commands.CALL_VOLUNTEER);
+                Commands.CALL_VOLUNTEER,
+                Commands.BACK_START_MENU);
         return prepareMultilineKeyboard(commandList);
     }
 
-    public Keyboard generateInfoCatShelterMenu() {
+    public InlineKeyboardMarkup generateInfoCatShelterMenu() {
         List<Commands> commandList = List.of(
                 Commands.ABOUT_CAT_SHELTER,
                 Commands.CAT_SHELTER_CONTACT_INFO,
                 Commands.CAT_SHELTER_PASS_REG,
                 Commands.CAT_SHELTER_SAFETY_RECOMMENDATIONS,
                 Commands.COMMUNICATION_REQUEST,
-                Commands.CALL_VOLUNTEER);
+                Commands.CALL_VOLUNTEER,
+                Commands.BACK_CAT_SHELTER);
         return prepareMultilineKeyboard(commandList);
     }
 
-    public Keyboard generateCommunicationOptionMenu() {
+    public InlineKeyboardMarkup generateCommunicationOptionMenu() {
         List<Commands> commandList = List.of(Commands.PHONE, Commands.EMAIL);
         return prepareSinglelineKeyboard(commandList);
     }
 
-    public Keyboard backButtonMenuDog() {
+    public InlineKeyboardMarkup backButtonMenuDog() {
         List<Commands> commandsList = List.of(Commands.BACK_DOG_SHELTER);
         return prepareMultilineKeyboard(commandsList);
     }
 
-    public Keyboard backButtonMenuCat() {
+    public InlineKeyboardMarkup backButtonMenuCat() {
         List<Commands> commandsList = List.of(Commands.BACK_CAT_SHELTER);
         return prepareMultilineKeyboard(commandsList);
     }

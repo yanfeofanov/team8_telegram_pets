@@ -7,7 +7,9 @@ import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
+import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,8 @@ public class TelegramBotService {
     private final PetOwnerService petOwnerService;
     private final DailyReportService dailyReportService;
     private final TelegramBot telegramBot;
+    private int lastMessageId;
+    private Boolean lastMessageIsReplaceableMenu = false;
 
     public TelegramBotService(InfoService infoService, ShelterService shelterService, KeyboardService keyboardService,
                               CommunicationRequestService communicationRequestService, UserService userService,
@@ -96,17 +100,17 @@ public class TelegramBotService {
     }
 
     private int processCommand(Long userId, Long chatId, String commandStr) {
-        if (Commands.START.getCommand().equals(commandStr)) {
+        if (Commands.START.getCommand().equals(commandStr) || Commands.BACK_START_MENU.getCommand().equals(commandStr)) {
             return sendShelterSelectionMenu(chatId);
         } else if (Commands.HELP.getCommand().equals(commandStr)) {
             return sendHelpInformation(chatId);
         } else if (Commands.CAT_SHELTER.getCommand().equals(commandStr)) {
             return sendCatShelterMenu(chatId);
-        } else if (Commands.CAT_SHELTER_MENU.getCommand().equals(commandStr)) {
+        } else if (Commands.CAT_SHELTER_INFO_MENU.getCommand().equals(commandStr)) {
             return sendCatInfoMenu(chatId);
         } else if (Commands.DOG_SHELTER.getCommand().equals(commandStr)) {
             return sendDogShelterMenu(chatId);
-        } else if (Commands.DOG_SHELTER_MENU.getCommand().equals(commandStr)) {
+        } else if (Commands.DOG_SHELTER_INFO_MENU.getCommand().equals(commandStr)) {
             return sendDogInfoMenu(chatId);
         } else if (Commands.ADOPT_CAT.getCommand().equals(commandStr)) {
             return sendMenuPreparingForAdoptionCat(chatId);
@@ -654,7 +658,9 @@ public class TelegramBotService {
             return -1;
         }
         String dogShelterStr = "приют для собак " + shelter.getName();
-        return sendReply(chatId, dogShelterStr, keyboardService.generateMainDogShelterMenu()).errorCode();
+        int errorCode = sendReply(chatId, dogShelterStr, keyboardService.generateMainDogShelterMenu()).errorCode();
+        lastMessageIsReplaceableMenu = true;
+        return errorCode;
     }
 
     private int sendCatShelterMenu(Long chatId) {
@@ -663,7 +669,9 @@ public class TelegramBotService {
             return -1;
         }
         String catShelterStr = "приют для кошек " + shelter.getName();
-        return sendReply(chatId, catShelterStr, keyboardService.generateMainCatShelterMenu()).errorCode();
+        int errorCode = sendReply(chatId, catShelterStr, keyboardService.generateMainCatShelterMenu()).errorCode();
+        lastMessageIsReplaceableMenu = true;
+        return errorCode;
     }
 
     private int sendCatInfoMenu(Long chatId) {
@@ -672,7 +680,9 @@ public class TelegramBotService {
             return -1;
         }
         String catShelterStr = "приют для кошек " + shelter.getName();
-        return sendReply(chatId, catShelterStr, keyboardService.generateInfoCatShelterMenu()).errorCode();
+        int errorCode = sendReply(chatId, catShelterStr, keyboardService.generateInfoCatShelterMenu()).errorCode();
+        lastMessageIsReplaceableMenu = true;
+        return errorCode;
     }
 
     private int sendDogInfoMenu(Long chatId) {
@@ -681,11 +691,15 @@ public class TelegramBotService {
             return -1;
         }
         String dogShelterStr = "приют для собак " + shelter.getName();
-        return sendReply(chatId, dogShelterStr, keyboardService.generateInfoDogShelterMenu()).errorCode();
+        int errorCode = sendReply(chatId, dogShelterStr, keyboardService.generateInfoDogShelterMenu()).errorCode();
+        lastMessageIsReplaceableMenu = true;
+        return errorCode;
     }
 
     private int sendShelterSelectionMenu(Long chatId) {
-        return sendReply(chatId, "выберите какой приют вас интересует", keyboardService.generateShelterSelectionMenu()).errorCode();
+        int errorCode = sendReply(chatId, "выберите какой приют вас интересует", keyboardService.generateShelterSelectionMenu()).errorCode();
+        lastMessageIsReplaceableMenu = true;
+        return errorCode;
     }
 
     private String generateGreetingText(String nickName) {
@@ -698,17 +712,31 @@ public class TelegramBotService {
         return greeting;
     }
 
-    public SendResponse sendReply(Long chatId, String text, Keyboard keyboard) {
+    public BaseResponse sendReply(Long chatId, String text, InlineKeyboardMarkup keyboard) {
+        if (lastMessageIsReplaceableMenu) {
+            return editBotMassage(chatId, lastMessageId, text, keyboard);
+        }
         SendMessage message = new SendMessage(chatId, text);
         //message.parseMode(ParseMode.Markdown);
         message.replyMarkup(keyboard);
-        return telegramBot.execute(message);
+        SendResponse sendResponse = telegramBot.execute(message);
+        lastMessageId = sendResponse.message().messageId();
+        return sendResponse;
     }
 
     public SendResponse sendReply(Long chatId, String text) {
         SendMessage message = new SendMessage(chatId, text);
         //message.parseMode(ParseMode.MarkdownV2);
-        return telegramBot.execute(message);
+        SendResponse sendResponse = telegramBot.execute(message);
+        lastMessageId = sendResponse.message().messageId();
+        lastMessageIsReplaceableMenu = false;
+        return sendResponse;
+    }
+
+    public BaseResponse editBotMassage(Long chatId, int messageId, String text, InlineKeyboardMarkup keyboard) {
+        EditMessageText editMessageText = new EditMessageText(chatId, messageId, text);
+        editMessageText.replyMarkup(keyboard);
+        return telegramBot.execute(editMessageText);
     }
 
     /**
@@ -730,10 +758,10 @@ public class TelegramBotService {
         InlineKeyboardButton inlineButton = new InlineKeyboardButton("пользователь");
         inlineButton.url(button_url);
         keyboard.addRow(inlineButton);
-        SendResponse sendResponse = sendReply(volunteerChatId, "поступил запрос на вызов волонтера от пользователя", keyboard);
-        if (sendResponse.isOk()) {
+        BaseResponse baseResponse = sendReply(volunteerChatId, "поступил запрос на вызов волонтера от пользователя", keyboard);
+        if (baseResponse.isOk()) {
             sendReply(chatId, "запрос отправлен волонтеру, он напишет вам в личных сообщениях как только освободится");
         }
-        return sendResponse.errorCode();
+        return baseResponse.errorCode();
     }
 }

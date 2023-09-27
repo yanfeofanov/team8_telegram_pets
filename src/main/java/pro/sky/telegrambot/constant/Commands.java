@@ -6,8 +6,8 @@ public enum Commands {
     HELP("описание команд бота", "/help"),
     CAT_SHELTER("приют для кошек", "/cat_shelter"),
     DOG_SHELTER("приют для собак", "/dog_shelter"),
-    CAT_SHELTER_MENU("меню информации о приюте кошек", "/cat_shelter_info_menu"),
-    DOG_SHELTER_MENU("меню информации о приюте собак", "/dog_shelter_info_menu"),
+    CAT_SHELTER_INFO_MENU("меню информации о приюте кошек", "/cat_shelter_info_menu"),
+    DOG_SHELTER_INFO_MENU("меню информации о приюте собак", "/dog_shelter_info_menu"),
     ADOPT_CAT("информация для усыновителя кошки", "/preparing_for_adoption_dog"),
     ADOPT_DOG("информация для усыновителя собаки", "/preparing_for_adoption_cat"),
     ABOUT_CAT_SHELTER("информация о приюте для кошек", "about_cat_shelter"),
@@ -39,8 +39,9 @@ public enum Commands {
     CALL_VOLUNTEER("позвать волонтера", "/call_volunteer"),
     PHONE("телефон", "phone"),
     EMAIL("электронная почта", "email"),
-    BACK_DOG_SHELTER("вернуться в приют для собак", "back_dog_shelter"),
-    BACK_CAT_SHELTER("вернуться в приют для кошек", "back_cat_shelter");
+    BACK_DOG_SHELTER("<- назад", "back_dog_shelter"),
+    BACK_CAT_SHELTER("<- назад", "back_cat_shelter"),
+    BACK_START_MENU("<- назад", "back_start_menu");
 
 
 
