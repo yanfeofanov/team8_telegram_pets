@@ -2,11 +2,13 @@ package pro.sky.telegrambot.service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import org.springframework.stereotype.Service;
+import pro.sky.telegrambot.exception.CommunicationRequestNotFoundException;
 import pro.sky.telegrambot.model.CommunicationRequest;
 import pro.sky.telegrambot.model.User;
 import pro.sky.telegrambot.repository.CommunicationRequestRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.TimeZone;
 
 @Service
@@ -36,9 +38,23 @@ public class CommunicationRequestService {
             } else {
                 communicationRequest.setContactInfo(contactInfo);
                 return communicationRequestRepository.save(communicationRequest);
-                //telegramBotService.sendReply(user.getChatId(), "У нас уже есть необработанный запрос на обратную связь с вами, ожидайте когда наш волонтер свяжется с вами.");
             }
         }
         return null;
+    }
+
+    public Collection<CommunicationRequest> getAllRequestForPeriodByDone(LocalDateTime startPeriod, LocalDateTime endPeriod, boolean done) {
+        if (done) {
+            return communicationRequestRepository.findByDateBetweenAndDoneIsTrue(startPeriod, endPeriod);
+        } else {
+            return communicationRequestRepository.findByDateBetweenAndDoneIsFalse(startPeriod, endPeriod);
+        }
+    }
+
+    public CommunicationRequest checkCommunicationRequest(int id, boolean done) {
+        CommunicationRequest request = communicationRequestRepository.findById(id).orElseThrow(CommunicationRequestNotFoundException::new);
+        request.setDone(done);
+        communicationRequestRepository.save(request);
+        return request;
     }
 }
