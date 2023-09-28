@@ -22,13 +22,11 @@ public class PetController {
 
     @GetMapping("/{id}")
     public Pet findPet(@PathVariable int id) {
-        checkParametersForNull(id);
         return petService.findPetById(id);
     }
 
     @PostMapping("/add")
     public Pet addPet(@RequestBody Pet newPet) {
-        checkParametersForNull(newPet);
         return petService.addPet(newPet);
     }
 
@@ -65,7 +63,6 @@ public class PetController {
      */
     @GetMapping("/all/{type}")
     public Collection<Pet> getAllPetsByType(@PathVariable String type) {
-        checkParametersForNull(type);
         try {
             TypeOfPet typeOfPet = TypeOfPet.valueOf(type.toUpperCase());
             return petService.getAllPetsByType(typeOfPet);
@@ -76,7 +73,6 @@ public class PetController {
 
     @GetMapping("/all/{type}/available")
     public Collection<Pet> getAllAvailablePetsByType(@PathVariable String type) {
-        checkParametersForNull(type);
         try {
             TypeOfPet typeOfPet = TypeOfPet.valueOf(type.toUpperCase());
             return petService.getAllAvailablePetsByType(typeOfPet);
@@ -93,13 +89,11 @@ public class PetController {
      */
     @GetMapping("/owner/{id}")
     public Collection<Pet> getPetsByOwnerId(@PathVariable int id) {
-        checkParametersForNull(id);
         return petService.findPetsByPetOwnerId(id);
     }
 
     @GetMapping("/on_probation/owner/{id}")
     public Pet getPetOnProbationByOwnerId(@PathVariable int id) {
-        checkParametersForNull(id);
         return petService.findPetOnProbationByPetOwnerId(id);
     }
 
@@ -111,20 +105,11 @@ public class PetController {
      */
     @GetMapping("/all/{type}/on_probation")
     public Collection<Pet> getAllPetsOnProbationByType(@PathVariable String type) {
-        checkParametersForNull(type);
         try {
             TypeOfPet typeOfPet = TypeOfPet.valueOf(type.toUpperCase());
             return petService.getAllPetsOnProbationByType(typeOfPet);
         } catch (IllegalArgumentException e) {
             throw new BadParamException();
-        }
-    }
-
-    private void checkParametersForNull(Object... params) {
-        for (Object param : params) {
-            if (param == null) {
-                throw new BadParamException();
-            }
         }
     }
 }
