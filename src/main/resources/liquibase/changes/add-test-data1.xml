@@ -317,7 +317,6 @@
             <tableIsEmpty tableName="pet"/>
         </preConditions>
         <insert tableName="pet">
-            <column name="id" value="1"/>
             <column name="type" value="CAT"/>
             <column name="name" value="Pushok"/>
             <column name="age" value="3"/>
@@ -327,7 +326,6 @@
             <column name="leave" value="false"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="2"/>
             <column name="type" value="DOG"/>
             <column name="name" value="Chernish"/>
             <column name="age" value="1"/>
@@ -337,7 +335,6 @@
             <column name="leave" value="true"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="3"/>
             <column name="type" value="DOG"/>
             <column name="name" value="Gera"/>
             <column name="age" value="5"/>
@@ -347,7 +344,6 @@
             <column name="leave" value="true"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="4"/>
             <column name="type" value="CAT"/>
             <column name="name" value="Lord"/>
             <column name="age" value="2"/>
