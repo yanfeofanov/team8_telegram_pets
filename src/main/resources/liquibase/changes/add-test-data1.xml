@@ -283,7 +283,6 @@
             <tableIsEmpty tableName="pet_owner"/>
         </preConditions>
         <insert tableName="pet_owner">
-            <column name="id" value="1"/>
             <column name="name" value="Ivan"/>
             <column name="surname" value="Ivanov"/>
             <column name="bot_user_id" value="298044410"/>
@@ -292,7 +291,6 @@
             <column name="end_probation" value="2023-09-29 10:43:07.044724"/>
         </insert>
         <insert tableName="pet_owner">
-            <column name="id" value="2"/>
             <column name="name" value="Petr"/>
             <column name="surname" value="Petrov"/>
             <column name="bot_user_id" value="76318058"/>
@@ -301,7 +299,6 @@
             <column name="end_probation" value="2023-09-12 10:43:07.044724"/>
         </insert>
         <insert tableName="pet_owner">
-            <column name="id" value="3"/>
             <column name="name" value="Oleg"/>
             <column name="surname" value="Olegov"/>
             <column name="bot_user_id" value="639608754"/>
@@ -317,7 +314,6 @@
             <tableIsEmpty tableName="pet"/>
         </preConditions>
         <insert tableName="pet">
-            <column name="id" value="1"/>
             <column name="type" value="CAT"/>
             <column name="name" value="Pushok"/>
             <column name="age" value="3"/>
@@ -327,7 +323,6 @@
             <column name="leave" value="false"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="2"/>
             <column name="type" value="DOG"/>
             <column name="name" value="Chernish"/>
             <column name="age" value="1"/>
@@ -337,7 +332,6 @@
             <column name="leave" value="true"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="3"/>
             <column name="type" value="DOG"/>
             <column name="name" value="Gera"/>
             <column name="age" value="5"/>
@@ -347,7 +341,6 @@
             <column name="leave" value="true"/>
         </insert>
         <insert tableName="pet">
-            <column name="id" value="4"/>
             <column name="type" value="CAT"/>
             <column name="name" value="Lord"/>
             <column name="age" value="2"/>

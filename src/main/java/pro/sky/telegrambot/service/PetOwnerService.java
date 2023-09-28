@@ -16,4 +16,8 @@ public class PetOwnerService {
     public PetOwner findPetOwnerWithProbationaryPeriod(Long userId) {
         return petOwnerRepository.findByUserIdAndProbationIsTrue(userId);
     }
+
+    public PetOwner findPetOwner(int petOwnerId) {
+        return petOwnerRepository.findPetOwnerById(petOwnerId);
+    }
 }

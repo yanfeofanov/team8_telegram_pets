@@ -8,7 +8,9 @@ import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import pro.sky.telegrambot.exception.BadParamException;
 import pro.sky.telegrambot.model.*;
 import pro.sky.telegrambot.repository.DailyReportRepository;
 
@@ -17,6 +19,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.TimeZone;
 
@@ -39,6 +43,8 @@ public class DailyReportService {
     private String coversDir;
 
     private final TelegramBot telegramBot;
+
+//    private static final DateTimeFormatter DATA_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public DailyReportService(DailyReportRepository dailyReportRepository,
                               PetOwnerService petOwnerService,
@@ -124,7 +130,7 @@ public class DailyReportService {
     /**
      * Метод обновляет объект типа PhotoPet
      *
-     * @param dailyReport      отчет о питомце
+     * @param dailyReport отчет о питомце
      * @param fileRequest объект класса GetFile
      * @param file        объект класса File
      * @param filePath    путь к файлу
@@ -172,8 +178,8 @@ public class DailyReportService {
      * Если владелец отправляет 2-ой или более отчет в день, то текущий отчет обновляется.
      *
      * @param dailyReport текущий отчет о питомце
-     * @param caption  новый текстовый отчет
-     * @param photo    новое фотография питомца
+     * @param caption     новый текстовый отчет
+     * @param photo       новое фотография питомца
      * @return обновленный отчет
      */
     private DailyReport updateDailyReport(DailyReport dailyReport, String caption, Photo photo) {
@@ -201,27 +207,27 @@ public class DailyReportService {
         }
     }
 
-    /**
-     * первая стадия метода отправки отчета. Этот метод отпрвляет пользователю сообщение с просьбой
-     * отправить отчет: текст и фото
-     *
-     * @param chatId      идентификатор чата
-     * @param messageText сообщение для пользователя
-     */
-    public void sendReport(long chatId, String messageText) {
-        sendMessageReply(chatId, messageText);
-    }
-
-    /**
-     * Метод вызывается при отправке отчета пользователем, который
-     * не является владельцем питомца
-     *
-     * @param chatId      идентификатор чата
-     * @param messageText сообщение пользователю
-     */
-    public void sendReportWithoutReply(long chatId, String messageText) {
-        sendMessage(chatId, messageText);
-    }
+//    /**
+//     * первая стадия метода отправки отчета. Этот метод отпрвляет пользователю сообщение с просьбой
+//     * отправить отчет: текст и фото
+//     *
+//     * @param chatId      идентификатор чата
+//     * @param messageText сообщение для пользователя
+//     */
+//    public void sendReport(long chatId, String messageText) {
+//        sendMessageReply(chatId, messageText);
+//    }
+//
+//    /**
+//     * Метод вызывается при отправке отчета пользователем, который
+//     * не является владельцем питомца
+//     *
+//     * @param chatId      идентификатор чата
+//     * @param messageText сообщение пользователю
+//     */
+//    public void sendReportWithoutReply(long chatId, String messageText) {
+//        sendMessage(chatId, messageText);
+//    }
 
     /**
      * Метод получает расширение файла из его полного пути
@@ -244,16 +250,73 @@ public class DailyReportService {
         telegramBot.execute(sendMess);
     }
 
-    /**
-     * Метод выводит список всех отчетов по определенным датам.
-     *
-     * @return Collection
-     */
-    public Collection<DailyReport> getAllDailyReport(LocalDate date) {
-        return dailyReportRepository.findDailyReportByDateBetween(date.atStartOfDay(), date.plusDays(1).atStartOfDay());
-    }
-
     public DailyReport getTodayDailyReportByPetOwner(PetOwner petOwner, LocalDate date) {
         return dailyReportRepository.findByPetOwnerAndDateBetween(petOwner, date.atStartOfDay(), date.plusDays(1).atStartOfDay());
     }
+
+    /**
+     * Метод выводит список проверенных/непроверенных отчетов
+     *
+     * @param check статус отчета
+     * @return список отчетов
+     */
+    public Collection<DailyReport> getCheckedDailyReport(Boolean check) {
+        return dailyReportRepository.findDailyReportByChecked(check);
+    }
+
+    /**
+     * Метод выводит список отчетов владельца жиотных
+     *
+     * @param petOwnerId ID владельца животного
+     * @return список отчетов
+     */
+    public Collection<DailyReport> getAllDailyReportByPetOwner(int petOwnerId) {
+        PetOwner petOwner = petOwnerService.findPetOwner(petOwnerId);
+        if (petOwner != null) {
+            return dailyReportRepository.findDailyReportByPetOwner(petOwner);
+        } else {
+            throw new NullPointerException("Владельца с таким айди не существует");
+        }
+    }
+
+    /**
+     * Метод выводит отчет по ID
+     *
+     * @param dailyReportId ID отчета
+     * @return список отчетов
+     */
+    public DailyReport getDailyReportById(Long dailyReportId) {
+        return dailyReportRepository.findDailyReportById(dailyReportId);
+    }
+
+    /**
+     * метод для волонтера, изменение статуса отчета
+     *
+     * @param id      - id владельца питомца
+     * @param checked - статус отчета (проверен(true)/не проверен(false))
+     */
+    public void checkDailyReport(Long id, boolean checked) {
+        DailyReport findDailyReport = dailyReportRepository.findDailyReportById(id);
+        findDailyReport.setChecked(checked);
+        dailyReportRepository.save(findDailyReport);
+    }
+
+    /**
+     * Метод выводит список отчетов по дате
+     *
+     * @param date день за который нужно вывести отчеты
+     * @return список отчетов
+     */
+    public Collection<DailyReport> getAllDailyReportByDate(String date) {
+        try {
+            LocalDate localDate = LocalDate.parse(date);
+            Collection<DailyReport> reportsByDate = dailyReportRepository.
+                    findDailyReportByDateBetween(localDate.atStartOfDay(), localDate.plusDays(1).atStartOfDay());
+            return reportsByDate;
+        } catch (DateTimeParseException e) {
+            throw new BadParamException("Дата указана неверно");
+        }
+    }
 }
+
+

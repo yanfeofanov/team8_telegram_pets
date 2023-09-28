@@ -16,7 +16,7 @@ import java.util.List;
 
 public class  TelegramBotConfiguration {
 
-    @Value("${telegram.bot.token}")
+    @Value("${telegram.bot.token1}")
     private String token;
 
     @Bean
