@@ -20,7 +20,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final TelegramBot telegramBot;
     private final  TelegramBotService telegramBotService;
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot, TelegramBotService telegramBotService) {
+    public TelegramBotUpdatesListener(TelegramBot telegramBot,
+                                      TelegramBotService telegramBotService) {
         this.telegramBot = telegramBot;
         this.telegramBotService = telegramBotService;
     }
@@ -36,7 +37,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             logger.info("Processing update: {}", update);
             Message message = update.message();
             CallbackQuery callbackQuery = update.callbackQuery();
-            byte processMassageCode = 0;
+            int processMassageCode = 0;
             String logMessage = "";
             if (message != null && !message.from().isBot()) {
                 processMassageCode = telegramBotService.processMessage(message);
@@ -44,7 +45,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         + " from chat #" + message.chat().id()
                         + " was not processed correctly";
 
-            } else if (callbackQuery != null && !callbackQuery.from().isBot()) {
+            }else if (callbackQuery != null && !callbackQuery.from().isBot()) {
                 processMassageCode = telegramBotService.processCallBackQuery(callbackQuery);
                 logMessage = "the callbackQuery id: " + callbackQuery.id()
                         + " from user #" + callbackQuery.from().id()

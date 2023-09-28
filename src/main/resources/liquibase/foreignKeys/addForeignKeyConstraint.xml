@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="add-foreign-key-constraint.1" author="AChumichev">
         <addForeignKeyConstraint baseTableName="communication_request"
@@ -20,6 +20,11 @@
                                  baseColumnNames="pet_owner_id"
                                  constraintName="FK_DAILY_REPORT_PET_OWNER"
                                  referencedTableName="pet_owner"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="daily_report"
+                                 baseColumnNames="pet_id"
+                                 constraintName="FK_DAILY_REPORT_PET"
+                                 referencedTableName="pet"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="daily_report"
                                  baseColumnNames="photo_id"
@@ -60,16 +65,6 @@
                                  baseColumnNames="volunteer_id"
                                  constraintName="FK_PET_OWNER_VOLUNTEER"
                                  referencedTableName="volunteer"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="photo"
-                                 baseColumnNames="pet_id"
-                                 constraintName="FK_PHOTO_PET"
-                                 referencedTableName="pet"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="photo"
-                                 baseColumnNames="report_id"
-                                 constraintName="FK_PHOTO_REPORT"
-                                 referencedTableName="daily_report"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="shelter"
                                  baseColumnNames="photo_id"

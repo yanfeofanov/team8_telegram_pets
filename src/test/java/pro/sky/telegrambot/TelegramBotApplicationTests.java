@@ -1,14 +1,23 @@
 package pro.sky.telegrambot;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import pro.sky.telegrambot.controller.PetController;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TelegramBotApplicationTests {
 
-	@Test
+    @LocalServerPort
+    private int port;
 
-	void contextLoads() {
-	}
+    @Autowired
+    private PetController petController;
 
+    @Test
+    void contextLoads() {
+        Assertions.assertNotNull(petController);
+    }
 }

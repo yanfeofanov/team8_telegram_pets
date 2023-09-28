@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="add-test-data-bot_user-table" author="Chumichev">
+        <preConditions>
+            <tableExists tableName="bot_user"/>
+            <tableIsEmpty tableName="bot_user"/>
+        </preConditions>
+        <insert tableName="bot_user">
+            <column name="id" value="298044410"/>
+            <column name="user_name" value="Sashko773"/>
+            <column name="chat_id" value="298044410"/>
+            <column name="date_added" value="2023-09-22 10:43:07.044724"/>
+        </insert>
+        <insert tableName="bot_user">
+            <column name="id" value="76318058"/>
+            <column name="user_name" value="verzhik11"/>
+            <column name="chat_id" value="76318058"/>
+            <column name="date_added" value="2023-09-22 10:43:07.044724"/>
+        </insert>
+        <insert tableName="bot_user">
+            <column name="id" value="1148893043"/>
+            <column name="user_name" value="SEvgNik"/>
+            <column name="chat_id" value="1148893043"/>
+            <column name="date_added" value="2023-09-22 10:43:07.044724"/>
+        </insert>
+        <insert tableName="bot_user">
+            <column name="id" value="639608754"/>
+            <column name="user_name" value="k52_tlt"/>
+            <column name="chat_id" value="639608754"/>
+            <column name="date_added" value="2023-09-22 10:43:07.044724"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="add-test-volunteer-table" author="Chumichev">
+        <preConditions>
+            <tableExists tableName="volunteer"/>
+            <tableIsEmpty tableName="volunteer"/>
+        </preConditions>
+        <insert tableName="volunteer">
+            <column name="id" value="1"/>
+            <column name="name" value="Stanislav"/>
+            <column name="surname" value="Kruglov"/>
+            <column name="bot_user_id" value="298044410"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="add-test-data-shelter-table" author="Chumichev">
+        <preConditions>
+            <tableExists tableName="shelter"/>
+            <tableIsEmpty tableName="shelter"/>
+        </preConditions>
+        <insert tableName="shelter">
+            <column name="id" value="1"/>
+            <column name="name" value="Лапочка"/>
+            <column name="type" value="CAT"/>
+        </insert>
+        <insert tableName="shelter">
+            <column name="id" value="2"/>
+            <column name="name" value="Верный друг"/>
+            <column name="type" value="DOG"/>
+        </insert>
+    </changeSet>
+    <changeSet id="add-test-data-info-table" author="Chumichev">
+        <preConditions>
+            <tableExists tableName="info"/>
+            <tableIsEmpty tableName="info"/>
+        </preConditions>
+        <insert tableName="info">
+            <column name="id" value="1"/>
+            <column name="type" value="INFO_ABOUT_BOT"/>
+            <column name="text"
+                    value="Здравствуйте, я бот сети приютов для животных, рад приветсвовать вас в нашем чате! Моя задача помочь вам найти себе нового друга и члена семьи."/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="2"/>
+            <column name="type" value="LONG_INFO_ABOUT_SHELTER"/>
+            <column name="text"
+                    value="Информация о приюте:&#10;
+Приют 'Лапочка' - это уютное место, где заботятся о бездомных кошках. Наш приют предоставляет временное убежище и медицинскую помощь кошкам, которые оказались на улице без присмотра. Мы стремимся найти для каждой кошки ответственных и любящих хозяев."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="3"/>
+            <column name="type" value="LONG_INFO_ABOUT_SHELTER"/>
+            <column name="text"
+                    value="Информация о приюте:&#10;
+Приют 'Верный друг' - это дом для бездомных собак, где каждый пушистик может найти своего верного хозяина. Мы предоставляем собакам заботу, лечение и возможность найти новый дом, где их ждут с любовью."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="4"/>
+            <column name="type" value="SHELTER_CONTACT_INFO"/>
+            <column name="text"
+                    value="Расписание работы:&#10; • Пн-Пт: с 10:00 до 18:00&#10; • Сб-Вс: с 11:00 до 15:00&#10;Адрес: Вячеславская ул. дом 2, Астана, Казахстан&#10;Схема проезда: https://yandex.ru/maps/163/astana/?ll=71.482494%2C51.173181&amp;mode=routes&amp;rtext=~51.175409%2C71.479170&amp;rtt=auto&amp;ruri=~ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgg2NzM1MjgwNBJK0prQsNC30LDSm9GB0YLQsNC9LCDQkNGB0YLQsNC90LAsINCS0Y_Rh9C10YHQu9Cw0LLRgdC60LDRjyDQutOp0YjQtdGB0ZYsIDIiCg1s9Y5CFbuzTEI%2C&amp;z=16.61"/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="5"/>
+            <column name="type" value="SHELTER_CONTACT_INFO"/>
+            <column name="text"
+                    value="Расписание работы:&#10;• Пн-Пт: с 9:00 до 17:00&#10;• Сб-Вс: с 10:00 до 16:00&#10;
+Адрес: улица Гагарина дом 17, Астана, Казахстан&#10;
+Схема проезда: https://yandex.ru/maps/163/astana/?ll=71.395345%2C51.193053&amp;mode=routes&amp;rtext=~51.192852%2C71.395457&amp;rtt=auto&amp;ruri=~ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgg2NzM1NzU5OBJB0prQsNC30LDSm9GB0YLQsNC9LCDQkNGB0YLQsNC90LAsINCT0LDQs9Cw0YDQuNC9INC606nRiNC10YHRliwgMTciCg1-yo5CFXrFTEI%2C&amp;z=17.59"/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="6"/>
+            <column name="type" value="SHELTER_PASS_REG_INFO"/>
+            <column name="text" value="Контакты для оформления пропуска на машину:&#10;
+Телефон: +7 (702) 987-65-43&#10;Email: vernydrug.astana@example.com"/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="7"/>
+            <column name="type" value="SHELTER_PASS_REG_INFO"/>
+            <column name="text" value="Контакты для оформления пропуска на машину:&#10;
+Телефон: +7 (701) 123-45-67&#10;Email: lapochka.astana@example.com"/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="8"/>
+            <column name="type" value="SAFETY_RECOMMENDATIONS"/>
+            <column name="text" value="Техника безопасности на территории приюта:&#10;
+• Перед посещением приюта, обязательно согласуйте время приезда и получите разрешение на въезд.&#10;
+• Не подходите к кошкам сразу, особенно если они могут быть агрессивными. Подождите, пока сотрудники приюта помогут вам.&#10;
+• Соблюдайте чистоту и порядок, утилизируйте мусор в специальных контейнерах.&#10;
+• Не кормите кошек без разрешения сотрудников приюта.&#10;
+• Соблюдайте тишину и спокойствие, чтобы не пугать животных."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="9"/>
+            <column name="type" value="SAFETY_RECOMMENDATIONS"/>
+            <column name="text" value="Техника безопасности на территории приюта:&#10;
+• Обязательно согласуйте время посещения приюта и получите пропуск для въезда.&#10;
+• Подходите к собакам осторожно, предоставьте им время познакомиться с вами.&#10;
+• Не кормите собак без согласия персонала приюта.&#10;
+• Соблюдайте чистоту и порядок, утилизируйте мусор в специальных контейнерах.&#10;
+• Дети должны находиться под присмотром взрослых, особенно вблизи собак."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="10"/>
+            <column name="type" value="RULES_FOR_GETTING_TO_KNOW_PET"/>
+            <column name="text" value="Правила знакомства с животным:&#10;
+Прежде чем забрать кошку из приюта, рекомендуется провести несколько посещений,
+установить контакт с животным и оценить взаимное влечение. Подходите к кошке спокойно,
+избегайте громких звуков и быстрых движений. Попробуйте играть с кошкой и ласкать ее, чтобы установить доверительные отношения."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="11"/>
+            <column name="type" value="RULES_FOR_GETTING_TO_KNOW_PET"/>
+            <column name="text" value="Правила знакомства с животным:&#10;
+Прежде чем забрать собаку из приюта, сначала познакомьтесь с ней.
+Проведите несколько встреч и прогулок, чтобы оценить, какой характер у собаки и насколько она вам подходит."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="12"/>
+            <column name="type" value="DOCUMENTS_FOR_ADOPTION_PET"/>
+            <column name="text" value="Список документов:&#10;
+• Паспорт или удостоверение личности.&#10;
+• Договор о взятии животного на уход."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="13"/>
+            <column name="type" value="DOCUMENTS_FOR_ADOPTION_PET"/>
+            <column name="text" value="Список документов:&#10;
+• Паспорт или удостоверение личности.&#10;
+• Договор о взятии животного на уход."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="14"/>
+            <column name="type" value="ANIMAL_TRANSPORTATION"/>
+            <column name="text" value="Рекомендации по транспортировке животного:&#10;
+Для безопасной перевозки кошки вам потребуется переноска, подстилка и вода.
+Обеспечьте достаточно вентиляции в переноске и учтите, что кошки могут быть нервными во время транспортировки."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="15"/>
+            <column name="type" value="ANIMAL_TRANSPORTATION"/>
+            <column name="text" value="Рекомендации по транспортировке животного:&#10;
+Используйте безопасные переноски и страховки для перевозки собаки.
+Подготовьте необходимые аксессуары для комфортной поездки."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="16"/>
+            <column name="type" value="HOUSE_FOR_CUB"/>
+            <column name="text" value="Рекомендации по обустройству дома для котенка:&#10;
+• Подготовьте безопасное место с игрушками и местом для сна.&#10;
+• Обеспечьте доступ к питательному корму и воде.&#10;
+• Обеспечьте чистоту и тепло."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="17"/>
+            <column name="type" value="HOUSE_FOR_CUB"/>
+            <column name="text" value="Рекомендации по обустройству дома для щенка:&#10;
+• Обеспечьте безопасное место для игр и отдыха.&#10;
+• Учтите рост собаки и обеспечьте соответствующее питание."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="18"/>
+            <column name="type" value="HOUSE_FOR_ADULT_PET"/>
+            <column name="text" value="Рекомендации по обустройству дома для взрослой кошки:&#10;
+• Создайте уютное место для отдыха и личного пространства.&#10;
+• Обеспечьте качественный корм и регулярные визиты к ветеринару."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="19"/>
+            <column name="type" value="HOUSE_FOR_ADULT_PET"/>
+            <column name="text" value="Рекомендации по обустройству дома для взрослой собаки:&#10;
+• Создайте место для отдыха и тренировок.&#10;
+• Обеспечьте разнообразное питание и регулярные прогулки."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="20"/>
+            <column name="type" value="HOUSE_FOR_DISABLED_PET"/>
+            <column name="text" value="Рекомендации по обустройству дома для кошки с ограниченными возможностями:&#10;
+• Уберите препятствия и создайте безопасную среду.&#10;
+• Учтите особенности медицинского ухода."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="21"/>
+            <column name="type" value="HOUSE_FOR_DISABLED_PET"/>
+            <column name="text" value="Рекомендации по обустройству дома для собаки с ограниченными возможностями:&#10;
+• Уберите препятствия и обеспечьте доступность.&#10;
+• Обеспечьте качественный медицинский уход."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="22"/>
+            <column name="type" value="REASONS_FOR_REFUSAL_OF_ADOPTION"/>
+            <column name="text" value="Причины отказа:&#10;
+• Несоответствие заявителя возрасту или здоровью животного.&#10;
+• Неспособность предоставить достойные условия для ухода и заботы.&#10;
+• Неготовность к оформлению необходимых документов и заключению договора."/>
+            <column name="shelter_id" value="1"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="23"/>
+            <column name="type" value="REASONS_FOR_REFUSAL_OF_ADOPTION"/>
+            <column name="text" value="Причины отказа:&#10;
+• Несоответствие заявителя возрасту или опыту владения собаками.&#10;
+• Отсутствие условий для содержания собаки (забор, место для прогулок).&#10;
+• Неготовность к оформлению необходимых документов и заключению договора."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="24"/>
+            <column name="type" value="TIPS_FROM_DOG_HANDLER"/>
+            <column name="text" value="Советы кинолога:&#10;
+Первое общение с собакой должно быть спокойным и дружелюбным. Не нависайте над собакой и не пытайтесь погладить ее сразу.
+Дайте ей возможность вас оценить и прийти на контакт самостоятельно."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+        <insert tableName="info">
+            <column name="id" value="25"/>
+            <column name="type" value="RECOMMENDED_DOG_HANDLERS"/>
+            <column name="text" value="Рекомендации по проверенным кинологам:&#10;
+По запросу мы можем предоставить контакты проверенных кинологов для дальнейшей работы над дрессировкой и адаптацией собаки в новом доме."/>
+            <column name="shelter_id" value="2"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="add-test-data-pet_owner-table" author="Chumichev">
+        <preConditions>
+            <tableExists tableName="pet_owner"/>
+            <tableIsEmpty tableName="pet_owner"/>
+        </preConditions>
+        <insert tableName="pet_owner">
+            <column name="id" value="1"/>
+            <column name="name" value="Ivan"/>
+            <column name="surname" value="Ivanov"/>
+            <column name="bot_user_id" value="298044410"/>
+            <column name="volunteer_id" value="1"/>
+            <column name="probation" value="true"/>
+            <column name="end_probation" value="2023-09-29 10:43:07.044724"/>
+        </insert>
+        <insert tableName="pet_owner">
+            <column name="id" value="2"/>
+            <column name="name" value="Petr"/>
+            <column name="surname" value="Petrov"/>
+            <column name="bot_user_id" value="76318058"/>
+            <column name="volunteer_id" value="1"/>
+            <column name="probation" value="false"/>
+            <column name="end_probation" value="2023-09-12 10:43:07.044724"/>
+        </insert>
+        <insert tableName="pet_owner">
+            <column name="id" value="3"/>
+            <column name="name" value="Oleg"/>
+            <column name="surname" value="Olegov"/>
+            <column name="bot_user_id" value="639608754"/>
+            <column name="volunteer_id" value="1"/>
+            <column name="probation" value="true"/>
+            <column name="end_probation" value="2023-09-30 10:43:07.044724"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="add-test-data-pet-table" author="Chumichev">
+        <preConditions>
+            <tableExists tableName="pet"/>
+            <tableIsEmpty tableName="pet"/>
+        </preConditions>
+        <insert tableName="pet">
+            <column name="type" value="CAT"/>
+            <column name="name" value="Pushok"/>
+            <column name="age" value="3"/>
+            <column name="breed" value="British"/>
+            <column name="shelter_id" value="1"/>
+            <column name="pet_owner_id" value="1"/>
+            <column name="leave" value="false"/>
+        </insert>
+        <insert tableName="pet">
+            <column name="type" value="DOG"/>
+            <column name="name" value="Chernish"/>
+            <column name="age" value="1"/>
+            <column name="breed" value="Dvornyaga"/>
+            <column name="shelter_id" value="2"/>
+            <column name="pet_owner_id" value="1"/>
+            <column name="leave" value="true"/>
+        </insert>
+        <insert tableName="pet">
+            <column name="type" value="DOG"/>
+            <column name="name" value="Gera"/>
+            <column name="age" value="5"/>
+            <column name="breed" value="Layka"/>
+            <column name="shelter_id" value="2"/>
+            <column name="pet_owner_id" value="2"/>
+            <column name="leave" value="true"/>
+        </insert>
+        <insert tableName="pet">
+            <column name="type" value="CAT"/>
+            <column name="name" value="Lord"/>
+            <column name="age" value="2"/>
+            <column name="breed" value="Meykun"/>
+            <column name="shelter_id" value="1"/>
+            <column name="pet_owner_id" value="3"/>
+            <column name="leave" value="false"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
