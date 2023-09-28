@@ -23,7 +23,6 @@
             <column name="type" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="photo_id" type="INT8"/>
         </createTable>
     </changeSet>
 

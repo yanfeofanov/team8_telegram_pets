@@ -51,11 +51,6 @@
                                  constraintName="FK_PET_OWNER"
                                  referencedTableName="pet_owner"
                                  referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="pet"
-                                 baseColumnNames="photo_id"
-                                 constraintName="FK_PET_PHOTO"
-                                 referencedTableName="photo"
-                                 referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="pet_owner"
                                  baseColumnNames="bot_user_id"
                                  constraintName="FK_PET_OWNER_BOT_USER"
@@ -65,11 +60,6 @@
                                  baseColumnNames="volunteer_id"
                                  constraintName="FK_PET_OWNER_VOLUNTEER"
                                  referencedTableName="volunteer"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="shelter"
-                                 baseColumnNames="photo_id"
-                                 constraintName="FK_SHELTER_PHOTO"
-                                 referencedTableName="photo"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="volunteer"
                                  baseColumnNames="bot_user_id"
