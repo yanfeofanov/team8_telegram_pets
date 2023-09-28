@@ -37,25 +37,35 @@ class PetControllerTest {
     static final Shelter shelter2 = new Shelter("Приют2", TypeOfPet.DOG);
     static final Pet pet1 = new Pet(TypeOfPet.CAT.toString(), "Пушок", (byte) 3, "Британец", shelter1, false);
     static final Pet pet2 = new Pet(TypeOfPet.DOG.toString(), "Чушок", (byte) 1, "Дворовой", shelter2, false);
+    static final JSONObject shelter1Json = new JSONObject();
+    static final JSONObject shelter2Json = new JSONObject();
     static final JSONObject pet1Json = new JSONObject();
     static final JSONObject pet2Json = new JSONObject();
 
     static {
         try {
-            pet1Json.put("id", "1");
-            pet1Json.put("type", pet1.getName());
-            pet1Json.put("name", pet1.getType());
+            shelter1Json.put("id", shelter1.getId());
+            shelter1Json.put("type", shelter1.getType());
+            shelter1Json.put("name", shelter1.getName());
+
+            shelter2Json.put("id", shelter2.getId());
+            shelter2Json.put("type", shelter2.getType());
+            shelter2Json.put("name", shelter2.getName());
+
+            pet1Json.put("id", pet1.getId());
+            pet1Json.put("type", pet1.getType());
+            pet1Json.put("name", pet1.getName());
             pet1Json.put("age", pet1.getAge());
             pet1Json.put("breed", pet1.getBreed());
-            pet1Json.put("shelter", pet1.getShelter());
+            pet1Json.put("shelter", shelter1Json);
             pet1Json.put("leave", pet1.getLeave());
 
-            pet2Json.put("id", "2");
-            pet2Json.put("type", pet2.getName());
-            pet2Json.put("name", pet2.getType());
+            pet2Json.put("id", pet2.getId());
+            pet2Json.put("type", pet2.getType());
+            pet2Json.put("name", pet2.getName());
             pet2Json.put("age", pet2.getAge());
             pet2Json.put("breed", pet2.getBreed());
-            pet2Json.put("shelter", pet2.getShelter());
+            pet2Json.put("shelter", shelter2Json);
             pet2Json.put("leave", pet2.getLeave());
 
         } catch (JSONException e) {
@@ -64,7 +74,7 @@ class PetControllerTest {
     }
 
     @Test
-    void findPetPositiveTest() throws Exception {
+    void findPetTest() throws Exception {
         when(petServiceMock.findPetById(anyInt())).thenReturn(pet1);
         mockMvc.perform(MockMvcRequestBuilders.get("/pets/1"))
                 .andExpect(status().isOk())
@@ -80,14 +90,8 @@ class PetControllerTest {
     }
 
     @Test
-    void findPetNegativeTest() throws Exception {
-        /*mockMvc.perform(MockMvcRequestBuilders.get("/pets/"))
-                .andExpect(status().isBadRequest());*/
-    }
-
-    @Test
     void addPetTest() throws Exception {
-       /* when(petServiceMock.addPet(any(Pet.class))).thenReturn(pet1);
+        when(petServiceMock.addPet(any(Pet.class))).thenReturn(pet1);
         mockMvc.perform(MockMvcRequestBuilders.post("/pets/add")
                         .content(pet1Json.toString())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -101,11 +105,14 @@ class PetControllerTest {
                 .andExpect(jsonPath("$.leave").value(pet1.getLeave()))
                 .andExpect(jsonPath("$.shelter.id").value(pet1.getShelter().getId()))
                 .andExpect(jsonPath("$.shelter.name").value(pet1.getShelter().getName()));
-        verify(petServiceMock, new Times(1)).addPet(any(Pet.class));*/
+        verify(petServiceMock, new Times(1)).addPet(any(Pet.class));
     }
 
     @Test
-    void deletePet() {
+    void deletePetTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/pets/delete/" + pet1.getId()))
+                .andExpect(status().isOk());
+        verify(petServiceMock, new Times(1)).deletePet(anyInt());
     }
 
     @Test

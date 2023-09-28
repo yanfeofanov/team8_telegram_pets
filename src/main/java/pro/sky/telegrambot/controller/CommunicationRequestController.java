@@ -23,7 +23,6 @@ public class CommunicationRequestController {
     public Collection<CommunicationRequest> getAllForPeriodByDone(@RequestParam(name = "startPeriod") String startPeriodStr,
                                                             @RequestParam(name = "endPeriod", required = false) String endPeriodStr,
                                                             @RequestParam boolean done) {
-        checkParametersForNull(startPeriodStr, done);
         LocalDateTime startPeriod, endPeriod;
         try {
             startPeriod = LocalDateTime.parse(startPeriodStr);
@@ -45,12 +44,5 @@ public class CommunicationRequestController {
     @PostMapping("/{id}/check")
     public CommunicationRequest checkCommunicationRequest(@PathVariable int id, @RequestBody boolean done) {
         return communicationRequestService.checkCommunicationRequest(id, done);
-    }
-    private void checkParametersForNull(Object... params) {
-        for (Object param : params) {
-            if (param == null) {
-                throw new BadParamException();
-            }
-        }
     }
 }
