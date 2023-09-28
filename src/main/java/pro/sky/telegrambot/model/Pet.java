@@ -28,6 +28,15 @@ public class Pet {
     public Pet() {
     }
 
+    public Pet(String type, String name, byte age, String breed, Shelter shelter, Boolean leave) {
+        this.type = type;
+        this.name = name;
+        this.age = age;
+        this.breed = breed;
+        this.shelter = shelter;
+        this.leave = leave;
+    }
+
     public Pet(String type, String name, byte age, String breed, Shelter shelter, PetOwner petOwner, Photo photo, Boolean leave) {
         this.type = type;
         this.name = name;
