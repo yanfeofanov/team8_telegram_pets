@@ -295,10 +295,14 @@ public class DailyReportService {
      * @param id      - id владельца питомца
      * @param checked - статус отчета (проверен(true)/не проверен(false))
      */
-    public void checkDailyReport(Long id, boolean checked) {
+    public String checkDailyReport(Long id, boolean checked) {
         DailyReport findDailyReport = dailyReportRepository.findDailyReportById(id);
+        if (checked == findDailyReport.getChecked()) {
+            return "отчет уже проверен";
+        }
         findDailyReport.setChecked(checked);
         dailyReportRepository.save(findDailyReport);
+        return "статус отчета изменен";
     }
 
     /**

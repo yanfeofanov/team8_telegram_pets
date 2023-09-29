@@ -121,13 +121,7 @@ public class DailyReportController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "статус отчета изменен",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                            schema = @Schema(implementation = DailyReport.class)
-                                    )
-                            }
+                            description = "статус отчета изменен"
                     ),
                     @ApiResponse(
                             responseCode = "400",
@@ -137,8 +131,8 @@ public class DailyReportController {
     )
 
     @PutMapping("/idReport/{id}")
-    public void checkedReport(@PathVariable Long id, @RequestParam boolean checked) {
-        dailyReportService.checkDailyReport(id,checked);
+    public String checkedReport(@PathVariable Long id, @RequestParam boolean checked) {
+        return dailyReportService.checkDailyReport(id,checked);
     }
 
     @Operation(

@@ -1,4 +1,4 @@
-package pro.sky.telegrambot.controller;
+package pro.sky.telegrambot.Controller;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pro.sky.telegrambot.constant.TypeOfPet;
+import pro.sky.telegrambot.controller.PetController;
 import pro.sky.telegrambot.model.Pet;
 import pro.sky.telegrambot.model.Shelter;
 import pro.sky.telegrambot.service.PetService;

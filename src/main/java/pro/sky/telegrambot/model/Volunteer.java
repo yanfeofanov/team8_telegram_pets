@@ -20,6 +20,14 @@ public class Volunteer {
     public Volunteer() {
     }
 
+    public Volunteer(int id, String name, String surname, String phoneNumber, User user) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.user = user;
+    }
+
     public Volunteer(String name, String surname, String phoneNumber, User user) {
         this.name = name;
         this.surname = surname;
