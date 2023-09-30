@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambot.model.Info;
 import pro.sky.telegrambot.service.InfoService;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * класс содержит эндпойнты для управления информационными данными о приюте. Можно добавлять и обновлять информацию
@@ -19,21 +19,24 @@ public class InfoController {
         this.infoService = infoService;
     }
 
-    @PostMapping
+    @PostMapping("/addInfo")
     public Info addInfo(@RequestBody Info newInfo) {
-        return newInfo;
+        return infoService.addInfo(newInfo);
     }
+
     @PutMapping
-    public Info updateInfo(@RequestBody Info info) {
-        return info;
+    public Info updateInfo(@PathVariable Long id,@RequestBody Info info) {
+        return infoService.updateInfoShelter(id,info);
     }
+
     /**
      * метод выводит всю информацию по выбранному приюту
+     *
      * @param id идентификатор приюта
      * @return список с информацией о приюте
      */
     @GetMapping("/{id}")
     public Collection<Info> getAllInfoByShelter(@PathVariable int id) {
-        return new ArrayList<>();
+        return infoService.findByIdInfo(id);
     }
 }

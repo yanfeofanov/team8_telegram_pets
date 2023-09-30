@@ -20,22 +20,27 @@ public class Pet {
     @OneToOne
     @JoinColumn(name = "pet_owner_id")
     private PetOwner petOwner;
-    @OneToOne
-    @JoinColumn(name = "photo_id")
-    private Photo photo;
     private Boolean leave;
 
     public Pet() {
     }
 
-    public Pet(String type, String name, byte age, String breed, Shelter shelter, PetOwner petOwner, Photo photo, Boolean leave) {
+    public Pet(String type, String name, byte age, String breed, Shelter shelter, Boolean leave) {
+        this.type = type;
+        this.name = name;
+        this.age = age;
+        this.breed = breed;
+        this.shelter = shelter;
+        this.leave = leave;
+    }
+
+    public Pet(String type, String name, byte age, String breed, Shelter shelter, PetOwner petOwner, Boolean leave) {
         this.type = type;
         this.name = name;
         this.age = age;
         this.breed = breed;
         this.shelter = shelter;
         this.petOwner = petOwner;
-        this.photo = photo;
         this.leave = leave;
     }
 
@@ -99,25 +104,17 @@ public class Pet {
         this.petOwner = petOwner;
     }
 
-    public Photo getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Pet)) return false;
         Pet pet = (Pet) o;
-        return getId() == pet.getId() && getAge() == pet.getAge() && Objects.equals(getType(), pet.getType()) && Objects.equals(getName(), pet.getName()) && Objects.equals(getBreed(), pet.getBreed()) && Objects.equals(getShelter(), pet.getShelter()) && Objects.equals(getPetOwner(), pet.getPetOwner()) && Objects.equals(getPhoto(), pet.getPhoto()) && Objects.equals(getLeave(), pet.getLeave());
+        return getId() == pet.getId() && getAge() == pet.getAge() && Objects.equals(getType(), pet.getType()) && Objects.equals(getName(), pet.getName()) && Objects.equals(getBreed(), pet.getBreed()) && Objects.equals(getShelter(), pet.getShelter()) && Objects.equals(getPetOwner(), pet.getPetOwner()) && Objects.equals(getLeave(), pet.getLeave());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getType(), getName(), getAge(), getBreed(), getShelter(), getPetOwner(), getPhoto(), getLeave());
+        return Objects.hash(getId(), getType(), getName(), getAge(), getBreed(), getShelter(), getPetOwner(), getLeave());
     }
 
     @Override
@@ -130,7 +127,6 @@ public class Pet {
                 ", breed='" + breed + '\'' +
                 ", shelter=" + shelter +
                 ", petOwner=" + petOwner +
-                ", photo=" + photo +
                 ", leave=" + leave +
                 '}';
     }

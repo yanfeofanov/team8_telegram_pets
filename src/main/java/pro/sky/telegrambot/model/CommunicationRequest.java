@@ -30,7 +30,6 @@ public class CommunicationRequest {
     }
 
     public CommunicationRequest() {
-
     }
 
     public int getId() {
