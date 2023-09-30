@@ -23,6 +23,7 @@ public class DailyReport {
     @Column(name = "report_body")
     private String reportBody;
     private Boolean checked;
+    private Boolean approved;
     @ManyToOne
     @JoinColumn(name = "volunteer_id")
     private Volunteer inspector;
@@ -30,7 +31,7 @@ public class DailyReport {
     public DailyReport() {
     }
 
-    public DailyReport(LocalDateTime date, PetOwner petOwner, Pet pet, Photo photo, String reportBody, Boolean checked, Volunteer inspector) {
+    public DailyReport(LocalDateTime date, PetOwner petOwner, Pet pet, Photo photo, String reportBody, Boolean checked, Boolean approved, Volunteer inspector) {
         this.date = date;
         this.petOwner = petOwner;
         this.pet = pet;
@@ -38,6 +39,7 @@ public class DailyReport {
         this.reportBody = reportBody;
         this.checked = checked;
         this.inspector = inspector;
+        this.approved = approved;
     }
 
     public Long getId() {
@@ -90,6 +92,14 @@ public class DailyReport {
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
+    }
+
+    public Boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
     }
 
     public Volunteer getInspector() {

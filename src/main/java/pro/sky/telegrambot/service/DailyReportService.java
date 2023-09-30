@@ -292,4 +292,5 @@ public class DailyReportService {
     public Collection<DailyReport> getAllDailyReport(LocalDate date){
         return dailyReportRepository.findDailyReportByDateBetween(date.atStartOfDay(), date.plusDays(1).atStartOfDay());
     }
+
 }

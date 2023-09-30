@@ -21,19 +21,19 @@ public class VolunteerController {
     }
     @PostMapping
     public Volunteer addVolunteer(@RequestBody Volunteer newVolunteer) {
-        return newVolunteer;
+        return volunteerService.addVolunteer(newVolunteer);
     }
     @DeleteMapping("/{id}")
     public Volunteer deleteVolunteer(@PathVariable int id) {
-        return new Volunteer();
+        return volunteerService.deleteVolunteer(id);
     }
-    @GetMapping("/{id}")
-    public Volunteer getVolunteer(@PathVariable int id) {
-        return new Volunteer();
+    @GetMapping("/{phoneNumber}")
+    public Volunteer getVolunteer(@PathVariable String phoneNumber) {
+        return volunteerService.geyVolunteerByPhone(phoneNumber);
     }
     @GetMapping("/all")
     public Collection<Volunteer> getAllVolunteers() {
-        return new ArrayList<>();
+        return volunteerService.getAllVolunteers();
     }
 
 
