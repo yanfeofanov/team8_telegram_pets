@@ -28,8 +28,8 @@ class CommunicationRequestServiceTest {
     private final CommunicationRequestRepository communicationRequestRepositoryMock = mock(CommunicationRequestRepository.class);
     private final CommunicationRequestService out = new CommunicationRequestService(communicationRequestRepositoryMock, userServiceMock, volunteerServiceMock);
     private final User testUser = new User(1L, "login", 1L, LocalDateTime.now());
-    private  final CommunicationRequest testCommunicationRequest1= new CommunicationRequest(LocalDateTime.now(), testUser, "номер телефона", false, new Volunteer());
-    private final CommunicationRequest testCommunicationRequest2= new CommunicationRequest(LocalDateTime.now(), testUser, "адрес электронной почты", false, new Volunteer());
+    private final CommunicationRequest testCommunicationRequest1 = new CommunicationRequest(LocalDateTime.now(), testUser, "номер телефона", false, new Volunteer());
+    private final CommunicationRequest testCommunicationRequest2 = new CommunicationRequest(LocalDateTime.now(), testUser, "адрес электронной почты", false, new Volunteer());
 
     @Test
     void getAllRequestForPeriodByDoneTest() {
@@ -65,6 +65,7 @@ class CommunicationRequestServiceTest {
         verify(communicationRequestRepositoryMock, new Times(1)).findByUserAndDoneIsFalse(any(User.class));
         verify(communicationRequestRepositoryMock, new Times(1)).save(any(CommunicationRequest.class));
     }
+
     @Test
     void addRequestToDatabaseNegativeTest() {
         when(userServiceMock.findUserById(anyLong())).thenReturn(null);
