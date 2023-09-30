@@ -44,17 +44,12 @@ public class CommunicationRequestService {
     }
 
     public Collection<CommunicationRequest> getAllRequestForPeriodByDone(LocalDateTime startPeriod, LocalDateTime endPeriod, boolean done) {
-        if (done) {
-            return communicationRequestRepository.findByDateBetweenAndDoneIsTrue(startPeriod, endPeriod);
-        } else {
-            return communicationRequestRepository.findByDateBetweenAndDoneIsFalse(startPeriod, endPeriod);
-        }
+        return communicationRequestRepository.findByDateBetweenAndDone(startPeriod, endPeriod, done);
     }
 
     public CommunicationRequest checkCommunicationRequest(int id, boolean done) {
         CommunicationRequest request = communicationRequestRepository.findById(id).orElseThrow(CommunicationRequestNotFoundException::new);
         request.setDone(done);
-        communicationRequestRepository.save(request);
-        return request;
+        return communicationRequestRepository.save(request);
     }
 }
