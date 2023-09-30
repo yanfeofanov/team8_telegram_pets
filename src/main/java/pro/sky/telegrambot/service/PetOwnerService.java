@@ -3,28 +3,20 @@ package pro.sky.telegrambot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.model.request.Keyboard;
-import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import pro.sky.telegrambot.constant.ProbationStatus;
 import pro.sky.telegrambot.exception.ErrorCollisionException;
 import pro.sky.telegrambot.exception.InvalidInputDataException;
 import pro.sky.telegrambot.model.*;
-import pro.sky.telegrambot.repository.DailyReportRepository;
 import pro.sky.telegrambot.repository.PetOwnerRepository;
 import pro.sky.telegrambot.repository.PetRepository;
-import pro.sky.telegrambot.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+
 
 import static pro.sky.telegrambot.constant.TypeOfPet.CAT;
 import static pro.sky.telegrambot.constant.TypeOfPet.DOG;
@@ -34,23 +26,17 @@ public class PetOwnerService {
 
     private final PetOwnerRepository petOwnerRepository;
 
-    private final TelegramBot telegramBot;
-
     private final PetRepository petRepository;
 
-    private final DailyReportRepository dailyReportRepository;
 
     private final TelegramBotService telegramBotService;
 
     private final VolunteerService volunteerService;
 
-    public PetOwnerService(PetOwnerRepository petOwnerRepository, TelegramBot telegramBot, PetRepository petRepository,
-                           DailyReportRepository dailyReportRepository, TelegramBotService telegramBotService,
-                           VolunteerService volunteerService) {
+    public PetOwnerService(PetOwnerRepository petOwnerRepository, PetRepository petRepository,
+                           TelegramBotService telegramBotService, VolunteerService volunteerService) {
         this.petOwnerRepository = petOwnerRepository;
-        this.telegramBot = telegramBot;
         this.petRepository = petRepository;
-        this.dailyReportRepository = dailyReportRepository;
         this.telegramBotService = telegramBotService;
         this.volunteerService = volunteerService;
     }
@@ -116,47 +102,57 @@ public class PetOwnerService {
         List<PetOwner> petOwners = petOwnerRepository.findAll().stream()
                 .filter(petOwner -> petOwner.getEndProbation().toLocalDate().isEqual(localDate))
                 .collect(Collectors.toList());
-        HashMap<PetOwner, Collection<DailyReport>> map = new HashMap<>();
-        for (PetOwner petOwner : petOwners) {
-            Collection<DailyReport> dailyReports = dailyReportRepository.findDailyReportByPetOwner(petOwner);
-            map.put(petOwner, dailyReports);
-        }
-        for (Map.Entry<PetOwner, Collection<DailyReport>> entry : map.entrySet()) {
-            PetOwner key = entry.getKey();
-            Collection<DailyReport> value = entry.getValue();
-            long quantityApproved = value.stream().filter(DailyReport::getApproved).count();
-            long size = value.size();
-            if ((quantityApproved / size) * 100 >= 80 && value.stream().skip(size - 7)
-                    .anyMatch(DailyReport::getApproved)) {
-                key.setProbation(false);
-                telegramBotService.sendReply(key.getUser().getChatId(),
-                        "Поздравляем, вы успешно прошли испытательный срок, отправлять отчет больше не требуется!");
-            } else if (value.size() >= 58 && value.stream().skip(size - 7)
-                    .anyMatch(dailyReport -> !dailyReport.getApproved())) {
-                telegramBotService.sendReply(key.getUser().getChatId(),
-                        "К сожалению, вы не прошли испытательный срок, с Вами скоро свяжется волонтер для дальнейших инструкций");
-            } else {
-                Volunteer volunteer = volunteerService.getRandomVolunteer();
-                telegramBotService.sendReply(volunteer.getUser().getChatId(),
-                        "Необходимо принять решение о статусе усыновителя " + key.getUser().getId(), generateMenu());
+        if (!petOwners.isEmpty()) {
+            Volunteer volunteer = volunteerService.getRandomVolunteer();
+            telegramBotService.sendReply(volunteer.getUser().getChatId(),
+                    "Необходимо принять решение о статусе следующих усыновителей ", generateMenu(petOwners));
 
-
-            }
         }
     }
 
-    public Keyboard generateMenu() {
-        List<ProbationStatus> probationStatuses = List.of(ProbationStatus.SUCCESS, ProbationStatus.SHORT_STATUS,
-                ProbationStatus.LONG_STATUS);
+    public InlineKeyboardMarkup generateMenu(List<PetOwner> petOwners) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        for (ProbationStatus probationStatus : probationStatuses) {
-            InlineKeyboardButton inlineButton = new InlineKeyboardButton(probationStatus.getText());
-            inlineButton.callbackData(probationStatus.getText());
+        for (PetOwner petOwner : petOwners) {
+            InlineKeyboardButton inlineButton = new InlineKeyboardButton(petOwner.getId() + " " + petOwner.getName() +
+                    " " + petOwner.getSurname());
+            inlineButton.callbackData(petOwner.getId() + " " + petOwner.getName() +
+                    " " + petOwner.getSurname());
             keyboard.addRow(inlineButton);
         }
         return keyboard;
     }
 
-
+    public PetOwner changeProbationStatus(int ownerId, int status) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        PetOwner petOwner = petOwnerRepository.getById(ownerId);
+        if (petOwner == null) {
+            throw new InvalidInputDataException("Усыновитель не найден, перепроверьте id");
+        } else {
+            long chatId = petOwner.getUser().getChatId();
+            switch (status) {
+                case 0:
+                    petOwner.setProbation(false);
+                    telegramBotService.sendReply(chatId, "Поздравляем, испытательный срок пройден");
+                    break;
+                case 1:
+                    petOwner.setEndProbation(localDateTime.plusDays(14));
+                    telegramBotService.sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 14 дней");
+                    break;
+                case 2:
+                    petOwner.setEndProbation(localDateTime.plusDays(30));
+                    telegramBotService.sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 30 дней");
+                    break;
+                case 3:
+                    petOwner.setProbation(false);
+                    petOwner.setEndProbation(null);
+                    telegramBotService.sendReply(chatId, "К сожалению, вы не прошли испытательный срок, " +
+                            "с Вами скоро свяжется волонтер для дальнейших указаний");
+                    break;
+                default:
+                    throw new InvalidInputDataException("Значения статусов должно быть от 0 до 3");
+            }
+            return petOwner;
+        }
+    }
 
 }

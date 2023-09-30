@@ -115,12 +115,12 @@ public class DailyReport {
         if (this == o) return true;
         if (!(o instanceof DailyReport)) return false;
         DailyReport that = (DailyReport) o;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getDate(), that.getDate()) && Objects.equals(getPetOwner(), that.getPetOwner()) && Objects.equals(getPet(), that.getPet()) && Objects.equals(getPhoto(), that.getPhoto()) && Objects.equals(getReportBody(), that.getReportBody()) && Objects.equals(getChecked(), that.getChecked()) && Objects.equals(getInspector(), that.getInspector());
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getDate(), that.getDate()) && Objects.equals(getPetOwner(), that.getPetOwner()) && Objects.equals(getPet(), that.getPet()) && Objects.equals(getPhoto(), that.getPhoto()) && Objects.equals(getReportBody(), that.getReportBody()) && Objects.equals(getChecked(), that.getChecked()) && Objects.equals(getApproved(), that.getApproved()) && Objects.equals(getInspector(), that.getInspector());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDate(), getPetOwner(), getPet(), getPhoto(), getReportBody(), getChecked(), getInspector());
+        return Objects.hash(getId(), getDate(), getPetOwner(), getPet(), getPhoto(), getReportBody(), getChecked(), getApproved(), getInspector());
     }
 
     @Override
@@ -134,6 +134,7 @@ public class DailyReport {
                 ", reportBody='" + reportBody + '\'' +
                 ", checked=" + checked +
                 ", inspector=" + inspector +
+                ", approved=" + approved +
                 '}';
     }
 }

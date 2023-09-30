@@ -55,13 +55,18 @@ public class PetsOwnerController {
         return petOwnerService.getPetOwnersOnProbation();
     }
     /**
-     * метод может изменить дату испытательного срока и изменить статус
+     * метод может изменить дату испытательного срока и изменить статус и отправить соотвествующие сообщение усыновителю
+     * @param ownerId принимает id усыновителя
+     * @param status принимает показатель нового статуса усыновителя:
+     * 0 - означает, что испытельный срок пройден
+     * 1 - испытательный срок продлен на 14 дней
+     * 2 - испытательный срок продлен на 30 дней
+     * 3 - испытательный срок не пройден
      * @return обновленные данные усыновителя
      */
-    @GetMapping("/probation/data/{owner_id}")
-    public PetOwner changeDataProbation(@PathVariable(value = "owner_id") String ownerId) {
-        return new PetOwner();
+    @PatchMapping("/probation/data/{owner_id}/{status}")
+    public PetOwner changeStatusProbation(@PathVariable(value = "owner_id") int ownerId,
+                                        @PathVariable int status) {
+        return petOwnerService.changeProbationStatus(ownerId, status);
     }
-
-
 }
