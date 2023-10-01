@@ -2,6 +2,7 @@ package pro.sky.telegrambot.service;
 
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambot.constant.TypeOfPet;
+import pro.sky.telegrambot.exception.PetNotFoundException;
 import pro.sky.telegrambot.model.Pet;
 import pro.sky.telegrambot.repository.PetRepository;
 
@@ -23,7 +24,7 @@ public class PetService {
      * @return Pet
      */
     public Pet findPetById(int id) {
-        return petRepository.findById(id);
+        return petRepository.findById(id).orElseThrow(() -> new PetNotFoundException("питомец с указанным Id не найден!"));
     }
 
     public Pet addPet(Pet newPet) {

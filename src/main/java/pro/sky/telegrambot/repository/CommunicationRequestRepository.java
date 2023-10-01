@@ -12,7 +12,5 @@ import java.util.Collection;
 public interface CommunicationRequestRepository extends JpaRepository<CommunicationRequest, Integer> {
     CommunicationRequest findByUserAndDoneIsFalse(User user);
 
-    Collection<CommunicationRequest> findByDateBetweenAndDoneIsTrue(LocalDateTime startPeriod, LocalDateTime endPeriod);
-
-    Collection<CommunicationRequest> findByDateBetweenAndDoneIsFalse(LocalDateTime startPeriod, LocalDateTime endPeriod);
+    Collection<CommunicationRequest> findByDateBetweenAndDone(LocalDateTime startPeriod, LocalDateTime endPeriod, boolean done);
 }

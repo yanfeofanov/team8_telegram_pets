@@ -4,10 +4,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import pro.sky.telegrambot.model.Pet;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface PetRepository extends JpaRepository<Pet, Integer> {
 
-    Pet findById(int id);
+    @Override
+    Optional<Pet> findById(Integer integer);
 
     Collection<Pet> findAllByType(String typeOfPet);
 
