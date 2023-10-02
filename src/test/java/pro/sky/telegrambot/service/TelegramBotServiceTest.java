@@ -1,10 +1,14 @@
 package pro.sky.telegrambot.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
+import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,40 +40,38 @@ class TelegramBotServiceTest {
     private final Message messageMock = mock(Message.class);
     private final User userMock = mock(User.class);
     private final Chat chatMock = mock(Chat.class);
+    private final BaseResponse baseResponseMock = mock(BaseResponse.class);
     private final SendResponse sendResponseMock = mock(SendResponse.class);
-    static final Long user1Id = 0L;
-    static final Long user2Id = 1L;
-    static final Long chat1Id = 0L;
-    static final Long chat2Id = 1L;
     static final pro.sky.telegrambot.model.User botUser = new pro.sky.telegrambot.model.User();
+    private final Long testUser1Id = 0L;
+    private final Long testUser2Id = 1L;
+    private final Long testChat1Id = 0L;
+    private final Long testChat2Id = 1L;
 
-   /* public static Stream<Arguments> provideParamsForTestProcessMessage() {
+    @BeforeEach
+    void init() {
+        when(telegramBotMock.execute(any(SendMessage.class))).thenReturn(sendResponseMock);
+    }
+    @Test
+    void processMessageTest() {
+        when(messageMock.from()).thenReturn(userMock);
+        when(userMock.id()).thenReturn(testUser1Id);
+        when(messageMock.chat()).thenReturn(chatMock);
+        when(chatMock.id()).thenReturn(testChat1Id);
+        when(messageMock.text()).thenReturn("/start");
+        when(userServiceMock.isTheUserNew(1L)).thenReturn(false);
 
-        return Stream.of(
-                Arguments.of("start/", true, 1, 1, 0),
-                Arguments.of("start/", false, 0, 1, 0),
-                Arguments.of("text", false, , , ),
-                Arguments.of(null, , , , , , , ));
+        //when(userServiceMock.addNewUser(anyLong(), anyString(), anyString(), anyLong())).thenReturn(new pro.sky.telegrambot.model.User());
+
+        //        when(out.sendReply(any(), any())).thenReturn(baseResponseMock);
+//        when(sendResponseMock.errorCode()).thenReturn(errorCode);
+//        assertEquals(out.processMessage(any(Message.class)), errorCode);
+//        verify(userServiceMock, new Times(numberOfCallsAddNewUser)).addNewUser(userId, any(), any(), chatId);
+//        verify(out, new Times(numberOfCallsAddNewUser)).pro(userId, any(), any(), chatId);
     }
 
-    @ParameterizedTest
-    @MethodSource("provideParamsForTestProcessMessage")
-    void TestProcessMessage(String textMessage, boolean newUser,
-                            int numberOfCallsAddNewUser, int numberOfCallsProcessCommand,
-                            int numberOfCallsProcessInputOfInformation) {
-        int errorCode = 0;
-        Long userId = 1L
-        Long chatId = 1L;
-        when(messageMock.from()).thenReturn(userMock);
-        when(messageMock.chat()).thenReturn(chatMock);
-        when(userMock.id()).thenReturn(userId);
-        when(chatMock.id()).thenReturn(chatId);
-        when(messageMock.text()).thenReturn(textMessage);
-        when(userServiceMock.isTheUserNew(1L)).thenReturn(newUser);
-        when(out.sendReply(any(), any())).thenReturn(sendResponseMock);
-        when(sendResponseMock.errorCode()).thenReturn(errorCode);
-        assertEquals(out.processMessage(any(Message.class)), errorCode);
-        verify(userServiceMock, new Times(numberOfCallsAddNewUser)).addNewUser(userId, any(), any(), chatId);
-        verify(out, new Times(numberOfCallsAddNewUser)).pro(userId, any(), any(), chatId);
-    }*/
+    @Test
+    void sendReplyTest() {
+
+    }
 }

@@ -110,7 +110,7 @@ class PetControllerTest {
 
     @Test
     void deletePetTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/pets/delete/" + pet1.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/pets/" + pet1.getId()))
                 .andExpect(status().isOk());
         verify(petServiceMock, new Times(1)).deletePet(anyInt());
     }

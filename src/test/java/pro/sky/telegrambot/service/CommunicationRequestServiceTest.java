@@ -35,7 +35,7 @@ class CommunicationRequestServiceTest {
     void getAllRequestForPeriodByDoneTest() {
         Collection<CommunicationRequest> requests = List.of(testCommunicationRequest1, testCommunicationRequest2);
         when(communicationRequestRepositoryMock.findByDateBetweenAndDone(any(LocalDateTime.class), any(LocalDateTime.class), anyBoolean())).thenReturn(requests);
-        assertThat(out.getAllRequestForPeriodByDone(any(LocalDateTime.class), any(LocalDateTime.class), anyBoolean()))
+        assertThat(out.getAllRequestForPeriodByDone(LocalDateTime.now().minusDays(1), LocalDateTime.now(), true))
                 .isEqualTo(requests);
         verify(communicationRequestRepositoryMock, new Times(1)).findByDateBetweenAndDone(any(LocalDateTime.class), any(LocalDateTime.class), anyBoolean());
     }
