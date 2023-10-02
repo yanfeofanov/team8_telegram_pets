@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class PetShelterExceptionHandler {
 
-    @ExceptionHandler({CommunicationRequestNotFoundException.class, PetNotFoundException.class})
+    @ExceptionHandler({CommunicationRequestNotFoundException.class, PetNotFoundException.class, ShelterNotFoundException.class})
     public ResponseEntity<?> handleNotFound(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
