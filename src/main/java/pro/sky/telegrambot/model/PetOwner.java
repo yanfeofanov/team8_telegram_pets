@@ -39,6 +39,18 @@ public class PetOwner {
         this.endProbation = endProbation;
     }
 
+    public PetOwner(int id, String name, String surname, String phoneNumber, String email, User user, Volunteer volunteer, boolean probation, LocalDateTime endProbation) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.user = user;
+        this.volunteer = volunteer;
+        this.probation = probation;
+        this.endProbation = endProbation;
+    }
+
     public int getId() {
         return id;
     }

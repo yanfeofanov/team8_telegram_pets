@@ -7,4 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BadParamException extends RuntimeException{
     public BadParamException() {
     }
+
+    public BadParamException(String message) {
+        super(message);
+    }
 }

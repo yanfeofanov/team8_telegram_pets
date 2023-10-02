@@ -40,6 +40,16 @@ public class DailyReport {
         this.inspector = inspector;
     }
 
+
+    public DailyReport(LocalDateTime date, PetOwner petOwner, Pet pet, String reportBody, Boolean checked, Volunteer inspector) {
+        this.date = date;
+        this.petOwner = petOwner;
+        this.pet = pet;
+        this.reportBody = reportBody;
+        this.checked = checked;
+        this.inspector = inspector;
+    }
+
     public Long getId() {
         return id;
     }

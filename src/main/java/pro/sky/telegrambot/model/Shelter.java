@@ -23,6 +23,12 @@ public class Shelter {
         this.type = type;
     }
 
+    public Shelter(int id, String name, TypeOfPet type) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+    }
+
     public int getId() {
         return id;
     }
