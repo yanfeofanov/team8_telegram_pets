@@ -1,11 +1,9 @@
 package pro.sky.telegrambot.controller;
 
 import org.springframework.web.bind.annotation.*;
-import pro.sky.telegrambot.model.Pet;
 import pro.sky.telegrambot.model.Volunteer;
 import pro.sky.telegrambot.service.VolunteerService;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -29,7 +27,7 @@ public class VolunteerController {
     }
     @GetMapping("/{phoneNumber}")
     public Volunteer getVolunteer(@PathVariable String phoneNumber) {
-        return volunteerService.geyVolunteerByPhone(phoneNumber);
+        return volunteerService.getVolunteerByPhone(phoneNumber);
     }
     @GetMapping("/all")
     public Collection<Volunteer> getAllVolunteers() {

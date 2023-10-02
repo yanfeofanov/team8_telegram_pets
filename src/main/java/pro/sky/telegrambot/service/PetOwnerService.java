@@ -3,6 +3,8 @@ package pro.sky.telegrambot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.SendResponse;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambot.exception.ErrorCollisionException;
@@ -28,17 +30,13 @@ public class PetOwnerService {
 
     private final PetRepository petRepository;
 
+    private final TelegramBot telegramBot;
 
-    private final TelegramBotService telegramBotService;
 
-    private final VolunteerService volunteerService;
-
-    public PetOwnerService(PetOwnerRepository petOwnerRepository, PetRepository petRepository,
-                           TelegramBotService telegramBotService, VolunteerService volunteerService) {
+    public PetOwnerService(PetOwnerRepository petOwnerRepository, PetRepository petRepository, TelegramBot telegramBot) {
         this.petOwnerRepository = petOwnerRepository;
         this.petRepository = petRepository;
-        this.telegramBotService = telegramBotService;
-        this.volunteerService = volunteerService;
+        this.telegramBot = telegramBot;
     }
 
 
@@ -95,7 +93,14 @@ public class PetOwnerService {
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * Метод каждый день проверяет истек ли период испытательного срока
+     * берет текущую дату @localData и сравнивает ее с датой окончания @endProbation
+     * преобразовывая последнюю в формат даты без времени DD/MM/YYYY
+     * если совпдает, то создает список и направляет каждому волонтеру, привязанному к усыновителю
+     * о необходимости принять решение о статусе
+     * информация передается ввиде меню
+     */
     @Scheduled(cron = "0 0 12 * * ?")
     public void checkProbation() {
         LocalDate localDate = LocalDate.now();
@@ -103,13 +108,18 @@ public class PetOwnerService {
                 .filter(petOwner -> petOwner.getEndProbation().toLocalDate().isEqual(localDate))
                 .collect(Collectors.toList());
         if (!petOwners.isEmpty()) {
-            Volunteer volunteer = volunteerService.getRandomVolunteer();
-            telegramBotService.sendReply(volunteer.getUser().getChatId(),
-                    "Необходимо принять решение о статусе следующих усыновителей ", generateMenu(petOwners));
-
+            for (PetOwner petOwner : petOwners) {
+                long chatId = petOwner.getVolunteer().getUser().getChatId();
+                sendReply(chatId,
+                        "Необходимо принять решение о статусе следующих усыновителей ", generateMenu(petOwners));
+            }
         }
     }
-
+    /**
+     * Метод генерируют меню с кнопками в формате @id petOwner + имя + фамилия
+     * @param petOwners
+     * @return экземляр InlineKeyboardMarkup
+     */
     public InlineKeyboardMarkup generateMenu(List<PetOwner> petOwners) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         for (PetOwner petOwner : petOwners) {
@@ -121,10 +131,16 @@ public class PetOwnerService {
         }
         return keyboard;
     }
+    /**
+     * Метод изменяет статус и дату испытательного срока усыновителя
+     * @param ownerId id усыновителя
+     * @param status статус усыновителя (от 0 до 3)
+     * @return экземляр PetOwner
+     */
 
-    public PetOwner changeProbationStatus(int ownerId, int status) {
+    public PetOwner changeProbationStatus(int ownerId, int status) { //status = 0...3
         LocalDateTime localDateTime = LocalDateTime.now();
-        PetOwner petOwner = petOwnerRepository.getById(ownerId);
+        PetOwner petOwner = petOwnerRepository.findById(ownerId).get();
         if (petOwner == null) {
             throw new InvalidInputDataException("Усыновитель не найден, перепроверьте id");
         } else {
@@ -132,27 +148,41 @@ public class PetOwnerService {
             switch (status) {
                 case 0:
                     petOwner.setProbation(false);
-                    telegramBotService.sendReply(chatId, "Поздравляем, испытательный срок пройден");
+                    sendReply(chatId, "Поздравляем, испытательный срок пройден");
                     break;
                 case 1:
                     petOwner.setEndProbation(localDateTime.plusDays(14));
-                    telegramBotService.sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 14 дней");
+                    sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 14 дней");
                     break;
                 case 2:
                     petOwner.setEndProbation(localDateTime.plusDays(30));
-                    telegramBotService.sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 30 дней");
+                    sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 30 дней");
                     break;
                 case 3:
                     petOwner.setProbation(false);
                     petOwner.setEndProbation(null);
-                    telegramBotService.sendReply(chatId, "К сожалению, вы не прошли испытательный срок, " +
+                    sendReply(chatId, "К сожалению, вы не прошли испытательный срок, " +
                             "с Вами скоро свяжется волонтер для дальнейших указаний");
                     break;
                 default:
                     throw new InvalidInputDataException("Значения статусов должно быть от 0 до 3");
             }
-            return petOwner;
+            petOwnerRepository.save(petOwner);
         }
+        return petOwner;
     }
 
+    public SendResponse sendReply(Long chatId, String text) {
+        SendMessage message = new SendMessage(chatId, text);
+        //message.parseMode(ParseMode.MarkdownV2);
+        return telegramBot.execute(message);
+    }
+
+    public SendResponse sendReply(Long chatId, String text, InlineKeyboardMarkup keyboard) {
+        SendMessage message = new SendMessage(chatId, text);
+        //message.parseMode(ParseMode.Markdown);
+        message.replyMarkup(keyboard);
+        SendResponse sendResponse = telegramBot.execute(message);
+        return sendResponse;
+    }
 }

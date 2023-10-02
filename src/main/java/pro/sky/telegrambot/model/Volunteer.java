@@ -27,6 +27,10 @@ public class Volunteer {
         this.user = user;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
