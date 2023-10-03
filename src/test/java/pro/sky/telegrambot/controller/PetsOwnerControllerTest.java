@@ -284,7 +284,7 @@ class PetsOwnerControllerTest {
         long days = faker.number().numberBetween(1, 30);
         long hours = faker.number().numberBetween(1, 5);
         LocalDateTime localDateTime = LocalDateTime.now().minusDays(days).minusHours(hours);
-        user.setDate_Added(localDateTime);
+        user.setDateAdded(localDateTime);
         petOwner.setEndProbation(localDateTime.plusDays(30));
         petOwner.setUser(user);
         Volunteer volunteer = generateVolunteer();
@@ -315,7 +315,7 @@ class PetsOwnerControllerTest {
         long days = faker.number().numberBetween(1, 30);
         long hours = faker.number().numberBetween(1, 5);
         LocalDateTime localDateTime = LocalDateTime.now().minusDays(days).minusHours(hours);
-        user.setDate_Added(localDateTime);
+        user.setDateAdded(localDateTime);
         volunteer.setUser(user);
         return volunteer;
 

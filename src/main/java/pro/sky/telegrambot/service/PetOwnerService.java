@@ -44,6 +44,10 @@ public class PetOwnerService {
         return petOwnerRepository.findByUserIdAndProbationIsTrue(userId);
     }
 
+    public PetOwner findPetOwner(int petOwnerId) {
+        return petOwnerRepository.findPetOwnerById(petOwnerId);
+    }
+
     public PetOwner findPetOwnerByPhone(String phoneNumber) {
         PetOwner foundOwner = petOwnerRepository.findPetOwnerByPhoneNumber(phoneNumber);
         if (!phoneNumber.isBlank() ||
