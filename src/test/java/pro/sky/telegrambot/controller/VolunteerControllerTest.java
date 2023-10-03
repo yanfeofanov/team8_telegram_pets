@@ -198,7 +198,7 @@ class VolunteerControllerTest {
         long days = faker.number().numberBetween(1, 30);
         long hours = faker.number().numberBetween(1, 5);
         LocalDateTime localDateTime = LocalDateTime.now().minusDays(days).minusHours(hours);
-        user.setDate_Added(localDateTime);
+        user.setDateAdded(localDateTime);
         volunteer.setUser(user);
         return volunteer;
 

@@ -42,7 +42,7 @@ public class InfoService {
      * @param id;
      * @return Информацию о приюте
      */
-    public Collection<Info> findByIdInfo(int id) {
+    public Collection<Info> findByShelterIdInfo(int id) {
         //Проверка на несуществующие приюты
         if (infoRepository.findByShelterId(id).isEmpty()) {
             throw new BadParamException();
@@ -50,7 +50,7 @@ public class InfoService {
         return infoRepository.findByShelterId(id);
     }
 
-    public Info updateInfoShelter(Long id,Info info) {
+    public Info updateInfoShelter(int id,Info info) {
         return infoRepository.findById(Math.toIntExact(id))
                 .map(oldInfo ->{
                     oldInfo.setShelter(info.getShelter());

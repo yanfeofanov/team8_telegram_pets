@@ -24,8 +24,8 @@ public class InfoController {
         return infoService.addInfo(newInfo);
     }
 
-    @PutMapping
-    public Info updateInfo(@PathVariable Long id,@RequestBody Info info) {
+    @PutMapping("/update/{id}")
+    public Info updateInfo(@PathVariable int id,@RequestBody Info info) {
         return infoService.updateInfoShelter(id,info);
     }
 
@@ -37,6 +37,6 @@ public class InfoController {
      */
     @GetMapping("/{id}")
     public Collection<Info> getAllInfoByShelter(@PathVariable int id) {
-        return infoService.findByIdInfo(id);
+        return infoService.findByShelterIdInfo(id);
     }
 }
