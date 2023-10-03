@@ -20,6 +20,7 @@ public class Info {
     private Shelter shelter;
 
     public Info() {
+
     }
 
     public Info(TypesOfInformation type, String text, Shelter shelter) {
