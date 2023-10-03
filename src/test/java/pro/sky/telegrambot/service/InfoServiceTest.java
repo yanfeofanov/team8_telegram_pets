@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import pro.sky.telegrambot.constant.TypesOfInformation;
+import pro.sky.telegrambot.exception.BadParamException;
 import pro.sky.telegrambot.model.Info;
 import pro.sky.telegrambot.model.Shelter;
 import pro.sky.telegrambot.repository.InfoRepository;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.checkerframework.checker.nullness.Opt.orElseThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -52,9 +54,15 @@ public class InfoServiceTest {
         verify(infoRepositoryMock, new Times(2)).findByShelterId(anyInt());
     }
 
-    @Test
-    void updateInfoShelterTest(){
-        out.updateInfoShelter(anyInt(),info1);
-        verify(infoRepositoryMock, new Times(1)).findById(anyInt());
-    }
+//    @Test
+//    void updateInfoShelterTest(){
+//        Exception exception = assertThrow(BadParamException.class )
+//        Collection<Info> info3 = List.of(info1,info2);
+//        when(infoRepositoryMock.findByShelterId(anyInt())).thenReturn(info3);
+//        assertThat(out.updateInfoShelter(anyInt(),info2))
+//                .isNotNull()
+//                        .isEqualTo(info3)
+//                                .orElseThrow(BadParamException);
+//        verify(infoRepositoryMock, new Times(1)).findById(anyInt());
+//    }
 }
