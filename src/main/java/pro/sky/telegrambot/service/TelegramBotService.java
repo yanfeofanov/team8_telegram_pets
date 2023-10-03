@@ -13,10 +13,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pro.sky.telegrambot.constant.Commands;
-import pro.sky.telegrambot.constant.TypeOfPet;
-import pro.sky.telegrambot.constant.TypeOfWaiting;
-import pro.sky.telegrambot.constant.TypesOfInformation;
+import pro.sky.telegrambot.constant.*;
 import pro.sky.telegrambot.model.*;
 
 import java.io.IOException;

@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface VolunteerRepository extends JpaRepository<Volunteer, Integer> {
  List<Volunteer> findAll();
+ Volunteer findVolunteerByPhoneNumber(String phoneNumber);
+
 }

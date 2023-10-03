@@ -23,6 +23,7 @@ public class DailyReport {
     @Column(name = "report_body")
     private String reportBody;
     private Boolean checked;
+    private Boolean approved;
     @ManyToOne
     @JoinColumn(name = "volunteer_id")
     private Volunteer inspector;
@@ -30,7 +31,7 @@ public class DailyReport {
     public DailyReport() {
     }
 
-    public DailyReport(LocalDateTime date, PetOwner petOwner, Pet pet, Photo photo, String reportBody, Boolean checked, Volunteer inspector) {
+    public DailyReport(LocalDateTime date, PetOwner petOwner, Pet pet, Photo photo, String reportBody, Boolean checked, Boolean approved, Volunteer inspector) {
         this.date = date;
         this.petOwner = petOwner;
         this.pet = pet;
@@ -38,6 +39,7 @@ public class DailyReport {
         this.reportBody = reportBody;
         this.checked = checked;
         this.inspector = inspector;
+        this.approved = approved;
     }
 
 
@@ -102,6 +104,14 @@ public class DailyReport {
         this.checked = checked;
     }
 
+    public Boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
+    }
+
     public Volunteer getInspector() {
         return inspector;
     }
@@ -115,12 +125,12 @@ public class DailyReport {
         if (this == o) return true;
         if (!(o instanceof DailyReport)) return false;
         DailyReport that = (DailyReport) o;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getDate(), that.getDate()) && Objects.equals(getPetOwner(), that.getPetOwner()) && Objects.equals(getPet(), that.getPet()) && Objects.equals(getPhoto(), that.getPhoto()) && Objects.equals(getReportBody(), that.getReportBody()) && Objects.equals(getChecked(), that.getChecked()) && Objects.equals(getInspector(), that.getInspector());
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getDate(), that.getDate()) && Objects.equals(getPetOwner(), that.getPetOwner()) && Objects.equals(getPet(), that.getPet()) && Objects.equals(getPhoto(), that.getPhoto()) && Objects.equals(getReportBody(), that.getReportBody()) && Objects.equals(getChecked(), that.getChecked()) && Objects.equals(getApproved(), that.getApproved()) && Objects.equals(getInspector(), that.getInspector());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDate(), getPetOwner(), getPet(), getPhoto(), getReportBody(), getChecked(), getInspector());
+        return Objects.hash(getId(), getDate(), getPetOwner(), getPet(), getPhoto(), getReportBody(), getChecked(), getApproved(), getInspector());
     }
 
     @Override
@@ -134,6 +144,7 @@ public class DailyReport {
                 ", reportBody='" + reportBody + '\'' +
                 ", checked=" + checked +
                 ", inspector=" + inspector +
+                ", approved=" + approved +
                 '}';
     }
 }
