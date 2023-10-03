@@ -8,4 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class PetNotFoundException extends RuntimeException {
     public PetNotFoundException() {
     }
+
+    public PetNotFoundException(String message) {
+        super(message);
+    }
 }

@@ -47,6 +47,17 @@ public class Pet {
         this.leave = leave;
     }
 
+    public Pet(int id, String type, String name, byte age, String breed, Shelter shelter, PetOwner petOwner, Boolean leave) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.age = age;
+        this.breed = breed;
+        this.shelter = shelter;
+        this.petOwner = petOwner;
+        this.leave = leave;
+    }
+
     public Boolean getLeave() {
         return leave;
     }

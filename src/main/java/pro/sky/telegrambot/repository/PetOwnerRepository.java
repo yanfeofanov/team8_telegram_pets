@@ -7,5 +7,7 @@ public interface PetOwnerRepository extends JpaRepository<PetOwner, Integer> {
     PetOwner findByUserIdAndProbationIsTrue(Long userId);
     PetOwner findPetOwnerByPhoneNumber(String phoneNumber);
 
+    PetOwner findPetOwnerById(int petOwnerId);
+
 }
 

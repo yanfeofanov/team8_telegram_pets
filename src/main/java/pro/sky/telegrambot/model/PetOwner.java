@@ -1,14 +1,10 @@
 package pro.sky.telegrambot.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "pet_owner")
 public class PetOwner {
     @Id
@@ -19,11 +15,9 @@ public class PetOwner {
     @Column(name = "phone_number")
     private String phoneNumber;
     private String email;
-
     @OneToOne
     @JoinColumn(name = "bot_user_id")
     private User user;
-
     @ManyToOne
     @JoinColumn(name = "volunteer_id")
     private Volunteer volunteer;
@@ -45,8 +39,16 @@ public class PetOwner {
         this.endProbation = endProbation;
     }
 
-    public void setId(int id) {
+    public PetOwner(int id, String name, String surname, String phoneNumber, String email, User user, Volunteer volunteer, boolean probation, LocalDateTime endProbation) {
         this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.user = user;
+        this.volunteer = volunteer;
+        this.probation = probation;
+        this.endProbation = endProbation;
     }
 
     public int getId() {

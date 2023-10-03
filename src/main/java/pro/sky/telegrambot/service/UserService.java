@@ -5,6 +5,7 @@ import pro.sky.telegrambot.model.User;
 import pro.sky.telegrambot.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.TimeZone;
 
 @Service
@@ -41,5 +42,9 @@ public class UserService {
 
     public User findUserById(Long userId) {
        return userRepository.findUserById(userId);
+    }
+
+    public Collection<User> getAllUsers(){
+        return userRepository.findAll();
     }
 }

@@ -19,12 +19,14 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String userName, Long chatId, LocalDateTime date_Added) {
+    public User(Long id, String userName, Long chatId, LocalDateTime dateAdded) {
         this.id = id;
         this.userName = userName;
         this.chatId = chatId;
-        this.dateAdded = date_Added;
+        this.dateAdded = dateAdded;
     }
+
+
 
     public Long getId() {
         return id;
@@ -50,11 +52,11 @@ public class User {
         this.chatId = chatId;
     }
 
-    public LocalDateTime getDate_Added() {
+    public LocalDateTime getDateAdded() {
         return dateAdded;
     }
 
-    public void setDate_Added(LocalDateTime dateAdded) {
+    public void setDateAdded(LocalDateTime dateAdded) {
         this.dateAdded = dateAdded;
     }
 
