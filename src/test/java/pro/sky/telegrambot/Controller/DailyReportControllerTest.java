@@ -73,12 +73,12 @@ public class DailyReportControllerTest {
             userPetOwnerJson.put("id", userPetOwner.getId());
             userPetOwnerJson.put("userName", userPetOwner.getUserName());
             userPetOwnerJson.put("chatId", userPetOwner.getChatId());
-            userPetOwnerJson.put("dateAdded", userPetOwner.getDate_Added());
+            userPetOwnerJson.put("dateAdded", userPetOwner.getDateAdded());
 
             userVolunteerJson.put("id", userVolunteer.getId());
             userVolunteerJson.put("userName", userVolunteer.getUserName());
             userVolunteerJson.put("chatId", userVolunteer.getChatId());
-            userVolunteerJson.put("dateAdded", userVolunteer.getDate_Added());
+            userVolunteerJson.put("dateAdded", userVolunteer.getDateAdded());
 
             volunteerJson.put("id", volunteer.getId());
             volunteerJson.put("name", volunteer.getName());

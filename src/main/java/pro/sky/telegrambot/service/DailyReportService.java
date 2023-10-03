@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
+import liquibase.pro.packaged.L;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -320,6 +322,45 @@ public class DailyReportService {
         } catch (DateTimeParseException e) {
             throw new BadParamException("Дата указана неверно");
         }
+    }
+
+    /**
+     * Метод выводит владельцев, неотпраялющих отчет один день
+     *
+     * @return список владельцев
+     */
+    public Collection<PetOwner> getPetOwnersNotReportingOneDay() {
+        LocalDate localDate = LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId());
+        //нахожу отчеты за вчерашний день
+        Collection<DailyReport> dailyReportCollectionYesterday = dailyReportRepository.
+                findDailyReportByDateBetween( localDate.atStartOfDay().minusDays(1), localDate.atStartOfDay());
+        Collection<PetOwner> dailyReportCollectionIsNotApproved = dailyReportCollectionYesterday.stream()
+                // отфильтрую непринятые отчеты
+                .filter(dailyReport -> dailyReport.getApproved() == false)
+                // создаю список владельцев
+                .map(DailyReport::getPetOwner)
+                // отфильтрую владельцев, которые владеют питомцем более одно дня
+                .filter(date -> !date.getEndProbation().equals(localDate.atStartOfDay().plusMonths(1)))
+                .collect(Collectors.toList());
+        return dailyReportCollectionIsNotApproved;
+    }
+
+    /**
+     * Метод выводит владельцев, неотпраялющих отчет больше одного дня
+     *
+     * @return список владельцев
+     */
+    public Collection<PetOwner> getPetOwnersNotReportingTwoDay() {
+        LocalDate localDate = LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId());
+        //нахожу отчеты за месяц до позавчерашнего
+        Collection<DailyReport> dailyReportCollectionBeforeYesterday = dailyReportRepository.
+                findDailyReportByDateBetween(localDate.atStartOfDay().minusMonths(1), localDate.atStartOfDay().minusDays(1));
+        Collection<PetOwner> dailyReportCollectionIsNotApproved = dailyReportCollectionBeforeYesterday.stream()
+                .filter(dailyReport -> dailyReport.getApproved() == false)
+                .map(DailyReport::getPetOwner)
+                .filter(date -> !date.getEndProbation().equals(localDate.atStartOfDay().plusMonths(1)))
+                .collect(Collectors.toList());
+        return dailyReportCollectionIsNotApproved;
     }
 }
 
