@@ -32,6 +32,13 @@ public class Photo {
         this.data = data;
     }
 
+    public Photo( LocalDateTime date, String filePath, String mediaType, long fileSize) {
+        this.date = date;
+        this.filePath = filePath;
+        this.mediaType = mediaType;
+        this.fileSize = fileSize;
+    }
+
     public Long getId() {
         return id;
     }
