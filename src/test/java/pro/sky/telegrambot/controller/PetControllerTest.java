@@ -1,4 +1,4 @@
-package pro.sky.telegrambot.Controller;
+package pro.sky.telegrambot.controller;
 
 import org.json.JSONException;
 import org.json.JSONObject;
