@@ -779,15 +779,11 @@ public class TelegramBotService {
         if (volunteer == null || volunteer.getUser() == null) {
             return sendReply(chatId, "к сожалению в данный момент нет возможности пригласить волонтера");
         }
-        Long volunteerChatId = volunteer.getUser().getChatId();
-        String button_url = "tg://user?id=" + userId;
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        InlineKeyboardButton inlineButton = new InlineKeyboardButton("пользователь");
-        inlineButton.url(button_url);
-        keyboard.addRow(inlineButton);
-        BaseResponse response = sendReply(volunteerChatId, "поступил запрос на вызов волонтера от пользователя", keyboard);
+        BaseResponse response = sendReply(volunteer.getUser().getChatId(),
+                "поступил запрос на вызов волонтера от пользователя", keyboardService.linkToBotUserButton(userId));
         if (response.isOk()) {
-            response = sendReply(chatId, "запрос отправлен волонтеру, он напишет вам в личных сообщениях как только освободится");
+            response = sendReply(chatId, "запрос отправлен волонтеру,\n " +
+                    "он напишет вам в личных сообщениях как только освободится");
         }
         return response;
     }
@@ -819,14 +815,40 @@ public class TelegramBotService {
         return telegramBot.execute(editMessageText);
     }
 
-    @Scheduled(cron = "0 30 22 * * *")
-    public void sendNotificationAboutBadOrdersToOwners() {
-        /*Collection<SendMessage> messages = dailyReportService.getBadReportList();
-        messages.forEach(notification -> {
-            BaseResponse response = telegramBot.execute(notification);
-            if (!response.isOk()) {
-                logger.error("не удалось отправить сообщение о некачественном отчете: ", notification);
-            }
-        });*/
+    @Scheduled(cron = "0 30 09 * * *")
+    private void sendNotifications() {
+        sendNotificationAboutBadOrdersToOwners();
+        sendNotificationAboutBadOrdersToVolunteer();
+    }
+
+    private void sendNotificationAboutBadOrdersToOwners() {
+        Collection<PetOwner> petOwners = petOwnerService.getPetOwnersWhoDidNotSendReportForYesterday();
+        petOwners.forEach(petOwner -> sendReply(
+                petOwner.getUser().getChatId(),
+                "Здравствуйте!\n" +
+                        " Вы вчера не отправили отчет о вашем питомце.\n" +
+                        " Просим вас не забывать вовремя отправлять отчеты."));
+    }
+
+    private void sendNotificationAboutBadOrdersToVolunteer() {
+        Collection<PetOwner> petOwners = petOwnerService.getPetOwnersWhoDidNotSendReportForTwoDaysPlus();
+        petOwners.forEach(
+                petOwner -> {
+                    Volunteer volunteer = petOwner.getVolunteer();
+                    if (volunteer == null) {
+                        volunteerService.getRandomVolunteer();
+                    }
+                    if (volunteer == null) {
+                        return;
+                    }
+                    sendReply(
+                            volunteer.getUser().getChatId(),
+                            "Здравствуйте!\n" +
+                                    " Свяжитесь пожалуйста с владельцем питомца,\n" +
+                                    " он уже не менее 2х дней подряд не отправляет отчет.\n" +
+                                    petOwner.getPhoneNumber() + " " + petOwner.getEmail(),
+                            keyboardService.linkToBotUserButton(petOwner.getUser().getId()));
+                }
+        );
     }
 }

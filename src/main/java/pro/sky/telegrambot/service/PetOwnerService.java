@@ -15,8 +15,10 @@ import pro.sky.telegrambot.repository.PetRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 
@@ -119,8 +121,10 @@ public class PetOwnerService {
             }
         }
     }
+
     /**
      * Метод генерируют меню с кнопками в формате @id petOwner + имя + фамилия
+     *
      * @param petOwners
      * @return экземляр InlineKeyboardMarkup
      */
@@ -135,10 +139,12 @@ public class PetOwnerService {
         }
         return keyboard;
     }
+
     /**
      * Метод изменяет статус и дату испытательного срока усыновителя
+     *
      * @param ownerId id усыновителя
-     * @param status статус усыновителя (от 0 до 3)
+     * @param status  статус усыновителя (от 0 до 3)
      * @return экземляр PetOwner
      */
 
@@ -188,5 +194,19 @@ public class PetOwnerService {
         message.replyMarkup(keyboard);
         SendResponse sendResponse = telegramBot.execute(message);
         return sendResponse;
+    }
+
+    public Collection<PetOwner> getPetOwnersWhoDidNotSendReportForYesterday() {
+        LocalDate currentDate = LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId());
+        return petOwnerRepository.getPetOwnersWhoDidNotSendReportForPeriod(
+                LocalDateTime.of(currentDate.minusDays(1), LocalTime.MIN),
+                LocalDateTime.of(currentDate.minusDays(1), LocalTime.MAX));
+    }
+
+    public Collection<PetOwner> getPetOwnersWhoDidNotSendReportForTwoDaysPlus() {
+        LocalDate currentDate = LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId());
+        return petOwnerRepository.getPetOwnersWhoDidNotSendReportForPeriod(
+                LocalDateTime.of(currentDate.minusDays(2), LocalTime.MIN),
+                LocalDateTime.of(currentDate.minusDays(1), LocalTime.MAX));
     }
 }
