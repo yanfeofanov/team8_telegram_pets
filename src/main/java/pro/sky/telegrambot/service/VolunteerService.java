@@ -53,7 +53,7 @@ public class VolunteerService {
 
     public Volunteer getVolunteerByPhone(String phoneNumber) {
         Volunteer volunteer = volunteerRepository.findVolunteerByPhoneNumber(phoneNumber);
-        if (!phoneNumber.isEmpty() && phoneNumber.equals(volunteer.getPhoneNumber())) {
+        if (!phoneNumber.isBlank() && phoneNumber.equals(volunteer.getPhoneNumber())) {
             return volunteer;
         } else {
             throw new InvalidInputDataException("Проверьте корректность входных данных");

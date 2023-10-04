@@ -139,7 +139,7 @@ public class PetOwnerService {
      * Метод изменяет статус и дату испытательного срока усыновителя
      * @param ownerId id усыновителя
      * @param status статус усыновителя (от 0 до 3)
-     * @return экземляр PetOwner
+     * @return экземпляр PetOwner
      */
 
     public PetOwner changeProbationStatus(int ownerId, int status) { //status = 0...3

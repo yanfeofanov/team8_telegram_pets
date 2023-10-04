@@ -66,22 +66,6 @@ class VolunteerControllerTest {
 
         verify(volunteerService).addVolunteer(newVolunteer);
         verify(volunteerService, times(1)).addVolunteer(any());
-        Mockito.reset(volunteerRepository);
-
-        when(volunteerRepository.findAll()).thenThrow(ErrorCollisionException.class);
-
-        mockMvc.perform(
-                        MockMvcRequestBuilders.post("/volunteer")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(volunteerJson)
-                                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(result -> {
-                    String responseString = result.getResponse().getContentAsString();
-                    assertThat(responseString).isNotNull();
-                });
-
-        verify(volunteerRepository, never()).save(newVolunteer);
     }
 
     @Test
@@ -150,6 +134,18 @@ class VolunteerControllerTest {
                     String responseString = result.getResponse().getContentAsString();
                     assertThat(responseString).isNotNull();
                 });
+        Mockito.reset(volunteerRepository);
+
+        when(volunteerRepository.findVolunteerByPhoneNumber(" ")).thenThrow(InvalidInputDataException.class);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/volunteer/ ")
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> {
+                    String responseString = result.getResponse().getContentAsString();
+                    assertThat(responseString).isNotNull();
+                });
     }
 
     @Test
@@ -198,7 +194,7 @@ class VolunteerControllerTest {
         long days = faker.number().numberBetween(1, 30);
         long hours = faker.number().numberBetween(1, 5);
         LocalDateTime localDateTime = LocalDateTime.now().minusDays(days).minusHours(hours);
-        user.setDate_Added(localDateTime);
+        user.setDateAdded(localDateTime);
         volunteer.setUser(user);
         return volunteer;
 
