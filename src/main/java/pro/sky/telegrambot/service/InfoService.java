@@ -3,6 +3,8 @@ package pro.sky.telegrambot.service;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambot.constant.TypesOfInformation;
 import pro.sky.telegrambot.exception.BadParamException;
+import pro.sky.telegrambot.exception.InfoNotFoundException;
+import pro.sky.telegrambot.exception.ShelterNotFoundException;
 import pro.sky.telegrambot.model.Info;
 import pro.sky.telegrambot.model.Shelter;
 import pro.sky.telegrambot.repository.InfoRepository;
@@ -42,23 +44,20 @@ public class InfoService {
      * @param id;
      * @return Информацию о приюте
      */
-    public Collection<Info> findByIdInfo(int id) {
+    public Collection<Info> findByShelterIdInfo(int id) {
         //Проверка на несуществующие приюты
         if (infoRepository.findByShelterId(id).isEmpty()) {
-            throw new BadParamException();
+            throw new ShelterNotFoundException("Информация с "+id+" не найдена!");
         }
         return infoRepository.findByShelterId(id);
     }
 
-    public Info updateInfoShelter(Long id,Info info) {
-        return infoRepository.findById(Math.toIntExact(id))
-                .map(oldInfo ->{
-                    oldInfo.setShelter(info.getShelter());
-                    oldInfo.setType(info.getType());
-                    oldInfo.setText(info.getText());
-                    return infoRepository.save(info);
-                })
-                .orElseThrow(()->new BadParamException());
+
+    public Info updateInfo(Info info){
+        if(infoRepository.existsById(info.getId())){
+            return infoRepository.save(info);
+        }
+            else throw new InfoNotFoundException("Информация с "+info.getId()+" не найдена!");
     }
 
 }
