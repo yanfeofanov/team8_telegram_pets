@@ -82,8 +82,8 @@ public class InfoControllerTest {
 
     @Test
     void updateInfoTest() throws Exception {
-        when(infoServiceMock.updateInfoShelter(anyInt(), any(Info.class))).thenReturn(info1);
-        mockMvc.perform(MockMvcRequestBuilders.put("/info/update/" + info1.getId())
+        when(infoServiceMock.updateInfo(any(Info.class))).thenReturn(info1);
+        mockMvc.perform(MockMvcRequestBuilders.put("/info")
                         .content(info1JSON.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -92,7 +92,7 @@ public class InfoControllerTest {
                 .andExpect(jsonPath("$.text").value(info1.getText()))
                 .andExpect(jsonPath("$.type").value(info1.getType().toString()))
                 .andExpect(jsonPath("$.shelter.id").value(shelter1.getId()));
-        verify(infoServiceMock, new Times(1)).updateInfoShelter(info1.getId(), info1);
+        verify(infoServiceMock, new Times(1)).updateInfo(info1);
     }
 
     @Test
