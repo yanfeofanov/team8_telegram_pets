@@ -24,9 +24,9 @@ public class InfoController {
         return infoService.addInfo(newInfo);
     }
 
-    @PutMapping("/update/{id}")
-    public Info updateInfo(@PathVariable int id,@RequestBody Info info) {
-        return infoService.updateInfoShelter(id,info);
+    @PutMapping()
+    public Info updateInfo(@RequestBody Info info) {
+        return infoService.updateInfo(info);
     }
 
     /**
