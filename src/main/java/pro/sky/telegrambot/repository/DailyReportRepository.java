@@ -10,12 +10,14 @@ import java.util.Collection;
 public interface DailyReportRepository extends JpaRepository<DailyReport, Long> {
 
     Collection<DailyReport> findDailyReportByChecked(boolean check);
+    Collection<DailyReport> findDailyReportByApproved(boolean approved);
 
     Collection<DailyReport> findDailyReportByPetOwner(PetOwner petOwner);
 
     DailyReport findByPetOwnerAndDateBetween(PetOwner petOwner, LocalDateTime begin, LocalDateTime end);
 
     Collection<DailyReport> findDailyReportByDateBetween(LocalDateTime begin, LocalDateTime end);
+    Collection<DailyReport> findDailyReportByDate(LocalDateTime date);
 
     DailyReport findDailyReportById(Long id);
 }

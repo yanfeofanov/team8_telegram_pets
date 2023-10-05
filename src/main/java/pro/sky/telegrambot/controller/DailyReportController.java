@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambot.model.DailyReport;
+import pro.sky.telegrambot.model.PetOwner;
 import pro.sky.telegrambot.service.DailyReportService;
 import java.util.Collection;
 
@@ -90,7 +91,7 @@ public class DailyReportController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "отчетов выведен",
+                            description = "отчет выведен",
                             content = {
                                     @Content(
                                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -159,6 +160,18 @@ public class DailyReportController {
     public ResponseEntity<Collection<DailyReport>> getAllDailyReportByDate(
             @RequestParam @Parameter(description = "Дата в формате YYYY-MM-DD") String date) {
         Collection<DailyReport> reports = dailyReportService.getAllDailyReportByDate(date);
+        return ResponseEntity.ok(reports);
+    }
+
+    @GetMapping("/petOwnerIsNotReportYesterday")
+    public ResponseEntity<Collection<PetOwner>> getPetOwnersNotReportingOneDay() {
+        Collection<PetOwner> reports = dailyReportService.getPetOwnersNotReportingOneDay();
+        return ResponseEntity.ok(reports);
+    }
+
+    @GetMapping("/petOwnerIsNotReportTwoDayMore")
+    public ResponseEntity<Collection<PetOwner>> getPetOwnersNotReportingTwoDayMore() {
+        Collection<PetOwner> reports = dailyReportService.getPetOwnersNotReportingTwoDay();
         return ResponseEntity.ok(reports);
     }
 }
