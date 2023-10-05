@@ -93,7 +93,7 @@ class PetControllerTest {
     @Test
     void addPetTest() throws Exception {
         when(petServiceMock.addPet(any(Pet.class))).thenReturn(pet1);
-        mockMvc.perform(MockMvcRequestBuilders.post("/pets/add")
+        mockMvc.perform(MockMvcRequestBuilders.post("/pets")
                         .content(pet1Json.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

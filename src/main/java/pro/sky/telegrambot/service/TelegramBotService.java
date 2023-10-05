@@ -817,11 +817,12 @@ public class TelegramBotService {
 
     @Scheduled(cron = "0 30 09 * * *")
     private void sendNotifications() {
-        sendNotificationAboutBadOrdersToOwners();
-        sendNotificationAboutBadOrdersToVolunteer();
+        sendNotificationToOwnersAboutAbsenceOfReport();
+        sendNotificationToVolunteerAboutAbsenceOfReport();
+        sendNotificationToOwnersAboutBadReport();
     }
 
-    private void sendNotificationAboutBadOrdersToOwners() {
+    private void sendNotificationToOwnersAboutAbsenceOfReport() {
         Collection<PetOwner> petOwners = petOwnerService.getPetOwnersWhoDidNotSendReportForYesterday();
         petOwners.forEach(petOwner -> sendReply(
                 petOwner.getUser().getChatId(),
@@ -830,7 +831,7 @@ public class TelegramBotService {
                         " Просим вас не забывать вовремя отправлять отчеты."));
     }
 
-    private void sendNotificationAboutBadOrdersToVolunteer() {
+    private void sendNotificationToVolunteerAboutAbsenceOfReport() {
         Collection<PetOwner> petOwners = petOwnerService.getPetOwnersWhoDidNotSendReportForTwoDaysPlus();
         petOwners.forEach(
                 petOwner -> {
@@ -848,6 +849,28 @@ public class TelegramBotService {
                                     " он уже не менее 2х дней подряд не отправляет отчет.\n" +
                                     petOwner.getPhoneNumber() + " " + petOwner.getEmail(),
                             keyboardService.linkToBotUserButton(petOwner.getUser().getId()));
+                }
+        );
+    }
+
+    private void sendNotificationToOwnersAboutBadReport() {
+        Collection<PetOwner> petOwners = petOwnerService.getPetOwnersWhoSendBadReportForYesterday();
+        petOwners.forEach(petOwner -> {
+                    Long chatId = petOwner.getUser().getChatId();
+                    BaseResponse baseResponse = sendReply(
+                            chatId,
+                            "Здравствуйте!\n" +
+                                    " Ваш вчерашний отчет о питомце не был принят нашим сотрудником.\n" +
+                                    " Просим вас ознакомиться с правилами составления ежедневных отчетов и отнестись к этому более ответственно.");
+                    if (baseResponse.isOk()) {
+                        sendReply(
+                                chatId,
+                                "отчет должен содержать следующую информацию:\n" +
+                                        "- фото животного\n" +
+                                        "- рацион животного\n" +
+                                        "- общее самочувствие и привыкание к новому месту\n" +
+                                        "- изменение в поведении: отказ от старых привычек, приобретение новых");
+                    }
                 }
         );
     }

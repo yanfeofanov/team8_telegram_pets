@@ -209,4 +209,11 @@ public class PetOwnerService {
                 LocalDateTime.of(currentDate.minusDays(2), LocalTime.MIN),
                 LocalDateTime.of(currentDate.minusDays(1), LocalTime.MAX));
     }
+
+    public Collection<PetOwner> getPetOwnersWhoSendBadReportForYesterday() {
+        LocalDate currentDate = LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId());
+        return petOwnerRepository.getPetOwnersWhoSendBadReportForYesterday(
+                LocalDateTime.of(currentDate.minusDays(1), LocalTime.MIN),
+                LocalDateTime.of(currentDate.minusDays(1), LocalTime.MAX));
+    }
 }
