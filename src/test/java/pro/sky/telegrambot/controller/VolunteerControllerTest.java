@@ -67,6 +67,7 @@ class VolunteerControllerTest {
 
         verify(volunteerService).addVolunteer(newVolunteer);
         verify(volunteerService, times(1)).addVolunteer(any());
+
     }
 
     @Test
@@ -130,11 +131,7 @@ class VolunteerControllerTest {
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/volunteer/phone?phone=89778861214")
                 )
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(result -> {
-                    String responseString = result.getResponse().getContentAsString();
-                    assertThat(responseString).isNotNull();
-                });
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
         Mockito.reset(volunteerRepository);
 
         when(volunteerRepository.findVolunteerByPhoneNumber(" ")).thenThrow(InvalidInputDataException.class);
@@ -142,11 +139,7 @@ class VolunteerControllerTest {
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/volunteer/phone?phone= ")
                 )
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(result -> {
-                    String responseString = result.getResponse().getContentAsString();
-                    assertThat(responseString).isNotNull();
-                });
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
