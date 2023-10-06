@@ -17,6 +17,7 @@ public class VolunteerController {
     public VolunteerController(VolunteerService volunteerService) {
         this.volunteerService = volunteerService;
     }
+
     @PostMapping
     public Volunteer addVolunteer(@RequestBody Volunteer newVolunteer) {
         return volunteerService.addVolunteer(newVolunteer);
@@ -25,8 +26,8 @@ public class VolunteerController {
     public Volunteer deleteVolunteer(@PathVariable int id) {
         return volunteerService.deleteVolunteer(id);
     }
-    @GetMapping("/{phoneNumber}")
-    public Volunteer getVolunteer(@PathVariable String phoneNumber) {
+    @GetMapping("/phone")
+    public Volunteer getVolunteer(@RequestParam (value = "phone") String phoneNumber) {
         return volunteerService.getVolunteerByPhone(phoneNumber);
     }
     @GetMapping("/all")
