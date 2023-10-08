@@ -287,7 +287,92 @@ class PetsOwnerControllerTest {
 
 
     @Test
-    public void changeStatusProbationTest() {
+    public void changeStatusProbationTest() throws Exception {
+        PetOwner petOwner = generatePetOwner();
+        petOwner.setId(11);
+        petOwner.setProbation(true);
+        when(petOwnerRepository.findById(eq(11))).thenReturn(Optional.of(petOwner));
+        when(petOwnerRepository.save(any(PetOwner.class))).thenReturn(petOwner);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/pet_owner/probation/status/?ownerId=11&status=0")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.name").value(petOwner.getName()))
+                .andExpect(jsonPath("$.surname").value(petOwner.getSurname()))
+                .andExpect(jsonPath("$.phoneNumber").value(petOwner.getPhoneNumber()))
+                .andExpect(jsonPath("$.email").value(petOwner.getEmail()))
+                .andExpect(jsonPath("$.probation").value(false));
+
+        verify(petOwnerRepository).findById(11);
+        verify(petOwnerRepository, times(1)).findById(11);
+        verify(petOwnerRepository).save(petOwner);
+        verify(petOwnerRepository, times(1)).save(petOwner);
+        Mockito.reset(petOwnerRepository);
+
+        when(petOwnerRepository.findById(eq(11))).thenReturn(Optional.of(petOwner));
+        when(petOwnerRepository.save(any(PetOwner.class))).thenReturn(petOwner);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/pet_owner/probation/status/?ownerId=11&status=1")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.name").value(petOwner.getName()))
+                .andExpect(jsonPath("$.surname").value(petOwner.getSurname()))
+                .andExpect(jsonPath("$.phoneNumber").value(petOwner.getPhoneNumber()))
+                .andExpect(jsonPath("$.email").value(petOwner.getEmail()))
+                .andExpect(jsonPath("$.probation").value(true))
+                .andExpect(jsonPath("$.endProbation").value(petOwner.getEndProbation()
+                        .format(DateTimeFormatter.ISO_DATE_TIME)));
+        assertThat(petOwner.getEndProbation().getDayOfYear()).isGreaterThan(LocalDateTime.now().getDayOfYear());
+
+        verify(petOwnerRepository).findById(11);
+        verify(petOwnerRepository, times(1)).findById(11);
+        verify(petOwnerRepository).save(petOwner);
+        verify(petOwnerRepository, times(1)).save(petOwner);
+        Mockito.reset(petOwnerRepository);
+
+        when(petOwnerRepository.findById(eq(11))).thenReturn(Optional.of(petOwner));
+        when(petOwnerRepository.save(any(PetOwner.class))).thenReturn(petOwner);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/pet_owner/probation/status/?ownerId=11&status=2")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.name").value(petOwner.getName()))
+                .andExpect(jsonPath("$.surname").value(petOwner.getSurname()))
+                .andExpect(jsonPath("$.phoneNumber").value(petOwner.getPhoneNumber()))
+                .andExpect(jsonPath("$.email").value(petOwner.getEmail()))
+                .andExpect(jsonPath("$.probation").value(true))
+                .andExpect(jsonPath("$.endProbation").value(petOwner.getEndProbation()
+                        .format(DateTimeFormatter.ISO_DATE_TIME)));
+        assertThat(petOwner.getEndProbation().getDayOfYear()).isGreaterThan(LocalDateTime.now().plusDays(20).getDayOfYear());
+
+        verify(petOwnerRepository).findById(11);
+        verify(petOwnerRepository, times(1)).findById(11);
+        verify(petOwnerRepository).save(petOwner);
+        verify(petOwnerRepository, times(1)).save(petOwner);
+        Mockito.reset(petOwnerRepository);
+
+        when(petOwnerRepository.findById(eq(11))).thenReturn(Optional.of(petOwner));
+        when(petOwnerRepository.save(any(PetOwner.class))).thenReturn(petOwner);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/pet_owner/probation/status/?ownerId=11&status=3")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.name").value(petOwner.getName()))
+                .andExpect(jsonPath("$.surname").value(petOwner.getSurname()))
+                .andExpect(jsonPath("$.phoneNumber").value(petOwner.getPhoneNumber()))
+                .andExpect(jsonPath("$.email").value(petOwner.getEmail()))
+                .andExpect(jsonPath("$.probation").value(false));
+        assertThat(petOwner.getEndProbation()).isNull();
+
+        verify(petOwnerRepository).findById(11);
+        verify(petOwnerRepository, times(1)).findById(11);
+        verify(petOwnerRepository).save(petOwner);
+        verify(petOwnerRepository, times(1)).save(petOwner);
+
     }
 
     private PetOwner generatePetOwner() {

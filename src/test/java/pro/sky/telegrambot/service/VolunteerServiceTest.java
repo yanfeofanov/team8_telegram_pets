@@ -47,7 +47,6 @@ class VolunteerServiceTest {
 
     @Test
     public void getRandomVolunteer() {
-        ;
         when(volunteerRepository.findAll()).thenReturn(volunteers);
         assertThat(out.getRandomVolunteer()).isNotNull().isIn(volunteers);
     }

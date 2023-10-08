@@ -51,8 +51,7 @@ public class PetOwnerService {
 
     public PetOwner findPetOwnerByPhone(String phoneNumber) {
         PetOwner foundOwner = petOwnerRepository.findPetOwnerByPhoneNumber(phoneNumber);
-        if (!phoneNumber.isBlank() ||
-                phoneNumber.equals(foundOwner.getPhoneNumber())) {
+        if (!phoneNumber.isBlank()) {
             return foundOwner;
         } else {
             throw new InvalidInputDataException("Проверьте корректность входных данных");
@@ -148,10 +147,12 @@ public class PetOwnerService {
                     sendReply(chatId, "Поздравляем, испытательный срок пройден");
                     break;
                 case 1:
+                    petOwner.setProbation(true);
                     petOwner.setEndProbation(localDateTime.plusDays(14));
                     sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 14 дней");
                     break;
                 case 2:
+                    petOwner.setProbation(true);
                     petOwner.setEndProbation(localDateTime.plusDays(30));
                     sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 30 дней");
                     break;

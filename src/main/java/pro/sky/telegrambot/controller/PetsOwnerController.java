@@ -64,7 +64,7 @@ public class PetsOwnerController {
      * 3 - испытательный срок не пройден
      * @return обновленные данные усыновителя
      */
-    @PatchMapping("/probation/data")
+    @PatchMapping("/probation/status")
     public PetOwner changeStatusProbation(@RequestParam int ownerId,
                                         @RequestParam int status) {
         return petOwnerService.changeProbationStatus(ownerId, status);
