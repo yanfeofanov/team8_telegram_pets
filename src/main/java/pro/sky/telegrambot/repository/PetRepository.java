@@ -12,9 +12,6 @@ import java.util.Optional;
 
 public interface PetRepository extends JpaRepository<Pet, Integer> {
 
-    @Override
-    Optional<Pet> findById(Integer integer);
-
     Collection<Pet> findAllByType(String typeOfPet);
 
     Collection<Pet> findAllByPetOwnerId(int petOwnerId);

@@ -18,8 +18,8 @@ public class ShelterController {
         return shelterService.addShelter(newShelter);
     }
 
-    @DeleteMapping()
-    public void deleteShelter(@RequestBody int id) {
+    @DeleteMapping("/{id}")
+    public void deleteShelter(@PathVariable int id) {
         shelterService.deleteShelterById(id);
     }
 

@@ -21,22 +21,18 @@ public class CommunicationRequestController {
 
     @GetMapping(value = "all_for_period")
     public Collection<CommunicationRequest> getAllForPeriodByDone(@RequestParam(name = "startPeriod") String startPeriodStr,
-                                                            @RequestParam(name = "endPeriod", required = false) String endPeriodStr,
-                                                            @RequestParam boolean done) {
+                                                                  @RequestParam(name = "endPeriod", required = false) String endPeriodStr,
+                                                                  @RequestParam boolean done) {
         LocalDateTime startPeriod, endPeriod;
         try {
             startPeriod = LocalDateTime.parse(startPeriodStr);
+            if (endPeriodStr == null) {
+                endPeriod = LocalDateTime.now(TimeZone.getTimeZone("GMT+3").toZoneId());
+            } else {
+                endPeriod = LocalDateTime.parse(endPeriodStr);
+            }
         } catch (DateTimeParseException e) {
             throw new BadParamException();
-        }
-        if (endPeriodStr == null) {
-            endPeriod = LocalDateTime.now(TimeZone.getTimeZone("GMT+3").toZoneId());
-        } else {
-            try {
-                endPeriod = LocalDateTime.parse(endPeriodStr);
-            } catch (DateTimeParseException e) {
-                throw new BadParamException();
-            }
         }
         return communicationRequestService.getAllRequestForPeriodByDone(startPeriod, endPeriod, done);
     }

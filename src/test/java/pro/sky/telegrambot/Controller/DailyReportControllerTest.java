@@ -35,8 +35,6 @@ public class DailyReportControllerTest {
     @MockBean
     private DailyReportService dailyReportServiceMock;
 
-
-
     static final String date = "2023-09-25";
     static final LocalDate currentDate = LocalDate.parse(date);
     static final LocalDateTime localDateTime = currentDate.atStartOfDay();
@@ -117,7 +115,7 @@ public class DailyReportControllerTest {
     }
 
     @Test
-    public void getDailyReportByIdTest() throws Exception {
+    void getDailyReportByIdTest() throws Exception {
         when(dailyReportServiceMock.getDailyReportById(anyLong())).thenReturn(dailyReport);
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/report/dailyReport/1")
@@ -132,7 +130,7 @@ public class DailyReportControllerTest {
     }
 
     @Test
-    public void getCheckedOrNotReportTest() throws Exception {
+    void getCheckedOrNotReportTest() throws Exception {
         Collection<DailyReport> dailyReportCollection = List.of(dailyReport);
         when(dailyReportServiceMock.getCheckedDailyReport(anyBoolean())).thenReturn(dailyReportCollection);
         mockMvc.perform(MockMvcRequestBuilders
@@ -148,7 +146,7 @@ public class DailyReportControllerTest {
     }
 
     @Test
-    public void getAllDailyReportByOwnerIdTest() throws Exception {
+    void getAllDailyReportByOwnerIdTest() throws Exception {
         Collection<DailyReport> dailyReportCollection = List.of(dailyReport);
         when(dailyReportServiceMock.getAllDailyReportByPetOwner(anyInt())).thenReturn(dailyReportCollection);
         mockMvc.perform(MockMvcRequestBuilders
@@ -164,7 +162,7 @@ public class DailyReportControllerTest {
     }
 
     @Test
-    public void getAllDailyReportByDateTest() throws Exception {
+    void getAllDailyReportByDateTest() throws Exception {
         Collection<DailyReport> dailyReportCollection = List.of(dailyReport);
         when(dailyReportServiceMock.getAllDailyReportByDate(date)).thenReturn(dailyReportCollection);
         mockMvc.perform(MockMvcRequestBuilders
@@ -179,6 +177,7 @@ public class DailyReportControllerTest {
                 .andExpect(jsonPath("$.[0].checked").value(dailyReport.getChecked()))
                 .andExpect(jsonPath("$.[0].inspector.id").value(dailyReport.getInspector().getId()));
     }
+
 
     @Test
     void checkedReportTest() {

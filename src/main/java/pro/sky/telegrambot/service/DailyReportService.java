@@ -3,15 +3,12 @@ package pro.sky.telegrambot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.File;
 import com.pengrad.telegrambot.model.PhotoSize;
-import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.GetFile;
-import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
-import liquibase.pro.packaged.L;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pro.sky.telegrambot.exception.BadParamException;
+import pro.sky.telegrambot.exception.DailyReportNullPointerException;
+import pro.sky.telegrambot.exception.PetOwnerNullPointerException;
 import pro.sky.telegrambot.model.*;
 import pro.sky.telegrambot.repository.DailyReportRepository;
 
@@ -20,11 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -45,8 +39,6 @@ public class DailyReportService {
     private String coversDir;
 
     private final TelegramBot telegramBot;
-
-//    private static final DateTimeFormatter DATA_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public DailyReportService(DailyReportRepository dailyReportRepository,
                               PetOwnerService petOwnerService,
@@ -106,7 +98,7 @@ public class DailyReportService {
      * @param userId идентификатор чата
      * @return айди искомого отчета
      */
-    private DailyReport findReportByUserId(Long userId) {
+    public DailyReport findReportByUserId(Long userId) {
         PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(userId);
         return getTodayDailyReportByPetOwner(petOwner, LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId()));
     }
@@ -209,28 +201,6 @@ public class DailyReportService {
         }
     }
 
-//    /**
-//     * первая стадия метода отправки отчета. Этот метод отпрвляет пользователю сообщение с просьбой
-//     * отправить отчет: текст и фото
-//     *
-//     * @param chatId      идентификатор чата
-//     * @param messageText сообщение для пользователя
-//     */
-//    public void sendReport(long chatId, String messageText) {
-//        sendMessageReply(chatId, messageText);
-//    }
-//
-//    /**
-//     * Метод вызывается при отправке отчета пользователем, который
-//     * не является владельцем питомца
-//     *
-//     * @param chatId      идентификатор чата
-//     * @param messageText сообщение пользователю
-//     */
-//    public void sendReportWithoutReply(long chatId, String messageText) {
-//        sendMessage(chatId, messageText);
-//    }
-
     /**
      * Метод получает расширение файла из его полного пути
      *
@@ -239,17 +209,6 @@ public class DailyReportService {
      */
     private String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
-    }
-
-    private void sendMessageReply(long chatId, String messageText) {
-        SendMessage sendMess = new SendMessage(chatId, messageText);
-        sendMess.replyMarkup(new ForceReply());
-        telegramBot.execute(sendMess);
-    }
-
-    public void sendMessage(long chatId, String messageText) {
-        SendMessage sendMess = new SendMessage(chatId, messageText);
-        telegramBot.execute(sendMess);
     }
 
     public DailyReport getTodayDailyReportByPetOwner(PetOwner petOwner, LocalDate date) {
@@ -277,7 +236,7 @@ public class DailyReportService {
         if (petOwner != null) {
             return dailyReportRepository.findDailyReportByPetOwner(petOwner);
         } else {
-            throw new NullPointerException("Владельца с таким айди не существует");
+            throw new PetOwnerNullPointerException(petOwnerId);
         }
     }
 
@@ -288,7 +247,12 @@ public class DailyReportService {
      * @return список отчетов
      */
     public DailyReport getDailyReportById(Long dailyReportId) {
-        return dailyReportRepository.findDailyReportById(dailyReportId);
+        DailyReport report = dailyReportRepository.findDailyReportById(dailyReportId);
+        if (report != null) {
+            return report;
+        } else {
+            throw new DailyReportNullPointerException(dailyReportId);
+        }
     }
 
     /**
@@ -299,12 +263,15 @@ public class DailyReportService {
      */
     public String checkDailyReport(Long id, boolean checked) {
         DailyReport findDailyReport = dailyReportRepository.findDailyReportById(id);
-        if (checked == findDailyReport.getChecked()) {
+        if (findDailyReport == null) {
+            throw new DailyReportNullPointerException(id);
+        }else if (checked == findDailyReport.getChecked()) {
             return "отчет уже проверен";
-        }
+        }else {
         findDailyReport.setChecked(checked);
         dailyReportRepository.save(findDailyReport);
         return "статус отчета изменен";
+        }
     }
 
     /**
@@ -314,53 +281,10 @@ public class DailyReportService {
      * @return список отчетов
      */
     public Collection<DailyReport> getAllDailyReportByDate(String date) {
-        try {
             LocalDate localDate = LocalDate.parse(date);
             Collection<DailyReport> reportsByDate = dailyReportRepository.
                     findDailyReportByDateBetween(localDate.atStartOfDay(), localDate.plusDays(1).atStartOfDay());
             return reportsByDate;
-        } catch (DateTimeParseException e) {
-            throw new BadParamException("Дата указана неверно");
-        }
-    }
-
-    /**
-     * Метод выводит владельцев, неотпраялющих отчет один день
-     *
-     * @return список владельцев
-     */
-    public Collection<PetOwner> getPetOwnersNotReportingOneDay() {
-        LocalDate localDate = LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId());
-        //нахожу отчеты за вчерашний день
-        Collection<DailyReport> dailyReportCollectionYesterday = dailyReportRepository.
-                findDailyReportByDateBetween( localDate.atStartOfDay().minusDays(1), localDate.atStartOfDay());
-        Collection<PetOwner> dailyReportCollectionIsNotApproved = dailyReportCollectionYesterday.stream()
-                // отфильтрую непринятые отчеты
-                .filter(dailyReport -> dailyReport.getApproved() == false)
-                // создаю список владельцев
-                .map(DailyReport::getPetOwner)
-                // отфильтрую владельцев, которые владеют питомцем более одно дня
-                .filter(date -> !date.getEndProbation().equals(localDate.atStartOfDay().plusMonths(1)))
-                .collect(Collectors.toList());
-        return dailyReportCollectionIsNotApproved;
-    }
-
-    /**
-     * Метод выводит владельцев, неотпраялющих отчет больше одного дня
-     *
-     * @return список владельцев
-     */
-    public Collection<PetOwner> getPetOwnersNotReportingTwoDay() {
-        LocalDate localDate = LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId());
-        //нахожу отчеты за месяц до позавчерашнего
-        Collection<DailyReport> dailyReportCollectionBeforeYesterday = dailyReportRepository.
-                findDailyReportByDateBetween(localDate.atStartOfDay().minusMonths(1), localDate.atStartOfDay().minusDays(1));
-        Collection<PetOwner> dailyReportCollectionIsNotApproved = dailyReportCollectionBeforeYesterday.stream()
-                .filter(dailyReport -> dailyReport.getApproved() == false)
-                .map(DailyReport::getPetOwner)
-                .filter(date -> !date.getEndProbation().equals(localDate.atStartOfDay().plusMonths(1)))
-                .collect(Collectors.toList());
-        return dailyReportCollectionIsNotApproved;
     }
 }
 
