@@ -65,9 +65,6 @@ public class DailyReportServiceTest {
 
     static final DailyReport dailyReport = new DailyReport(localDateTime, petOwner, pet,photo,
             reportBody,checked,approved,volunteer);
-
-    static final DailyReport dailyReportNow = new DailyReport(1L,localDateNow, petOwner, pet,photo,
-            reportBody,checked,approved,volunteer);
     @Test
     void findReportByUserIdTest() {
         when(petOwnerServiceMock.findPetOwnerWithProbationaryPeriod(anyLong())).thenReturn(petOwner);
@@ -163,13 +160,13 @@ public class DailyReportServiceTest {
     @Test
     void createDailyReportTest() {
         when(petOwnerServiceMock.findPetOwnerWithProbationaryPeriod(anyLong())).thenReturn(null);
-        Throwable throwable = catchThrowable(() -> out.createDailyReport(anyLong(),"test",photo));
+        Throwable throwable = catchThrowable(() -> out.createDailyReport(anyLong(),dailyReport.getReportBody(),photo));
         assertThat(throwable).isInstanceOf(PetOwnerNullPointerException.class);
     }
 
     @Test
     void updateDailyReportTest() {
-        DailyReport result =out.updateDailyReport(dailyReportNow,dailyReportNow.getReportBody(),dailyReportNow.getPhoto());
-        Assertions.assertEquals(dailyReportNow,result);
+        DailyReport result =out.updateDailyReport(dailyReport,dailyReport.getReportBody(),dailyReport.getPhoto());
+        Assertions.assertEquals(dailyReport,result);
     }
 }
