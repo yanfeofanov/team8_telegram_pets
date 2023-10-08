@@ -42,13 +42,15 @@ public class DailyReport {
         this.approved = approved;
     }
 
-
-    public DailyReport(LocalDateTime date, PetOwner petOwner, Pet pet, String reportBody, Boolean checked, Volunteer inspector) {
+    public DailyReport(Long id, LocalDateTime date, PetOwner petOwner, Pet pet, Photo photo, String reportBody, Boolean checked, Boolean approved, Volunteer inspector) {
+        this.id = id;
         this.date = date;
         this.petOwner = petOwner;
         this.pet = pet;
+        this.photo = photo;
         this.reportBody = reportBody;
         this.checked = checked;
+        this.approved = approved;
         this.inspector = inspector;
     }
 

@@ -10,7 +10,7 @@ import pro.sky.telegrambot.exception.DailyReportNullPointerException;
 import pro.sky.telegrambot.exception.PetOwnerNullPointerException;
 import pro.sky.telegrambot.model.*;
 import pro.sky.telegrambot.repository.DailyReportRepository;
-import pro.sky.telegrambot.repository.PetOwnerRepository;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +22,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import org.junit.jupiter.api.Assertions;
 
 @ExtendWith(MockitoExtension.class)
 public class DailyReportServiceTest {
@@ -39,13 +40,16 @@ public class DailyReportServiceTest {
 
     static final String date = "2023-10-01";
     static final LocalDate currentDate = LocalDate.parse(date);
+    static final LocalDateTime localDateNow = LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId()).atStartOfDay();
     static final LocalDateTime localDateTime = currentDate.atStartOfDay();
     static final LocalDateTime endDateTime = currentDate.plusDays(1).atStartOfDay();
     static final LocalDateTime endProbation = currentDate.plusDays(30).atStartOfDay();
     static final boolean probation = true;
     static final boolean leave = false;
     static final boolean checked = false;
+    static final boolean approved = false;
     static final boolean checkedTrue = true;
+    static final String reportBody = "Это моя собака, с ней все хорошо";
     static final Shelter shelter = new Shelter("Приют собак", TypeOfPet.DOG);
     static final User userPetOwner = new User(1L,"user",222L,localDateTime);
     static final User userVolunteer = new User(1L,"user",123L,localDateTime);
@@ -54,13 +58,16 @@ public class DailyReportServiceTest {
             userPetOwner,volunteer,probation,endProbation);
 
     static final Pet pet = new Pet(1,TypeOfPet.DOG.toString(),"Rex",(byte) 1, "Ovcharka", shelter, petOwner, leave);
-    static final DailyReport dailyReport = new DailyReport(localDateTime, petOwner, pet,
-            "Это моя собака, с ней все хорошо",checked,volunteer);
+    static final Photo photo = new Photo(localDateTime,"filePath","application-json",213L);
 
-    static final DailyReport dailyReportTrue = new DailyReport(localDateTime, petOwner, pet,
-            "Это моя собака, с ней все хорошо",checkedTrue,volunteer);
+    static final DailyReport dailyReportTrue = new DailyReport(localDateTime, petOwner, pet,photo,
+            reportBody,checkedTrue,approved,volunteer);
 
+    static final DailyReport dailyReport = new DailyReport(localDateTime, petOwner, pet,photo,
+            reportBody,checked,approved,volunteer);
 
+    static final DailyReport dailyReportNow = new DailyReport(1L,localDateNow, petOwner, pet,photo,
+            reportBody,checked,approved,volunteer);
     @Test
     void findReportByUserIdTest() {
         when(petOwnerServiceMock.findPetOwnerWithProbationaryPeriod(anyLong())).thenReturn(petOwner);
@@ -151,5 +158,18 @@ public class DailyReportServiceTest {
         assertThat(out.getAllDailyReportByDate(date))
                 .isNotNull()
                 .isEqualTo(dailyReportCollection);
+    }
+
+    @Test
+    void createDailyReportTest() {
+        when(petOwnerServiceMock.findPetOwnerWithProbationaryPeriod(anyLong())).thenReturn(null);
+        Throwable throwable = catchThrowable(() -> out.createDailyReport(anyLong(),"test",photo));
+        assertThat(throwable).isInstanceOf(PetOwnerNullPointerException.class);
+    }
+
+    @Test
+    void updateDailyReportTest() {
+        DailyReport result =out.updateDailyReport(dailyReportNow,dailyReportNow.getReportBody(),dailyReportNow.getPhoto());
+        Assertions.assertEquals(dailyReportNow,result);
     }
 }

@@ -43,6 +43,7 @@ public class DailyReportControllerTest {
     static final boolean probation = true;
     static final boolean leave = false;
     static final boolean checked = false;
+    static final boolean approved = false;
     static final Shelter shelter = new Shelter("Приют собак", TypeOfPet.DOG);
     static final User userPetOwner = new User(1L,"user",222L,localDateTime);
     static final User userVolunteer = new User(1L,"user",123L,localDateTime);
@@ -50,9 +51,11 @@ public class DailyReportControllerTest {
     static final PetOwner petOwner = new PetOwner("D","M","89009009009","test@mail.com",
             userPetOwner,volunteer,probation,endProbation);
 
+    static final Photo photo = new Photo(localDateTime,"filePath","application-json",213L);
+
     static final Pet pet = new Pet(1,TypeOfPet.DOG.toString(),"Rex",(byte) 1, "Ovcharka", shelter, petOwner, leave);
-    static final DailyReport dailyReport = new DailyReport(localDateTime, petOwner, pet,
-            "Это моя собака, с ней все хорошо",checked,volunteer);
+    static final DailyReport dailyReport = new DailyReport(localDateTime, petOwner, pet,photo,
+            "Это моя собака, с ней все хорошо",checked,approved,volunteer);
 
     static final JSONObject shelterJson = new JSONObject();
     static final JSONObject userPetOwnerJson = new JSONObject();
@@ -60,7 +63,9 @@ public class DailyReportControllerTest {
     static final JSONObject volunteerJson = new JSONObject();
     static final JSONObject petOwnerJson = new JSONObject();
     static final JSONObject petJson = new JSONObject();
+    static final JSONObject photoJson = new JSONObject();
     static final JSONObject dailyReportJson = new JSONObject();
+
 
     static {
         try {
@@ -102,6 +107,12 @@ public class DailyReportControllerTest {
             petJson.put("petOwner", petOwnerJson);
             petJson.put("leave", pet.getLeave());
 
+            photoJson.put("id", photo.getId());
+            photoJson.put("date", photo.getDate());
+            photoJson.put("filePat", photo.getFilePath());
+            photoJson.put("mediaType", photo.getMediaType());
+            photoJson.put("fileSize", photo.getFileSize());
+
             dailyReportJson.put("id",dailyReport.getId());
             dailyReportJson.put("date",dailyReport.getDate());
             dailyReportJson.put("petOwner",petOwnerJson);
@@ -125,7 +136,9 @@ public class DailyReportControllerTest {
                 .andExpect(jsonPath("$.date").value(dailyReport.getDate().format(DateTimeFormatter.ISO_DATE_TIME)))
                 .andExpect(jsonPath("$.petOwner.id").value(dailyReport.getPetOwner().getId()))
                 .andExpect(jsonPath("$.pet.id").value(dailyReport.getPet().getId()))
+                .andExpect(jsonPath("$.photo.id").value(dailyReport.getPhoto().getId()))
                 .andExpect(jsonPath("$.checked").value(dailyReport.getChecked()))
+                .andExpect(jsonPath("$.approved").value(dailyReport.getApproved()))
                 .andExpect(jsonPath("$.inspector.id").value(dailyReport.getInspector().getId()));
     }
 
@@ -141,7 +154,9 @@ public class DailyReportControllerTest {
                 .andExpect(jsonPath("$.[0].date").value(dailyReport.getDate().format(DateTimeFormatter.ISO_DATE_TIME)))
                 .andExpect(jsonPath("$.[0].petOwner.id").value(dailyReport.getPetOwner().getId()))
                 .andExpect(jsonPath("$.[0].pet.id").value(dailyReport.getPet().getId()))
+                .andExpect(jsonPath("$.[0].photo.id").value(dailyReport.getPhoto().getId()))
                 .andExpect(jsonPath("$.[0].checked").value(dailyReport.getChecked()))
+                .andExpect(jsonPath("$.[0].approved").value(dailyReport.getApproved()))
                 .andExpect(jsonPath("$.[0].inspector.id").value(dailyReport.getInspector().getId()));
     }
 
@@ -157,7 +172,9 @@ public class DailyReportControllerTest {
                 .andExpect(jsonPath("$.[0].date").value(dailyReport.getDate().format(DateTimeFormatter.ISO_DATE_TIME)))
                 .andExpect(jsonPath("$.[0].petOwner.id").value(dailyReport.getPetOwner().getId()))
                 .andExpect(jsonPath("$.[0].pet.id").value(dailyReport.getPet().getId()))
+                .andExpect(jsonPath("$.[0].photo.id").value(dailyReport.getPhoto().getId()))
                 .andExpect(jsonPath("$.[0].checked").value(dailyReport.getChecked()))
+                .andExpect(jsonPath("$.[0].approved").value(dailyReport.getApproved()))
                 .andExpect(jsonPath("$.[0].inspector.id").value(dailyReport.getInspector().getId()));
     }
 
@@ -174,7 +191,9 @@ public class DailyReportControllerTest {
                 .andExpect(jsonPath("$.[0].date").value(dailyReport.getDate().format(DateTimeFormatter.ISO_DATE_TIME)))
                 .andExpect(jsonPath("$.[0].petOwner.id").value(dailyReport.getPetOwner().getId()))
                 .andExpect(jsonPath("$.[0].pet.id").value(dailyReport.getPet().getId()))
+                .andExpect(jsonPath("$.[0].photo.id").value(dailyReport.getPhoto().getId()))
                 .andExpect(jsonPath("$.[0].checked").value(dailyReport.getChecked()))
+                .andExpect(jsonPath("$.[0].approved").value(dailyReport.getApproved()))
                 .andExpect(jsonPath("$.[0].inspector.id").value(dailyReport.getInspector().getId()));
     }
 
