@@ -20,8 +20,8 @@ public class PetsOwnerController {
         this.petOwnerService = petOwnerService;
     }
 
-    @GetMapping("/{phoneNumber}")
-    public PetOwner findPetOwner(@PathVariable String phoneNumber) {
+    @GetMapping("/phone")
+    public PetOwner findPetOwner(@RequestParam(value = "phone") String phoneNumber) {
         return petOwnerService.findPetOwnerByPhone(phoneNumber);
     }
 
@@ -64,9 +64,9 @@ public class PetsOwnerController {
      * 3 - испытательный срок не пройден
      * @return обновленные данные усыновителя
      */
-    @PatchMapping("/probation/data/{owner_id}/{status}")
-    public PetOwner changeStatusProbation(@PathVariable(value = "owner_id") int ownerId,
-                                        @PathVariable int status) {
+    @PatchMapping("/probation/status")
+    public PetOwner changeStatusProbation(@RequestParam int ownerId,
+                                        @RequestParam int status) {
         return petOwnerService.changeProbationStatus(ownerId, status);
     }
 }

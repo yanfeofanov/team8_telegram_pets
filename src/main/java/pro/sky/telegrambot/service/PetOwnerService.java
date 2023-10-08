@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pro.sky.telegrambot.constant.TypeOfPet;
 import pro.sky.telegrambot.exception.ErrorCollisionException;
 import pro.sky.telegrambot.exception.InvalidInputDataException;
 import pro.sky.telegrambot.model.*;
@@ -52,8 +53,7 @@ public class PetOwnerService {
 
     public PetOwner findPetOwnerByPhone(String phoneNumber) {
         PetOwner foundOwner = petOwnerRepository.findPetOwnerByPhoneNumber(phoneNumber);
-        if (!phoneNumber.isBlank() ||
-                phoneNumber.equals(foundOwner.getPhoneNumber())) {
+        if (!phoneNumber.isBlank()) {
             return foundOwner;
         } else {
             throw new InvalidInputDataException("Проверьте корректность входных данных");
@@ -80,23 +80,19 @@ public class PetOwnerService {
     }
 
     public Collection<PetOwner> getCatOwners() {
-        return petRepository.findAll().stream()
-                .filter(pet -> pet.getShelter().getType().equals(CAT))
+        return petRepository.findAllByTypeCat().stream()
                 .map(Pet::getPetOwner)
                 .collect(Collectors.toList());
     }
 
     public Collection<PetOwner> getDogOwners() {
-        return petRepository.findAll().stream()
-                .filter(pet -> pet.getShelter().getType().equals(DOG))
+        return petRepository.findAllByTypeDog().stream()
                 .map(Pet::getPetOwner)
                 .collect(Collectors.toList());
     }
 
     public Collection<PetOwner> getPetOwnersOnProbation() {
-        return petOwnerRepository.findAll().stream()
-                .filter(PetOwner::isProbation)
-                .collect(Collectors.toList());
+        return petOwnerRepository.findAllByProbationIsTrue();
     }
 
     /**
@@ -110,9 +106,7 @@ public class PetOwnerService {
     @Scheduled(cron = "0 0 12 * * ?")
     public void checkProbation() {
         LocalDate localDate = LocalDate.now();
-        List<PetOwner> petOwners = petOwnerRepository.findAll().stream()
-                .filter(petOwner -> petOwner.getEndProbation().toLocalDate().isEqual(localDate))
-                .collect(Collectors.toList());
+        List<PetOwner> petOwners = petOwnerRepository.findAllByEndProbationIsToday(localDate);
         if (!petOwners.isEmpty()) {
             for (PetOwner petOwner : petOwners) {
                 long chatId = petOwner.getVolunteer().getUser().getChatId();
@@ -144,16 +138,14 @@ public class PetOwnerService {
      * Метод изменяет статус и дату испытательного срока усыновителя
      *
      * @param ownerId id усыновителя
-     * @param status  статус усыновителя (от 0 до 3)
-     * @return экземляр PetOwner
+     * @param status статус усыновителя (от 0 до 3)
+     * @return экземпляр PetOwner
      */
 
     public PetOwner changeProbationStatus(int ownerId, int status) { //status = 0...3
         LocalDateTime localDateTime = LocalDateTime.now();
-        PetOwner petOwner = petOwnerRepository.findById(ownerId).get();
-        if (petOwner == null) {
-            throw new InvalidInputDataException("Усыновитель не найден, перепроверьте id");
-        } else {
+        PetOwner petOwner = petOwnerRepository.findById(ownerId)
+                .orElseThrow(() -> new InvalidInputDataException("Усыновитель не найден, перепроверьте id"));
             long chatId = petOwner.getUser().getChatId();
             switch (status) {
                 case 0:
@@ -161,10 +153,12 @@ public class PetOwnerService {
                     sendReply(chatId, "Поздравляем, испытательный срок пройден");
                     break;
                 case 1:
+                    petOwner.setProbation(true);
                     petOwner.setEndProbation(localDateTime.plusDays(14));
                     sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 14 дней");
                     break;
                 case 2:
+                    petOwner.setProbation(true);
                     petOwner.setEndProbation(localDateTime.plusDays(30));
                     sendReply(chatId, "Сообщаем, что Ваш испытательный срок продлен на 30 дней");
                     break;
@@ -178,7 +172,6 @@ public class PetOwnerService {
                     throw new InvalidInputDataException("Значения статусов должно быть от 0 до 3");
             }
             petOwnerRepository.save(petOwner);
-        }
         return petOwner;
     }
 
