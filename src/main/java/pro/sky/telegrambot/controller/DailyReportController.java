@@ -7,9 +7,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pro.sky.telegrambot.exception.BadParamException;
+import pro.sky.telegrambot.exception.DateTimeOfDailyReportParseException;
 import pro.sky.telegrambot.model.DailyReport;
 import pro.sky.telegrambot.model.PetOwner;
 import pro.sky.telegrambot.service.DailyReportService;
+
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
 
 /**
@@ -36,22 +40,12 @@ public class DailyReportController {
                                             schema = @Schema(implementation = DailyReport.class)
                                     )
                             }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Неверный аргумент"
                     )
             }
     )
     @GetMapping("/{check}")
     public ResponseEntity<Collection<DailyReport>> getCheckedOrNotReport(@PathVariable Boolean check) {
-        Collection<DailyReport> checkedReports = null;
-        try {
-            checkedReports = dailyReportService.getCheckedDailyReport(check);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-
-        }
+        Collection<DailyReport> checkedReports = dailyReportService.getCheckedDailyReport(check);
         return ResponseEntity.ok(checkedReports);
     }
 
@@ -69,20 +63,14 @@ public class DailyReportController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
-                            description = "Неверный аргумент"
+                            responseCode = "404",
+                            description = "Владелец с таким id не найден"
                     )
             }
     )
     @GetMapping("/owner/{id}")
     public ResponseEntity<Collection<DailyReport>> getAllDailyReportByOwnerId(@PathVariable Integer id) {
-        Collection<DailyReport> ownerReports = null;
-        try {
-            ownerReports = dailyReportService.getAllDailyReportByPetOwner(id);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-
-        }
+        Collection<DailyReport> ownerReports = dailyReportService.getAllDailyReportByPetOwner(id);
         return ResponseEntity.ok(ownerReports);
     }
 
@@ -100,20 +88,14 @@ public class DailyReportController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
-                            description = "Неверный аргумент"
+                            responseCode = "404",
+                            description = "Отчет с таким id не найден"
                     )
             }
     )
     @GetMapping("/dailyReport/{id}")
     public ResponseEntity<DailyReport> getDailyReportById(@PathVariable Long id){
-        DailyReport dailyReports = null;
-        try {
-            dailyReports = dailyReportService.getDailyReportById(id);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-
-        }
+        DailyReport dailyReports = dailyReportService.getDailyReportById(id);
         return ResponseEntity.ok(dailyReports);
     }
 
@@ -125,8 +107,8 @@ public class DailyReportController {
                             description = "статус отчета изменен"
                     ),
                     @ApiResponse(
-                            responseCode = "400",
-                            description = "Неверный аргумент"
+                            responseCode = "404",
+                            description = "Отчет с таким id не найден"
                     )
             }
     )
@@ -148,10 +130,6 @@ public class DailyReportController {
                                             schema = @Schema(implementation = DailyReport.class)
                                     )
                             }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Неверный аргумент"
                     )
             }
     )
@@ -159,19 +137,13 @@ public class DailyReportController {
     @GetMapping("/date")
     public ResponseEntity<Collection<DailyReport>> getAllDailyReportByDate(
             @RequestParam @Parameter(description = "Дата в формате YYYY-MM-DD") String date) {
-        Collection<DailyReport> reports = dailyReportService.getAllDailyReportByDate(date);
-        return ResponseEntity.ok(reports);
-    }
+        Collection<DailyReport> reports = null;
+        try {
+            reports = dailyReportService.getAllDailyReportByDate(date);
+        }catch (DateTimeParseException e) {
+            throw new DateTimeOfDailyReportParseException();
+        }
 
-    @GetMapping("/petOwnerIsNotReportYesterday")
-    public ResponseEntity<Collection<PetOwner>> getPetOwnersNotReportingOneDay() {
-        Collection<PetOwner> reports = dailyReportService.getPetOwnersNotReportingOneDay();
-        return ResponseEntity.ok(reports);
-    }
-
-    @GetMapping("/petOwnerIsNotReportTwoDayMore")
-    public ResponseEntity<Collection<PetOwner>> getPetOwnersNotReportingTwoDayMore() {
-        Collection<PetOwner> reports = dailyReportService.getPetOwnersNotReportingTwoDay();
         return ResponseEntity.ok(reports);
     }
 }
