@@ -164,4 +164,12 @@ public class KeyboardService {
         return prepareMultilineKeyboard(commandsList);
     }
 
+    public InlineKeyboardMarkup linkToBotUserButton(Long userId) {
+        String button_url = "tg://user?id=" + userId;
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        InlineKeyboardButton inlineButton = new InlineKeyboardButton("пользователь");
+        inlineButton.url(button_url);
+        keyboard.addRow(inlineButton);
+        return keyboard;
+    }
 }

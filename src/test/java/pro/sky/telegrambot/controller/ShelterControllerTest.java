@@ -12,10 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pro.sky.telegrambot.constant.TypeOfPet;
 import pro.sky.telegrambot.model.Shelter;
-import pro.sky.telegrambot.service.PetService;
 import pro.sky.telegrambot.service.ShelterService;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -60,9 +58,7 @@ class ShelterControllerTest {
 
     @Test
     void deleteShelterTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/shelter")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("" + testShelter.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/shelter/" + testShelter.getId()))
                 .andExpect(status().isOk());
         verify(shelterService, new Times(1)).deleteShelterById(anyInt());
     }
