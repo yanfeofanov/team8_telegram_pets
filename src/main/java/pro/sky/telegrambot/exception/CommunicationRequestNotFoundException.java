@@ -7,8 +7,4 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class CommunicationRequestNotFoundException extends RuntimeException {
     public CommunicationRequestNotFoundException() {
     }
-
-    public CommunicationRequestNotFoundException(String message) {
-        super(message);
-    }
 }

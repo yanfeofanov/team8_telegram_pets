@@ -147,10 +147,10 @@ public class DailyReportService {
      * @param photo  объект содержащий информацию. о фотографии
      * @return новый отчет
      */
-    private DailyReport createDailyReport(Long userId, String text, Photo photo) {
+    public DailyReport createDailyReport(Long userId, String text, Photo photo) {
         PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(userId);
         if (petOwner == null) {
-            throw new IllegalArgumentException("Владельца с таким userId не существует:" + userId);
+            throw new PetOwnerNullPointerException(userId);
         }
         Pet pet = petService.findPetOnProbationByPetOwnerId(petOwner.getId());
         Volunteer volunteer = volunteerService.getRandomVolunteer();
@@ -163,6 +163,7 @@ public class DailyReportService {
         dailyReport.setPet(pet);
         dailyReport.setChecked(false);
         dailyReport.setInspector(volunteer);
+        dailyReport.setApproved(false);
         return dailyReport;
     }
 
@@ -176,7 +177,7 @@ public class DailyReportService {
      * @param photo       новое фотография питомца
      * @return обновленный отчет
      */
-    private DailyReport updateDailyReport(DailyReport dailyReport, String caption, Photo photo) {
+    public DailyReport updateDailyReport(DailyReport dailyReport, String caption, Photo photo) {
         dailyReport.setDate(LocalDateTime.now(TimeZone.getTimeZone("GMT+3").toZoneId()));
         dailyReport.setReportBody(caption);
         dailyReport.setPhoto(photo);
