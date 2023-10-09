@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import pro.sky.telegrambot.model.PetOwner;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,10 +16,8 @@ public interface PetOwnerRepository extends JpaRepository<PetOwner, Integer> {
     PetOwner findPetOwnerByPhoneNumber(String phoneNumber);
     PetOwner findPetOwnerById(int petOwnerId);
     Collection<PetOwner> findAllByProbationIsTrue();
-    @Query(value = "select * from PetOwner where DATE(end_probation) = :data", nativeQuery = true)
+    @Query(value = "select * from pet_Owner where DATE(end_probation) = :data", nativeQuery = true)
     List<PetOwner> findAllByEndProbationIsToday(@Param("data") LocalDate localDate);
-
-
 
     @Query(value = "select pet_owner.*\n" +
             "from pet_owner\n" +

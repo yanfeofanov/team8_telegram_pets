@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.PhotoSize;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -76,7 +75,7 @@ public class TelegramBotService {
             }
             return processCommand(userId, chatId, textMassage);
         } else if (textMassage != null || photoSizes != null) {
-            return processInputOfInformation(userId, chatId, (photoSizes != null) ? message.caption() : textMassage, photoSizes);
+            return processInputOfInformation(userId, chatId, (photoSizes != null) ? message.caption().trim() : textMassage.trim(), photoSizes);
         } else {
             return sendReply(chatId, "извините, к сожалению наш бот не работает с данными такого типа");
         }
@@ -172,9 +171,9 @@ public class TelegramBotService {
         } else if (Commands.RECOMMENDATION_FOR_CAT_ADULT_HOUSE.getCommand().equals(commandStr)) {
             return sendInfoAboutCatShelterHouseAdultPet(chatId);
         } else if (Commands.RECOMMENDATION_FOR_DISABLED_DOG_HOUSE.getCommand().equals(commandStr)) {
-            return sendInfoAboutDogShelterHouseDisable(chatId);
+            return sendInfoAboutDogShelterHouseDisablePet(chatId);
         } else if (Commands.RECOMMENDATION_FOR_DISABLED_CAT_HOUSE.getCommand().equals(commandStr)) {
-            return sendInfoAboutCatShelterHouseDisable(chatId);
+            return sendInfoAboutCatShelterHouseDisablePet(chatId);
         } else if (Commands.TIPS_FROM_DOG_HANDLER.getCommand().equals(commandStr)) {
             return sendInfoAboutDogShelterTipsDogHandler(chatId);
         } else if (Commands.RECOMMENDED_DOG_HANDLERS_LIST.getCommand().equals(commandStr)) {
@@ -385,7 +384,7 @@ public class TelegramBotService {
         }
     }
 
-    private BaseResponse sendInfoAboutDogShelterHouseDisable(Long chatId) {
+    private BaseResponse sendInfoAboutDogShelterHouseDisablePet(Long chatId) {
         Shelter shelter = shelterService.findByType(TypeOfPet.DOG);
         if (shelter == null) {
             logger.error("no shelter with type \"dog\" found");
@@ -640,7 +639,7 @@ public class TelegramBotService {
         }
     }
 
-    private BaseResponse sendInfoAboutCatShelterHouseDisable(Long chatId) {
+    private BaseResponse sendInfoAboutCatShelterHouseDisablePet(Long chatId) {
         Shelter shelter = shelterService.findByType(TypeOfPet.CAT);
         if (shelter == null) {
             logger.error("no shelter with type \"cat\" found");
