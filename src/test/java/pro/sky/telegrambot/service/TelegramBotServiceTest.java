@@ -54,11 +54,8 @@ class TelegramBotServiceTest {
     private final Shelter shelterMock = mock(Shelter.class);
     private final Info infoMock = mock(Info.class);
     private final InlineKeyboardMarkup inlineKeyboardMarkupMock = mock(InlineKeyboardMarkup.class);
-    static final pro.sky.telegrambot.model.User botUser = new pro.sky.telegrambot.model.User();
-    private final Long testUser1Id = 1L;
-    private final Long testChat1Id = 1L;
-    private final Long testUser2Id = 2L;
-    private final Long testChat2Id = 2L;
+    private final Long testUserId = 1L;
+    private final Long testChatId = 1L;
 
     @BeforeEach
     void init() {
@@ -67,8 +64,8 @@ class TelegramBotServiceTest {
         when(messageMock.chat()).thenReturn(chatMock);
         when(messageMock.messageId()).thenReturn(1);
         when(messageMock.from()).thenReturn(userMock);
-        when(chatMock.id()).thenReturn(testChat1Id);
-        when(userMock.id()).thenReturn(testUser1Id);
+        when(chatMock.id()).thenReturn(testChatId);
+        when(userMock.id()).thenReturn(testUserId);
         when(telegramBotMock.execute(any())).thenReturn(sendResponseMock);
         when(sendResponseMock.message()).thenReturn(messageMock);
     }
@@ -81,7 +78,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("введите номер телефона для связи в формате - 89093568391");
     }
 
@@ -93,7 +90,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("введите адрес электронной почты для связи");
     }
 
@@ -105,7 +102,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("выберите способ для связи:");
     }
 
@@ -117,7 +114,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("ознакомьтесь пожалуйста с информацией, которая поможет вам подготовиться ко встрече с новым членом семьи");
     }
 
@@ -129,14 +126,14 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual1 = argumentCaptor.getValue();
-        assertThat(actual1.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual1.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual1.getParameters().get("text")).isEqualTo("ознакомьтесь пожалуйста с информацией, которая поможет вам подготовиться ко встрече с новым членом семьи");
 
         when(callbackQueryMock.data()).thenReturn(Commands.BACK_START_MENU.getCommand());
         out.processCallBackQuery(callbackQueryMock);
 
         SendMessage actual2 = argumentCaptor.getValue();
-        assertThat(actual2.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual2.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual2.getParameters().get("text")).isEqualTo("ознакомьтесь пожалуйста с информацией, которая поможет вам подготовиться ко встрече с новым членом семьи");
     }
 
@@ -148,7 +145,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("выберите какой приют вас интересует");
     }
 
@@ -177,7 +174,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock, times(2)).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo(textMassage);
     }
 
@@ -206,7 +203,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock, times(2)).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo(textMassage);
     }
 
@@ -222,7 +219,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock, times(2)).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("Запрос на обратную связь не создан!");
     }
 
@@ -235,7 +232,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("вам не нужно отправлять отчет, т.к. вы не являетесь владельцем питомца на испытательном сроке.");
     }
 
@@ -248,7 +245,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("пришлите пожалуйста отчет содержащий следующую информацию:\n" +
                 "- фото животного\n" +
                 "- рацион животного\n" +
@@ -283,7 +280,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testInfoText");
     }
 
@@ -313,7 +310,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testDocumentText");
     }
 
@@ -343,7 +340,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testRulesText");
     }
 
@@ -373,7 +370,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testTransportationText");
     }
 
@@ -403,7 +400,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testHouseCubText");
     }
 
@@ -433,7 +430,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testHouseAdultPetText");
     }
 
@@ -463,7 +460,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testHouseDisablePetText");
     }
 
@@ -493,7 +490,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testTipsDogHandlerText");
     }
 
@@ -523,7 +520,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testTipsDogHandlerListText");
     }
 
@@ -553,7 +550,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testPossibleReasonForRefusalAdoptionText");
     }
 
@@ -583,7 +580,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testContactText");
     }
 
@@ -613,7 +610,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testSafetyRecommendationText");
     }
 
@@ -643,7 +640,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testPassRegText");
     }
 
@@ -673,7 +670,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testPassRegText");
     }
 
@@ -703,7 +700,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testContactText");
     }
 
@@ -733,7 +730,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testSafetyRecommendationText");
     }
 
@@ -763,7 +760,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testGettingRulesText");
     }
 
@@ -793,7 +790,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testDocumentAdoptionText");
     }
 
@@ -823,7 +820,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testTransportationText");
     }
 
@@ -853,7 +850,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testHouseCubText");
     }
 
@@ -883,7 +880,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testHouseAdultPetText");
     }
 
@@ -913,7 +910,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testHouseDisablePetText");
     }
 
@@ -943,7 +940,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testHouseDisablePetText");
     }
 
@@ -973,7 +970,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text")).isEqualTo("testInfoText");
     }
 
@@ -993,7 +990,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text").toString()).startsWith("приют для собак");
     }
 
@@ -1013,7 +1010,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text").toString()).startsWith("приют для кошек");
     }
 
@@ -1033,7 +1030,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text").toString()).startsWith("приют для кошек");
     }
 
@@ -1053,7 +1050,7 @@ class TelegramBotServiceTest {
         ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
         verify(telegramBotMock).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
-        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChat1Id);
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(testChatId);
         assertThat(actual.getParameters().get("text").toString()).startsWith("приют для собак");
     }
 }
