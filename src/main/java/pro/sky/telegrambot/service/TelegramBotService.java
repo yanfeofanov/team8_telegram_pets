@@ -39,7 +39,7 @@ public class TelegramBotService {
     private final PetOwnerService petOwnerService;
     private final DailyReportService dailyReportService;
     private final TelegramBot telegramBot;
-    private int lastMessageId;
+    private final Map<Long, Integer> lastMessageId = new HashMap<>();
     private final Map<Long, Boolean> lastMessageIsReplaceableMenu = new HashMap<>();
 
     public TelegramBotService(InfoService infoService, ShelterService shelterService, KeyboardService keyboardService,
@@ -789,13 +789,13 @@ public class TelegramBotService {
 
     public BaseResponse sendReply(Long chatId, String text, InlineKeyboardMarkup keyboard) {
         if (lastMessageIsReplaceableMenu.get(chatId) != null && lastMessageIsReplaceableMenu.get(chatId)) {
-            return editBotMassage(chatId, lastMessageId, text, keyboard);
+            return editBotMassage(chatId, lastMessageId.get(chatId), text, keyboard);
         }
         SendMessage message = new SendMessage(chatId, text);
         //message.parseMode(ParseMode.Markdown);
         message.replyMarkup(keyboard);
         SendResponse response = telegramBot.execute(message);
-        lastMessageId = response.message().messageId();
+        lastMessageId.put(chatId, response.message().messageId());
         return response;
     }
 
@@ -803,7 +803,7 @@ public class TelegramBotService {
         SendMessage message = new SendMessage(chatId, text);
         //message.parseMode(ParseMode.MarkdownV2);
         SendResponse response = telegramBot.execute(message);
-        lastMessageId = response.message().messageId();
+        lastMessageId.put(chatId, response.message().messageId());
         lastMessageIsReplaceableMenu.put(chatId, false);
         return response;
     }
