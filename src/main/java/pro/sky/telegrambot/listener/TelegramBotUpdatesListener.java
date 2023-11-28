@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.response.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
-    private final  TelegramBotService telegramBotService;
+    private final TelegramBotService telegramBotService;
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot,
                                       TelegramBotService telegramBotService) {
@@ -37,26 +38,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             logger.info("Processing update: {}", update);
             Message message = update.message();
             CallbackQuery callbackQuery = update.callbackQuery();
-            int processMassageCode = 0;
-            String logMessage = "";
+            BaseResponse response;
             if (message != null && !message.from().isBot()) {
-                processMassageCode = telegramBotService.processMessage(message);
-                logMessage = "the message id: " + message.messageId()
-                        + " from chat #" + message.chat().id()
-                        + " was not processed correctly";
-
-            }else if (callbackQuery != null && !callbackQuery.from().isBot()) {
-                processMassageCode = telegramBotService.processCallBackQuery(callbackQuery);
-                logMessage = "the callbackQuery id: " + callbackQuery.id()
-                        + " from user #" + callbackQuery.from().id()
-                        + " was not processed correctly";
+                response = telegramBotService.processMessage(message);
+                if (response == null || !response.isOk()) {
+                    logger.error("the message id: " + message.messageId()
+                            + " from user #" + message.chat().id()
+                            + " was not processed correctly");
+                }
+            } else if (callbackQuery != null && !callbackQuery.from().isBot()) {
+                response = telegramBotService.processCallBackQuery(callbackQuery);
+                if (response == null || !response.isOk()) {
+                    logger.error("the callbackQuery id: " + callbackQuery.id()
+                            + " from user #" + callbackQuery.from().id()
+                            + " was not processed correctly");
+                }
             }
-            if (processMassageCode != 0) { //0 - code indicating the absence of errors
-                logger.error(logMessage);
-            }
-
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
-
 }

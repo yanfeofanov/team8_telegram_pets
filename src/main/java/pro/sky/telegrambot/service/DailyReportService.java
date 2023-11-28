@@ -3,12 +3,12 @@ package pro.sky.telegrambot.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.File;
 import com.pengrad.telegrambot.model.PhotoSize;
-import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.GetFile;
-import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pro.sky.telegrambot.exception.DailyReportNullPointerException;
+import pro.sky.telegrambot.exception.PetOwnerNullPointerException;
 import pro.sky.telegrambot.model.*;
 import pro.sky.telegrambot.repository.DailyReportRepository;
 
@@ -98,7 +98,7 @@ public class DailyReportService {
      * @param userId идентификатор чата
      * @return айди искомого отчета
      */
-    private DailyReport findReportByUserId(Long userId) {
+    public DailyReport findReportByUserId(Long userId) {
         PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(userId);
         return getTodayDailyReportByPetOwner(petOwner, LocalDate.now(TimeZone.getTimeZone("GMT+3").toZoneId()));
     }
@@ -124,7 +124,7 @@ public class DailyReportService {
     /**
      * Метод обновляет объект типа PhotoPet
      *
-     * @param dailyReport      отчет о питомце
+     * @param dailyReport отчет о питомце
      * @param fileRequest объект класса GetFile
      * @param file        объект класса File
      * @param filePath    путь к файлу
@@ -147,10 +147,10 @@ public class DailyReportService {
      * @param photo  объект содержащий информацию. о фотографии
      * @return новый отчет
      */
-    private DailyReport createDailyReport(Long userId, String text, Photo photo) {
+    public DailyReport createDailyReport(Long userId, String text, Photo photo) {
         PetOwner petOwner = petOwnerService.findPetOwnerWithProbationaryPeriod(userId);
         if (petOwner == null) {
-            throw new IllegalArgumentException("Владельца с таким userId не существует:" + userId);
+            throw new PetOwnerNullPointerException(userId);
         }
         Pet pet = petService.findPetOnProbationByPetOwnerId(petOwner.getId());
         Volunteer volunteer = volunteerService.getRandomVolunteer();
@@ -163,6 +163,7 @@ public class DailyReportService {
         dailyReport.setPet(pet);
         dailyReport.setChecked(false);
         dailyReport.setInspector(volunteer);
+        dailyReport.setApproved(false);
         return dailyReport;
     }
 
@@ -172,11 +173,11 @@ public class DailyReportService {
      * Если владелец отправляет 2-ой или более отчет в день, то текущий отчет обновляется.
      *
      * @param dailyReport текущий отчет о питомце
-     * @param caption  новый текстовый отчет
-     * @param photo    новое фотография питомца
+     * @param caption     новый текстовый отчет
+     * @param photo       новое фотография питомца
      * @return обновленный отчет
      */
-    private DailyReport updateDailyReport(DailyReport dailyReport, String caption, Photo photo) {
+    public DailyReport updateDailyReport(DailyReport dailyReport, String caption, Photo photo) {
         dailyReport.setDate(LocalDateTime.now(TimeZone.getTimeZone("GMT+3").toZoneId()));
         dailyReport.setReportBody(caption);
         dailyReport.setPhoto(photo);
@@ -202,28 +203,6 @@ public class DailyReportService {
     }
 
     /**
-     * первая стадия метода отправки отчета. Этот метод отпрвляет пользователю сообщение с просьбой
-     * отправить отчет: текст и фото
-     *
-     * @param chatId      идентификатор чата
-     * @param messageText сообщение для пользователя
-     */
-    public void sendReport(long chatId, String messageText) {
-        sendMessageReply(chatId, messageText);
-    }
-
-    /**
-     * Метод вызывается при отправке отчета пользователем, который
-     * не является владельцем питомца
-     *
-     * @param chatId      идентификатор чата
-     * @param messageText сообщение пользователю
-     */
-    public void sendReportWithoutReply(long chatId, String messageText) {
-        sendMessage(chatId, messageText);
-    }
-
-    /**
      * Метод получает расширение файла из его полного пути
      *
      * @param fileName имя файла
@@ -233,27 +212,81 @@ public class DailyReportService {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
-    private void sendMessageReply(long chatId, String messageText) {
-        SendMessage sendMess = new SendMessage(chatId, messageText);
-        sendMess.replyMarkup(new ForceReply());
-        telegramBot.execute(sendMess);
-    }
-
-    public void sendMessage(long chatId, String messageText) {
-        SendMessage sendMess = new SendMessage(chatId, messageText);
-        telegramBot.execute(sendMess);
-    }
-
-    /**
-     * Метод выводит список всех отчетов по определенным датам.
-     *
-     * @return Collection
-     */
-    public Collection<DailyReport> getAllDailyReport(LocalDate date) {
-        return dailyReportRepository.findDailyReportByDateBetween(date.atStartOfDay(), date.plusDays(1).atStartOfDay());
-    }
-
     public DailyReport getTodayDailyReportByPetOwner(PetOwner petOwner, LocalDate date) {
         return dailyReportRepository.findByPetOwnerAndDateBetween(petOwner, date.atStartOfDay(), date.plusDays(1).atStartOfDay());
     }
+
+    /**
+     * Метод выводит список проверенных/непроверенных отчетов
+     *
+     * @param check статус отчета
+     * @return список отчетов
+     */
+    public Collection<DailyReport> getCheckedDailyReport(Boolean check) {
+        return dailyReportRepository.findDailyReportByChecked(check);
+    }
+
+    /**
+     * Метод выводит список отчетов владельца жиотных
+     *
+     * @param petOwnerId ID владельца животного
+     * @return список отчетов
+     */
+    public Collection<DailyReport> getAllDailyReportByPetOwner(int petOwnerId) {
+        PetOwner petOwner = petOwnerService.findPetOwner(petOwnerId);
+        if (petOwner != null) {
+            return dailyReportRepository.findDailyReportByPetOwner(petOwner);
+        } else {
+            throw new PetOwnerNullPointerException(petOwnerId);
+        }
+    }
+
+    /**
+     * Метод выводит отчет по ID
+     *
+     * @param dailyReportId ID отчета
+     * @return список отчетов
+     */
+    public DailyReport getDailyReportById(Long dailyReportId) {
+        DailyReport report = dailyReportRepository.findDailyReportById(dailyReportId);
+        if (report != null) {
+            return report;
+        } else {
+            throw new DailyReportNullPointerException(dailyReportId);
+        }
+    }
+
+    /**
+     * метод для волонтера, изменение статуса отчета
+     *
+     * @param id      - id владельца питомца
+     * @param checked - статус отчета (проверен(true)/не проверен(false))
+     */
+    public String checkDailyReport(Long id, boolean checked) {
+        DailyReport findDailyReport = dailyReportRepository.findDailyReportById(id);
+        if (findDailyReport == null) {
+            throw new DailyReportNullPointerException(id);
+        }else if (checked == findDailyReport.getChecked()) {
+            return "отчет уже проверен";
+        }else {
+        findDailyReport.setChecked(checked);
+        dailyReportRepository.save(findDailyReport);
+        return "статус отчета изменен";
+        }
+    }
+
+    /**
+     * Метод выводит список отчетов по дате
+     *
+     * @param date день за который нужно вывести отчеты
+     * @return список отчетов
+     */
+    public Collection<DailyReport> getAllDailyReportByDate(String date) {
+            LocalDate localDate = LocalDate.parse(date);
+            Collection<DailyReport> reportsByDate = dailyReportRepository.
+                    findDailyReportByDateBetween(localDate.atStartOfDay(), localDate.plusDays(1).atStartOfDay());
+            return reportsByDate;
+    }
 }
+
+
